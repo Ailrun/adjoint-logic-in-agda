@@ -10,7 +10,7 @@ open import Calculus.LambdaBox.Typing
 
 ∈-++ˡ : ∀ Γ₁ →
         x ⦂ S ∈ Γ₀ →
-        ----------------------------
+        -----------------------------
         length Γ₁ + x ⦂ S ∈ Γ₁ ++ Γ₀
 ∈-++ˡ {x = x} []      x∈
   rewrite ℕ.+-identityʳ x     = x∈
@@ -19,7 +19,7 @@ open import Calculus.LambdaBox.Typing
 
 ∈-++ʳ : ∀ Γ₀ →
         x ⦂ S ∈ Γ₁ →
-        -------------------
+        -----------------
         x ⦂ S ∈ Γ₁ ++ Γ₀
 ∈-++ʳ Γ₀ here       = here
 ∈-++ʳ Γ₀ (there x∈) = there (∈-++ʳ Γ₀ x∈)
@@ -34,6 +34,7 @@ open import Calculus.LambdaBox.Typing
 
 ⊢⇒++⊢ : ∀ Γ₁ →
         Δ ⍮ Γ₀ ⊢ L ⦂ S →
+        ---------------------
         Δ ⍮ Γ₀ ++ Γ₁ ⊢ L ⦂ S
 ⊢⇒++⊢ Γ₁ `unit                = `unit
 ⊢⇒++⊢ Γ₁ (`box ⊢L)            = `box ⊢L

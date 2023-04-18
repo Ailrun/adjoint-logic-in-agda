@@ -12,6 +12,7 @@ open import Relation.Nullary.Decidable using (dec-yes; dec-no)
 open import Calculus.GeneralOpSem
 
 wkidx[↑suc]suc≡sucwkidx[↑] : ∀ n x y →
+                             --------------------------------------------------
                              wkidx[ n ↑ suc x ] suc y ≡ suc (wkidx[ n ↑ x ] y)
 wkidx[↑suc]suc≡sucwkidx[↑] n x y
   with suc y ℕ.≥? suc x

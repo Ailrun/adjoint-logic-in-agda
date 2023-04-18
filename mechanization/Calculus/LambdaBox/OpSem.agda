@@ -15,7 +15,7 @@ data Value : Term → Set where
            Value `unit
 
   `box   : ∀ M →
-           -------------------
+           ---------------
            Value (`box M)
 
   `λ⦂_∙_ : ∀ S M →
