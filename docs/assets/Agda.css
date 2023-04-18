@@ -4,6 +4,9 @@
 @font-face { font-family: JuliaMono; font-style: italic; ssrc: url('./fonts/JuliaMono-RegularItalic.woff2'); }
 @font-face { font-family: JuliaMono; font-weight: bold; font-style: italic; ssrc: url('./fonts/JuliaMono-BoldItalic.woff2'); }
 
+.Agda {
+  font-family: JuliaMono, monospace;
+}
 
 /* Aspects. */
 .Agda .Comment       { color: #B22222 }
