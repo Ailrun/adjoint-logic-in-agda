@@ -1,5 +1,5 @@
 ------------------------------------------------------------
--- Embedding of λ□ (Davies & Pfenning 2001) into λ↑↓₂
+-- Embedding of λ□ (Davies & Pfenning 2001) into λ↓↑₂
 ------------------------------------------------------------
 --
 -- This module provides an embedding relation between λ□ and λ↑↓₂,
@@ -8,6 +8,7 @@
 -- operational semantics.
 --
 
+{-# OPTIONS --safe #-}
 module Calculus.Elevator.Embedding.LambdaBox where
 
 open import Agda.Primitive
