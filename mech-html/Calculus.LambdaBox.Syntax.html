@@ -1,0 +1,214 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="utf-8"><title>Calculus.LambdaBox.Syntax</title><link rel="stylesheet" href="Agda.css"></head><body><pre class="Agda"><a id="1" class="Symbol">{-#</a> <a id="5" class="Keyword">OPTIONS</a> <a id="13" class="Pragma">--safe</a> <a id="20" class="Symbol">#-}</a>
+<a id="24" class="Keyword">module</a> <a id="31" href="Calculus.LambdaBox.Syntax.html" class="Module">Calculus.LambdaBox.Syntax</a> <a id="57" class="Keyword">where</a>
+
+<a id="64" class="Keyword">open</a> <a id="69" class="Keyword">import</a> <a id="76" href="Data.Nat.html" class="Module">Data.Nat</a> <a id="85" class="Keyword">using</a> <a id="91" class="Symbol">(</a><a id="92" href="Agda.Builtin.Nat.html#186" class="Datatype">ℕ</a><a id="93" class="Symbol">)</a>
+<a id="95" class="Keyword">open</a> <a id="100" class="Keyword">import</a> <a id="107" href="Data.List.html" class="Module">Data.List</a> <a id="117" class="Keyword">using</a> <a id="123" class="Symbol">(</a><a id="124" href="Agda.Builtin.List.html#130" class="Datatype">List</a><a id="128" class="Symbol">)</a>
+
+<a id="131" class="Keyword">data</a> <a id="Type"></a><a id="136" href="Calculus.LambdaBox.Syntax.html#136" class="Datatype">Type</a> <a id="141" class="Symbol">:</a> <a id="143" href="Agda.Primitive.html#320" class="Primitive">Set</a> <a id="147" class="Keyword">where</a>
+  <a id="Type.`⊤"></a><a id="155" href="Calculus.LambdaBox.Syntax.html#155" class="InductiveConstructor">`⊤</a>   <a id="160" class="Symbol">:</a> <a id="162" href="Calculus.LambdaBox.Syntax.html#136" class="Datatype">Type</a>
+  <a id="Type._`→_"></a><a id="169" href="Calculus.LambdaBox.Syntax.html#169" class="InductiveConstructor Operator">_`→_</a> <a id="174" class="Symbol">:</a> <a id="176" href="Calculus.LambdaBox.Syntax.html#136" class="Datatype">Type</a> <a id="181" class="Symbol">→</a> <a id="183" href="Calculus.LambdaBox.Syntax.html#136" class="Datatype">Type</a> <a id="188" class="Symbol">→</a> <a id="190" href="Calculus.LambdaBox.Syntax.html#136" class="Datatype">Type</a>
+  <a id="Type.`□_"></a><a id="197" href="Calculus.LambdaBox.Syntax.html#197" class="InductiveConstructor Operator">`□_</a>  <a id="202" class="Symbol">:</a> <a id="204" href="Calculus.LambdaBox.Syntax.html#136" class="Datatype">Type</a> <a id="209" class="Symbol">→</a> <a id="211" href="Calculus.LambdaBox.Syntax.html#136" class="Datatype">Type</a>
+
+<a id="217" class="Keyword">data</a> <a id="Term"></a><a id="222" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a> <a id="227" class="Symbol">:</a> <a id="229" href="Agda.Primitive.html#320" class="Primitive">Set</a> <a id="233" class="Keyword">where</a>
+  <a id="Term.`unit"></a><a id="241" href="Calculus.LambdaBox.Syntax.html#241" class="InductiveConstructor">`unit</a>         <a id="255" class="Symbol">:</a> <a id="257" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a>
+
+  <a id="Term.`box"></a><a id="265" href="Calculus.LambdaBox.Syntax.html#265" class="InductiveConstructor">`box</a>          <a id="279" class="Symbol">:</a> <a id="281" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a> <a id="286" class="Symbol">→</a> <a id="288" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a>
+  <a id="Term.`let-box_`in_"></a><a id="295" href="Calculus.LambdaBox.Syntax.html#295" class="InductiveConstructor Operator">`let-box_`in_</a> <a id="309" class="Symbol">:</a> <a id="311" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a> <a id="316" class="Symbol">→</a> <a id="318" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a> <a id="323" class="Symbol">→</a> <a id="325" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a>
+
+  <a id="Term.`λ⦂_∙_"></a><a id="333" href="Calculus.LambdaBox.Syntax.html#333" class="InductiveConstructor Operator">`λ⦂_∙_</a>        <a id="347" class="Symbol">:</a> <a id="349" href="Calculus.LambdaBox.Syntax.html#136" class="Datatype">Type</a> <a id="354" class="Symbol">→</a> <a id="356" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a> <a id="361" class="Symbol">→</a> <a id="363" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a>
+  <a id="Term._`$_"></a><a id="370" href="Calculus.LambdaBox.Syntax.html#370" class="InductiveConstructor Operator">_`$_</a>          <a id="384" class="Symbol">:</a> <a id="386" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a> <a id="391" class="Symbol">→</a> <a id="393" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a> <a id="398" class="Symbol">→</a> <a id="400" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a>
+
+  <a id="Term.`#¹_"></a><a id="408" href="Calculus.LambdaBox.Syntax.html#408" class="InductiveConstructor Operator">`#¹_</a>          <a id="422" class="Symbol">:</a> <a id="424" href="Agda.Builtin.Nat.html#186" class="Datatype">ℕ</a> <a id="426" class="Symbol">→</a> <a id="428" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a>
+  <a id="Term.`#⁰_"></a><a id="435" href="Calculus.LambdaBox.Syntax.html#435" class="InductiveConstructor Operator">`#⁰_</a>          <a id="449" class="Symbol">:</a> <a id="451" href="Agda.Builtin.Nat.html#186" class="Datatype">ℕ</a> <a id="453" class="Symbol">→</a> <a id="455" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a>
+
+<a id="Context"></a><a id="461" href="Calculus.LambdaBox.Syntax.html#461" class="Function">Context</a> <a id="469" class="Symbol">:</a> <a id="471" href="Agda.Primitive.html#320" class="Primitive">Set</a>
+<a id="475" href="Calculus.LambdaBox.Syntax.html#461" class="Function">Context</a> <a id="483" class="Symbol">=</a> <a id="485" href="Agda.Builtin.List.html#130" class="Datatype">List</a> <a id="490" href="Calculus.LambdaBox.Syntax.html#136" class="Datatype">Type</a>
+
+<a id="496" class="Keyword">variable</a>
+  <a id="507" href="Calculus.LambdaBox.Syntax.html#507" class="Generalizable">x</a> <a id="509" href="Calculus.LambdaBox.Syntax.html#509" class="Generalizable">x′</a> <a id="512" href="Calculus.LambdaBox.Syntax.html#512" class="Generalizable">x″</a> <a id="515" href="Calculus.LambdaBox.Syntax.html#515" class="Generalizable">x‴</a> <a id="518" href="Calculus.LambdaBox.Syntax.html#518" class="Generalizable">x₀</a> <a id="521" href="Calculus.LambdaBox.Syntax.html#521" class="Generalizable">x₁</a> <a id="524" href="Calculus.LambdaBox.Syntax.html#524" class="Generalizable">x₂</a> <a id="527" href="Calculus.LambdaBox.Syntax.html#527" class="Generalizable">x₃</a> <a id="530" href="Calculus.LambdaBox.Syntax.html#530" class="Generalizable">y</a> <a id="532" href="Calculus.LambdaBox.Syntax.html#532" class="Generalizable">y′</a> <a id="535" href="Calculus.LambdaBox.Syntax.html#535" class="Generalizable">y″</a> <a id="538" href="Calculus.LambdaBox.Syntax.html#538" class="Generalizable">y‴</a> <a id="541" href="Calculus.LambdaBox.Syntax.html#541" class="Generalizable">y₀</a> <a id="544" href="Calculus.LambdaBox.Syntax.html#544" class="Generalizable">y₁</a> <a id="547" href="Calculus.LambdaBox.Syntax.html#547" class="Generalizable">y₂</a> <a id="550" href="Calculus.LambdaBox.Syntax.html#550" class="Generalizable">y₃</a> <a id="553" href="Calculus.LambdaBox.Syntax.html#553" class="Generalizable">u</a> <a id="555" href="Calculus.LambdaBox.Syntax.html#555" class="Generalizable">u′</a> <a id="558" href="Calculus.LambdaBox.Syntax.html#558" class="Generalizable">u″</a> <a id="561" href="Calculus.LambdaBox.Syntax.html#561" class="Generalizable">u‴</a> <a id="564" href="Calculus.LambdaBox.Syntax.html#564" class="Generalizable">u₀</a> <a id="567" href="Calculus.LambdaBox.Syntax.html#567" class="Generalizable">u₁</a> <a id="570" href="Calculus.LambdaBox.Syntax.html#570" class="Generalizable">u₂</a> <a id="573" href="Calculus.LambdaBox.Syntax.html#573" class="Generalizable">u₃</a> <a id="576" href="Calculus.LambdaBox.Syntax.html#576" class="Generalizable">v</a> <a id="578" href="Calculus.LambdaBox.Syntax.html#578" class="Generalizable">v′</a> <a id="581" href="Calculus.LambdaBox.Syntax.html#581" class="Generalizable">v″</a> <a id="584" href="Calculus.LambdaBox.Syntax.html#584" class="Generalizable">v‴</a> <a id="587" href="Calculus.LambdaBox.Syntax.html#587" class="Generalizable">v₀</a> <a id="590" href="Calculus.LambdaBox.Syntax.html#590" class="Generalizable">v₁</a> <a id="593" href="Calculus.LambdaBox.Syntax.html#593" class="Generalizable">v₂</a> <a id="596" href="Calculus.LambdaBox.Syntax.html#596" class="Generalizable">v₃</a> <a id="599" class="Symbol">:</a> <a id="601" href="Agda.Builtin.Nat.html#186" class="Datatype">ℕ</a>
+  <a id="605" href="Calculus.LambdaBox.Syntax.html#605" class="Generalizable">S</a> <a id="607" href="Calculus.LambdaBox.Syntax.html#607" class="Generalizable">S′</a> <a id="610" href="Calculus.LambdaBox.Syntax.html#610" class="Generalizable">S″</a> <a id="613" href="Calculus.LambdaBox.Syntax.html#613" class="Generalizable">S‴</a> <a id="616" href="Calculus.LambdaBox.Syntax.html#616" class="Generalizable">S₀</a> <a id="619" href="Calculus.LambdaBox.Syntax.html#619" class="Generalizable">S₁</a> <a id="622" href="Calculus.LambdaBox.Syntax.html#622" class="Generalizable">S₂</a> <a id="625" href="Calculus.LambdaBox.Syntax.html#625" class="Generalizable">S₃</a> <a id="628" href="Calculus.LambdaBox.Syntax.html#628" class="Generalizable">T</a> <a id="630" href="Calculus.LambdaBox.Syntax.html#630" class="Generalizable">T′</a> <a id="633" href="Calculus.LambdaBox.Syntax.html#633" class="Generalizable">T″</a> <a id="636" href="Calculus.LambdaBox.Syntax.html#636" class="Generalizable">T‴</a> <a id="639" href="Calculus.LambdaBox.Syntax.html#639" class="Generalizable">T₀</a> <a id="642" href="Calculus.LambdaBox.Syntax.html#642" class="Generalizable">T₁</a> <a id="645" href="Calculus.LambdaBox.Syntax.html#645" class="Generalizable">T₂</a> <a id="648" href="Calculus.LambdaBox.Syntax.html#648" class="Generalizable">T₃</a> <a id="651" class="Symbol">:</a> <a id="653" href="Calculus.LambdaBox.Syntax.html#136" class="Datatype">Type</a>
+  <a id="660" href="Calculus.LambdaBox.Syntax.html#660" class="Generalizable">L</a> <a id="662" href="Calculus.LambdaBox.Syntax.html#662" class="Generalizable">L′</a> <a id="665" href="Calculus.LambdaBox.Syntax.html#665" class="Generalizable">L″</a> <a id="668" href="Calculus.LambdaBox.Syntax.html#668" class="Generalizable">L‴</a> <a id="671" href="Calculus.LambdaBox.Syntax.html#671" class="Generalizable">L₀</a> <a id="674" href="Calculus.LambdaBox.Syntax.html#674" class="Generalizable">L₁</a> <a id="677" href="Calculus.LambdaBox.Syntax.html#677" class="Generalizable">L₂</a> <a id="680" href="Calculus.LambdaBox.Syntax.html#680" class="Generalizable">L₃</a> <a id="683" href="Calculus.LambdaBox.Syntax.html#683" class="Generalizable">M</a> <a id="685" href="Calculus.LambdaBox.Syntax.html#685" class="Generalizable">M′</a> <a id="688" href="Calculus.LambdaBox.Syntax.html#688" class="Generalizable">M″</a> <a id="691" href="Calculus.LambdaBox.Syntax.html#691" class="Generalizable">M‴</a> <a id="694" href="Calculus.LambdaBox.Syntax.html#694" class="Generalizable">M₀</a> <a id="697" href="Calculus.LambdaBox.Syntax.html#697" class="Generalizable">M₁</a> <a id="700" href="Calculus.LambdaBox.Syntax.html#700" class="Generalizable">M₂</a> <a id="703" href="Calculus.LambdaBox.Syntax.html#703" class="Generalizable">M₃</a> <a id="706" href="Calculus.LambdaBox.Syntax.html#706" class="Generalizable">N</a> <a id="708" href="Calculus.LambdaBox.Syntax.html#708" class="Generalizable">N′</a> <a id="711" href="Calculus.LambdaBox.Syntax.html#711" class="Generalizable">N″</a> <a id="714" href="Calculus.LambdaBox.Syntax.html#714" class="Generalizable">N‴</a> <a id="717" href="Calculus.LambdaBox.Syntax.html#717" class="Generalizable">N₀</a> <a id="720" href="Calculus.LambdaBox.Syntax.html#720" class="Generalizable">N₁</a> <a id="723" href="Calculus.LambdaBox.Syntax.html#723" class="Generalizable">N₂</a> <a id="726" href="Calculus.LambdaBox.Syntax.html#726" class="Generalizable">N₃</a> <a id="729" class="Symbol">:</a> <a id="731" href="Calculus.LambdaBox.Syntax.html#222" class="Datatype">Term</a>
+  <a id="738" href="Calculus.LambdaBox.Syntax.html#738" class="Generalizable">Γ</a> <a id="740" href="Calculus.LambdaBox.Syntax.html#740" class="Generalizable">Γ′</a> <a id="743" href="Calculus.LambdaBox.Syntax.html#743" class="Generalizable">Γ″</a> <a id="746" href="Calculus.LambdaBox.Syntax.html#746" class="Generalizable">Γ‴</a> <a id="749" href="Calculus.LambdaBox.Syntax.html#749" class="Generalizable">Γ₀</a> <a id="752" href="Calculus.LambdaBox.Syntax.html#752" class="Generalizable">Γ₁</a> <a id="755" href="Calculus.LambdaBox.Syntax.html#755" class="Generalizable">Γ₂</a> <a id="758" href="Calculus.LambdaBox.Syntax.html#758" class="Generalizable">Γ₃</a> <a id="761" href="Calculus.LambdaBox.Syntax.html#761" class="Generalizable">Δ</a> <a id="763" href="Calculus.LambdaBox.Syntax.html#763" class="Generalizable">Δ′</a> <a id="766" href="Calculus.LambdaBox.Syntax.html#766" class="Generalizable">Δ″</a> <a id="769" href="Calculus.LambdaBox.Syntax.html#769" class="Generalizable">Δ‴</a> <a id="772" href="Calculus.LambdaBox.Syntax.html#772" class="Generalizable">Δ₀</a> <a id="775" href="Calculus.LambdaBox.Syntax.html#775" class="Generalizable">Δ₁</a> <a id="778" href="Calculus.LambdaBox.Syntax.html#778" class="Generalizable">Δ₂</a> <a id="781" href="Calculus.LambdaBox.Syntax.html#781" class="Generalizable">Δ₃</a> <a id="784" href="Calculus.LambdaBox.Syntax.html#784" class="Generalizable">Ψ</a> <a id="786" href="Calculus.LambdaBox.Syntax.html#786" class="Generalizable">Ψ′</a> <a id="789" href="Calculus.LambdaBox.Syntax.html#789" class="Generalizable">Ψ″</a> <a id="792" href="Calculus.LambdaBox.Syntax.html#792" class="Generalizable">Ψ‴</a> <a id="795" href="Calculus.LambdaBox.Syntax.html#795" class="Generalizable">Ψ₀</a> <a id="798" href="Calculus.LambdaBox.Syntax.html#798" class="Generalizable">Ψ₁</a> <a id="801" href="Calculus.LambdaBox.Syntax.html#801" class="Generalizable">Ψ₂</a> <a id="804" href="Calculus.LambdaBox.Syntax.html#804" class="Generalizable">Ψ₃</a> <a id="807" class="Symbol">:</a> <a id="809" href="Calculus.LambdaBox.Syntax.html#461" class="Function">Context</a>
+
+<a id="818" class="Comment">-- _⟶*_ : Term → Term → Set</a>
+<a id="846" class="Comment">-- _⟶*_ = Star _⟶_</a>
+
+<a id="866" class="Comment">-- *lift-⟶-cong : (f : Term → Term) →</a>
+<a id="904" class="Comment">--                (∀ {M M′} → M ⟶ M′ → f M ⟶ f M′) →</a>
+<a id="957" class="Comment">--                ∀ {M M′} → M ⟶* M′ → f M ⟶* f M′</a>
+<a id="1008" class="Comment">-- *lift-⟶-cong f cong ε           = ε</a>
+<a id="1047" class="Comment">-- *lift-⟶-cong f cong (e⟶ ◅ e′⟶*) = cong e⟶ ◅ *lift-⟶-cong f cong e′⟶*</a>
+
+<a id="1120" class="Comment">-- ------------------------------------------------------------</a>
+<a id="1184" class="Comment">-- -- Properties of Substitutions and Weakenings</a>
+<a id="1233" class="Comment">-- ------------------------------------------------------------</a>
+<a id="1297" class="Comment">-- wkwkby¹from¹≡wkby¹from¹ : ∀ n m l M₀ →</a>
+<a id="1339" class="Comment">--                           ------------------------------------------------------------------</a>
+<a id="1435" class="Comment">--                           wk wk M₀ by¹ n from¹ l by¹ m from¹ l ≡ wk M₀ by¹ (n + m) from¹ l</a>
+<a id="1529" class="Comment">-- wkwkby¹from¹≡wkby¹from¹ n m l (box M₀)        = cong box (wkwkby¹from¹≡wkby¹from¹ n m l M₀)</a>
+<a id="1624" class="Comment">-- wkwkby¹from¹≡wkby¹from¹ n m l (let-box M₀ N₀) = cong₂ let-box (wkwkby¹from¹≡wkby¹from¹ n m l M₀) (wkwkby¹from¹≡wkby¹from¹ n m (suc l) N₀)</a>
+<a id="1765" class="Comment">-- wkwkby¹from¹≡wkby¹from¹ n m l (#¹ u)          = cong #¹_ (wkvarwkvar≡wkvar n m l u)</a>
+<a id="1852" class="Comment">-- wkwkby¹from¹≡wkby¹from¹ n m l (#⁰ x)          = refl</a>
+<a id="1908" class="Comment">-- wkwkby¹from¹≡wkby¹from¹ n m l (Λ S₀ ∙ M₀)     = cong (Λ S₀ ∙_) (wkwkby¹from¹≡wkby¹from¹ n m l M₀)</a>
+<a id="2009" class="Comment">-- wkwkby¹from¹≡wkby¹from¹ n m l (M₀ $ N₀)       = cong₂ _$_ (wkwkby¹from¹≡wkby¹from¹ n m l M₀) (wkwkby¹from¹≡wkby¹from¹ n m l N₀)</a>
+
+<a id="2141" class="Comment">-- wkwkby⁰from⁰≡wkby⁰from⁰ : ∀ n m l M₀ →</a>
+<a id="2183" class="Comment">--                           ------------------------------------------------------------------</a>
+<a id="2279" class="Comment">--                           wk wk M₀ by⁰ n from⁰ l by⁰ m from⁰ l ≡ wk M₀ by⁰ (n + m) from⁰ l</a>
+<a id="2373" class="Comment">-- wkwkby⁰from⁰≡wkby⁰from⁰ n m l (box M₀)        = refl</a>
+<a id="2429" class="Comment">-- wkwkby⁰from⁰≡wkby⁰from⁰ n m l (let-box M₀ N₀) = cong₂ let-box (wkwkby⁰from⁰≡wkby⁰from⁰ n m l M₀) (wkwkby⁰from⁰≡wkby⁰from⁰ n m l N₀)</a>
+<a id="2564" class="Comment">-- wkwkby⁰from⁰≡wkby⁰from⁰ n m l (#¹ u)          = refl</a>
+<a id="2620" class="Comment">-- wkwkby⁰from⁰≡wkby⁰from⁰ n m l (#⁰ x)          = cong #⁰_ (wkvarwkvar≡wkvar n m l x)</a>
+<a id="2707" class="Comment">-- wkwkby⁰from⁰≡wkby⁰from⁰ n m l (Λ S₀ ∙ M₀)     = cong (Λ S₀ ∙_) (wkwkby⁰from⁰≡wkby⁰from⁰ n m (suc l) M₀)</a>
+<a id="2814" class="Comment">-- wkwkby⁰from⁰≡wkby⁰from⁰ n m l (M₀ $ N₀)       = cong₂ _$_ (wkwkby⁰from⁰≡wkby⁰from⁰ n m l M₀) (wkwkby⁰from⁰≡wkby⁰from⁰ n m l N₀)</a>
+
+<a id="2946" class="Comment">-- wkby⁰from⁰wkby¹from¹-commute : ∀ n m l o M₀ →</a>
+<a id="2995" class="Comment">--                                ------------------------------------------------------------------------------</a>
+<a id="3108" class="Comment">--                                wk wk M₀ by¹ l from¹ o by⁰ n from⁰ m ≡ wk wk M₀ by⁰ n from⁰ m by¹ l from¹ o</a>
+<a id="3218" class="Comment">-- wkby⁰from⁰wkby¹from¹-commute n m l o (box M₀)        = refl</a>
+<a id="3281" class="Comment">-- wkby⁰from⁰wkby¹from¹-commute n m l o (let-box M₀ N₀) = cong₂ let-box (wkby⁰from⁰wkby¹from¹-commute n m l o M₀) (wkby⁰from⁰wkby¹from¹-commute n m l (suc o) N₀)</a>
+<a id="3443" class="Comment">-- wkby⁰from⁰wkby¹from¹-commute n m l o (#¹ u)          = refl</a>
+<a id="3506" class="Comment">-- wkby⁰from⁰wkby¹from¹-commute n m l o (#⁰ x)          = refl</a>
+<a id="3569" class="Comment">-- wkby⁰from⁰wkby¹from¹-commute n m l o (Λ S₀ ∙ M₀)     = cong (Λ S₀ ∙_) (wkby⁰from⁰wkby¹from¹-commute n (suc m) l o M₀)</a>
+<a id="3690" class="Comment">-- wkby⁰from⁰wkby¹from¹-commute n m l o (M₀ $ N₀)       = cong₂ _$_ (wkby⁰from⁰wkby¹from¹-commute n m l o M₀) (wkby⁰from⁰wkby¹from¹-commute n m l o N₀)</a>
+
+
+<a id="3844" class="Comment">-- wkby¹0from¹ : ∀ n M₀ →</a>
+<a id="3870" class="Comment">--               ------------------------</a>
+<a id="3912" class="Comment">--               wk M₀ by¹ 0 from¹ n ≡ M₀</a>
+<a id="3954" class="Comment">-- wkby¹0from¹ n (box M₀)        = cong box (wkby¹0from¹ n M₀)</a>
+<a id="4017" class="Comment">-- wkby¹0from¹ n (let-box M₀ N₀) = cong₂ let-box (wkby¹0from¹ n M₀) (wkby¹0from¹ (suc n) N₀)</a>
+<a id="4110" class="Comment">-- wkby¹0from¹ n (#¹ u)          = cong #¹_ (wkvarby0 n u)</a>
+<a id="4169" class="Comment">-- wkby¹0from¹ n (#⁰ x)          = refl</a>
+<a id="4209" class="Comment">-- wkby¹0from¹ n (Λ S₀ ∙ M₀)     = cong (Λ S₀ ∙_) (wkby¹0from¹ n M₀)</a>
+<a id="4278" class="Comment">-- wkby¹0from¹ n (M₀ $ N₀)       = cong₂ _$_ (wkby¹0from¹ n M₀) (wkby¹0from¹ n N₀)</a>
+
+<a id="4362" class="Comment">-- wkby⁰0from⁰ : ∀ n M₀ →</a>
+<a id="4388" class="Comment">--               ------------------------</a>
+<a id="4430" class="Comment">--               wk M₀ by⁰ 0 from⁰ n ≡ M₀</a>
+<a id="4472" class="Comment">-- wkby⁰0from⁰ n (box M₀)        = refl</a>
+<a id="4512" class="Comment">-- wkby⁰0from⁰ n (let-box M₀ N₀) = cong₂ let-box (wkby⁰0from⁰ n M₀) (wkby⁰0from⁰ n N₀)</a>
+<a id="4599" class="Comment">-- wkby⁰0from⁰ n (#¹ u)          = refl</a>
+<a id="4639" class="Comment">-- wkby⁰0from⁰ n (#⁰ x)          = cong #⁰_ (wkvarby0 n x)</a>
+<a id="4698" class="Comment">-- wkby⁰0from⁰ n (Λ S₀ ∙ M₀)     = cong (Λ S₀ ∙_) (wkby⁰0from⁰ (suc n) M₀)</a>
+<a id="4773" class="Comment">-- wkby⁰0from⁰ n (M₀ $ N₀)       = cong₂ _$_ (wkby⁰0from⁰ n M₀) (wkby⁰0from⁰ n N₀)</a>
+
+
+<a id="4858" class="Comment">-- ⊢wkby¹from¹ : ∀ Φ₁″ Φ₁′ →</a>
+<a id="4887" class="Comment">--               Φ₁″ ++ Φ₁ ⍮ Φ₀ ⊢ M₀ ⦂ S₀ →</a>
+<a id="4931" class="Comment">--               -----------------------------------------------------------------</a>
+<a id="5014" class="Comment">--               Φ₁″ ++ Φ₁′ ++ Φ₁ ⍮ Φ₀ ⊢ wk M₀ by¹ length Φ₁′ from¹ length Φ₁″ ⦂ S₀</a>
+<a id="5098" class="Comment">-- ⊢wkby¹from¹ Φ₁″ Φ₁′ (box ⊢M₀)         = box (⊢wkby¹from¹ Φ₁″ Φ₁′ ⊢M₀)</a>
+<a id="5171" class="Comment">-- ⊢wkby¹from¹ Φ₁″ Φ₁′ (let-box ⊢M₀ ⊢N₀) = let-box (⊢wkby¹from¹ Φ₁″ Φ₁′ ⊢M₀) (⊢wkby¹from¹ (_ ∷ Φ₁″) Φ₁′ ⊢N₀)</a>
+<a id="5280" class="Comment">-- ⊢wkby¹from¹ Φ₁″ Φ₁′ (#¹ u∈)           = #¹ wkvar∈ Φ₁″ Φ₁′ u∈</a>
+<a id="5344" class="Comment">-- ⊢wkby¹from¹ Φ₁″ Φ₁′ (#⁰ x∈)           = #⁰ x∈</a>
+<a id="5393" class="Comment">-- ⊢wkby¹from¹ Φ₁″ Φ₁′ (Λ?∙ ⊢M₀)         = Λ?∙ ⊢wkby¹from¹ Φ₁″ Φ₁′ ⊢M₀</a>
+<a id="5464" class="Comment">-- ⊢wkby¹from¹ Φ₁″ Φ₁′ (⊢M₀ $ ⊢N₀)       = ⊢wkby¹from¹ Φ₁″ Φ₁′ ⊢M₀ $ ⊢wkby¹from¹ Φ₁″ Φ₁′ ⊢N₀</a>
+
+<a id="5558" class="Comment">-- ⊢wkby⁰from⁰ : ∀ Φ₀″ Φ₀′ →</a>
+<a id="5587" class="Comment">--               Φ₁ ⍮ Φ₀″ ++ Φ₀ ⊢ M₀ ⦂ S₀ →</a>
+<a id="5631" class="Comment">--               -----------------------------------------------------------------</a>
+<a id="5714" class="Comment">--               Φ₁ ⍮ Φ₀″ ++ Φ₀′ ++ Φ₀ ⊢ wk M₀ by⁰ length Φ₀′ from⁰ length Φ₀″ ⦂ S₀</a>
+<a id="5798" class="Comment">-- ⊢wkby⁰from⁰ Φ₀″ Φ₀′ (box ⊢M₀)         = box ⊢M₀</a>
+<a id="5849" class="Comment">-- ⊢wkby⁰from⁰ Φ₀″ Φ₀′ (let-box ⊢M₀ ⊢N₀) = let-box (⊢wkby⁰from⁰ Φ₀″ Φ₀′ ⊢M₀) (⊢wkby⁰from⁰ Φ₀″ Φ₀′ ⊢N₀)</a>
+<a id="5952" class="Comment">-- ⊢wkby⁰from⁰ Φ₀″ Φ₀′ (#¹ u∈)           = #¹ u∈</a>
+<a id="6001" class="Comment">-- ⊢wkby⁰from⁰ Φ₀″ Φ₀′ (#⁰ x∈)           = #⁰ wkvar∈ Φ₀″ Φ₀′ x∈</a>
+<a id="6065" class="Comment">-- ⊢wkby⁰from⁰ Φ₀″ Φ₀′ (Λ?∙ ⊢M₀)         = Λ?∙ ⊢wkby⁰from⁰ (_ ∷ Φ₀″) Φ₀′ ⊢M₀</a>
+<a id="6142" class="Comment">-- ⊢wkby⁰from⁰ Φ₀″ Φ₀′ (⊢M₀ $ ⊢N₀)       = ⊢wkby⁰from⁰ Φ₀″ Φ₀′ ⊢M₀ $ ⊢wkby⁰from⁰ Φ₀″ Φ₀′ ⊢N₀</a>
+
+<a id="6236" class="Comment">-- ≤⇒⊢⇒wk≡ : ∀ n {m} →</a>
+<a id="6259" class="Comment">--           length Φ₀ ≤ m →</a>
+<a id="6288" class="Comment">--           Φ₁ ⍮ Φ₀ ⊢ M₀ ⦂ S₀ →</a>
+<a id="6321" class="Comment">--           wk M₀ by⁰ n from⁰ m ≡ M₀</a>
+<a id="6359" class="Comment">-- ≤⇒⊢⇒wk≡ n Φ₀≤ (box ⊢M₀)         = refl</a>
+<a id="6401" class="Comment">-- ≤⇒⊢⇒wk≡ n Φ₀≤ (let-box ⊢M₀ ⊢N₀) = cong₂ let-box (≤⇒⊢⇒wk≡ n Φ₀≤ ⊢M₀) (≤⇒⊢⇒wk≡ n Φ₀≤ ⊢N₀)</a>
+<a id="6492" class="Comment">-- ≤⇒⊢⇒wk≡ n Φ₀≤ (#¹ u∈)           = refl</a>
+<a id="6534" class="Comment">-- ≤⇒⊢⇒wk≡ n Φ₀≤ (#⁰ x∈)           = cong #⁰_ (&lt;⇒wkvar≡ _ (&lt;-transˡ (∈⇒&lt; x∈) Φ₀≤))</a>
+<a id="6617" class="Comment">-- ≤⇒⊢⇒wk≡ n Φ₀≤ (Λ?∙ ⊢M₀)         = cong (Λ _ ∙_) (≤⇒⊢⇒wk≡ n (s≤s Φ₀≤) ⊢M₀)</a>
+<a id="6694" class="Comment">-- ≤⇒⊢⇒wk≡ n Φ₀≤ (⊢M₀ $ ⊢N₀)       = cong₂ _$_ (≤⇒⊢⇒wk≡ n Φ₀≤ ⊢M₀) (≤⇒⊢⇒wk≡ n Φ₀≤ ⊢N₀)</a>
+
+<a id="6782" class="Comment">-- ⊢[/¹] : ∀ Φ₁′ →</a>
+<a id="6801" class="Comment">--         Φ₁ ⍮ [] ⊢ M₀ ⦂ S₀ →</a>
+<a id="6832" class="Comment">--         Φ₁′ ++ (S₀ ∷ Φ₁) ⍮ Φ₀ ⊢ N₀ ⦂ T₀ →</a>
+<a id="6877" class="Comment">--         -------------------------------------------------------------------------</a>
+<a id="6962" class="Comment">--         Φ₁′ ++ Φ₁ ⍮ Φ₀ ⊢ [ wk M₀ by¹ (length Φ₁′) from¹ 0 /¹ length Φ₁′ ] N₀ ⦂ T₀</a>
+<a id="7047" class="Comment">-- ⊢[/¹]           Φ₁′ ⊢M₀ (box ⊢N₀)                               = box (⊢[/¹] Φ₁′ ⊢M₀ ⊢N₀)</a>
+<a id="7140" class="Comment">-- ⊢[/¹] {M₀ = M₀} Φ₁′ ⊢M₀ (let-box ⊢N₀ ⊢L₀)</a>
+<a id="7185" class="Comment">--   with ⊢L₀′ ← ⊢[/¹] (_ ∷ Φ₁′) ⊢M₀ ⊢L₀</a>
+<a id="7226" class="Comment">--     rewrite +-comm 1 (length Φ₁′)</a>
+<a id="7263" class="Comment">--           | ≡.sym (wkwkby¹from¹≡wkby¹from¹ (length Φ₁′) 1 0 M₀) = let-box (⊢[/¹] Φ₁′ ⊢M₀ ⊢N₀) ⊢L₀′</a>
+<a id="7365" class="Comment">-- ⊢[/¹] {S₀ = S₀} Φ₁′ ⊢M₀ (#¹_ {u = u} u∈)</a>
+<a id="7409" class="Comment">--   with length Φ₁′ ≟ u</a>
+<a id="7434" class="Comment">-- ...  | yes refl</a>
+<a id="7453" class="Comment">--     rewrite length∈-++⇒≡ Φ₁′ u∈                                 = ⊢wkby¹from¹ [] Φ₁′ (subst₂ (_ ⍮_⊢_⦂ _) (++-identityʳ _) (≤⇒⊢⇒wk≡ _ z≤n ⊢M₀) (⊢wkby⁰from⁰ [] _ ⊢M₀))</a>
+<a id="7622" class="Comment">-- ...  | no  ≢u</a>
+<a id="7639" class="Comment">--     with length Φ₁′ &lt;? u</a>
+<a id="7667" class="Comment">-- ...    | no  ≮u                                                 = #¹ (&gt;∈-++-++⇒∈-++ Φ₁′ L.[ _ ] (≤∧≢⇒&lt; (≮⇒≥ ≮u) (≢-sym ≢u)) u∈)</a>
+<a id="7798" class="Comment">-- ...    | yes &lt;u</a>
+<a id="7817" class="Comment">--       rewrite +-comm 1 (length Φ₁′)</a>
+<a id="7856" class="Comment">--             | ≡.sym (length-++ Φ₁′ {L.[ S₀ ]})                  = #¹ ≤∈-++-++⇒∈-++ Φ₁′ L.[ _ ] &lt;u u∈</a>
+<a id="7960" class="Comment">-- ⊢[/¹]           Φ₁′ ⊢M₀ (#⁰ x∈)                                 = #⁰ x∈</a>
+<a id="8035" class="Comment">-- ⊢[/¹]           Φ₁′ ⊢M₀ (Λ?∙ ⊢N₀)                               = Λ?∙ ⊢[/¹] Φ₁′ ⊢M₀ ⊢N₀</a>
+<a id="8126" class="Comment">-- ⊢[/¹]           Φ₁′ ⊢M₀ (⊢N₀ $ ⊢L₀)                             = ⊢[/¹] Φ₁′ ⊢M₀ ⊢N₀ $ ⊢[/¹] Φ₁′ ⊢M₀ ⊢L₀</a>
+
+<a id="8234" class="Comment">-- ⊢[/⁰] : ∀ Φ₀′ →</a>
+<a id="8253" class="Comment">--         Φ₁ ⍮ Φ₀ ⊢ M₀ ⦂ S₀ →</a>
+<a id="8284" class="Comment">--         Φ₁ ⍮ Φ₀′ ++ (S₀ ∷ Φ₀) ⊢ N₀ ⦂ T₀ →</a>
+<a id="8329" class="Comment">--         -------------------------------------------------------------------------</a>
+<a id="8414" class="Comment">--         Φ₁ ⍮ Φ₀′ ++ Φ₀ ⊢ [ wk M₀ by⁰ (length Φ₀′) from⁰ 0 /⁰ length Φ₀′ ] N₀ ⦂ T₀</a>
+<a id="8499" class="Comment">-- ⊢[/⁰]           Φ₀′ ⊢M₀ (box ⊢N₀)                               = box ⊢N₀</a>
+<a id="8576" class="Comment">-- ⊢[/⁰] {M₀ = M₀} Φ₀′ ⊢M₀ (let-box ⊢N₀ ⊢L₀)</a>
+<a id="8621" class="Comment">--   with ⊢L₀′ ← ⊢[/⁰] Φ₀′ (⊢wkby¹from¹ [] L.[ _ ] ⊢M₀) ⊢L₀</a>
+<a id="8681" class="Comment">--     rewrite wkby⁰from⁰wkby¹from¹-commute (length Φ₀′) 0 1 0 M₀  = let-box (⊢[/⁰] Φ₀′ ⊢M₀ ⊢N₀) ⊢L₀′</a>
+<a id="8783" class="Comment">-- ⊢[/⁰]           Φ₀′ ⊢M₀ (#¹ u∈)                                 = #¹ u∈</a>
+<a id="8858" class="Comment">-- ⊢[/⁰] {S₀ = S₀} Φ₀′ ⊢M₀ (#⁰_ {x = x} x∈)</a>
+<a id="8902" class="Comment">--   with length Φ₀′ ≟ x</a>
+<a id="8927" class="Comment">-- ...  | yes refl</a>
+<a id="8946" class="Comment">--     rewrite length∈-++⇒≡ Φ₀′ x∈                                 = ⊢wkby⁰from⁰ [] Φ₀′ ⊢M₀</a>
+<a id="9038" class="Comment">-- ...  | no  ≢x</a>
+<a id="9055" class="Comment">--     with length Φ₀′ &lt;? x</a>
+<a id="9083" class="Comment">-- ...    | no  ≮x                                                 = #⁰ (&gt;∈-++-++⇒∈-++ Φ₀′ L.[ _ ] (≤∧≢⇒&lt; (≮⇒≥ ≮x) (≢-sym ≢x)) x∈)</a>
+<a id="9214" class="Comment">-- ...    | yes &lt;x</a>
+<a id="9233" class="Comment">--       rewrite +-comm 1 (length Φ₀′)</a>
+<a id="9272" class="Comment">--             | ≡.sym (length-++ Φ₀′ {L.[ S₀ ]})                  = #⁰ ≤∈-++-++⇒∈-++ Φ₀′ L.[ _ ] &lt;x x∈</a>
+<a id="9376" class="Comment">-- ⊢[/⁰] {M₀ = M₀} Φ₀′ ⊢M₀ (Λ?∙ ⊢N₀)</a>
+<a id="9413" class="Comment">--   with ⊢N₀′ ← ⊢[/⁰] (_ ∷ Φ₀′) ⊢M₀ ⊢N₀</a>
+<a id="9454" class="Comment">--     rewrite +-comm 1 (length Φ₀′)</a>
+<a id="9491" class="Comment">--           | ≡.sym (wkwkby⁰from⁰≡wkby⁰from⁰ (length Φ₀′) 1 0 M₀) = Λ?∙ ⊢N₀′</a>
+<a id="9569" class="Comment">-- ⊢[/⁰]           Φ₀′ ⊢M₀ (⊢N₀ $ ⊢L₀)                             = ⊢[/⁰] Φ₀′ ⊢M₀ ⊢N₀ $ ⊢[/⁰] Φ₀′ ⊢M₀ ⊢L₀</a>
+
+<a id="9677" class="Comment">-- ------------------------------------------------------------</a>
+<a id="9741" class="Comment">-- -- Type Safety</a>
+<a id="9759" class="Comment">-- ------------------------------------------------------------</a>
+<a id="9823" class="Comment">-- preservation : [] ⍮ [] ⊢ M₀ ⦂ S₀ →</a>
+<a id="9861" class="Comment">--                M₀ ⟶ M₀′ →</a>
+<a id="9890" class="Comment">--                -------------------------------</a>
+<a id="9940" class="Comment">--                [] ⍮ [] ⊢ M₀′ ⦂ S₀</a>
+<a id="9977" class="Comment">-- preservation (let-box ⊢M₀       ⊢N₀) (cong-let-box M₀⟶) = let-box (preservation ⊢M₀ M₀⟶) ⊢N₀</a>
+<a id="10073" class="Comment">-- preservation (let-box (box ⊢M₀) ⊢N₀) (β-□ {M₀ = M₀})</a>
+<a id="10129" class="Comment">--   with ⊢N₀′ ← ⊢[/¹] [] ⊢M₀ ⊢N₀</a>
+<a id="10163" class="Comment">--     rewrite wkby¹0from¹ 0 M₀                            = ⊢N₀′</a>
+<a id="10229" class="Comment">-- preservation (⊢M₀       $ ⊢N₀)       (congˡ-$ M₀⟶)      = preservation ⊢M₀ M₀⟶ $ ⊢N₀</a>
+<a id="10317" class="Comment">-- preservation (⊢M₀       $ ⊢N₀)       (congʳ-$ _ N₀⟶)    = ⊢M₀ $ preservation ⊢N₀ N₀⟶</a>
+<a id="10405" class="Comment">-- preservation ((Λ?∙ ⊢M₀) $ ⊢N₀)       (β-⇒ {N₀ = N₀} _)</a>
+<a id="10463" class="Comment">--   with ⊢M₀′ ← ⊢[/⁰] [] ⊢N₀ ⊢M₀</a>
+<a id="10497" class="Comment">--     rewrite wkby⁰0from⁰ 0 N₀                           = ⊢M₀′</a>
+
+<a id="10563" class="Comment">-- progress : [] ⍮ [] ⊢ M₀ ⦂ S₀ →</a>
+<a id="10597" class="Comment">--            -----------------</a>
+<a id="10629" class="Comment">--            Value M₀ ⊎ (∃ λ M₀′ → M₀ ⟶ M₀′)</a>
+<a id="10675" class="Comment">-- progress (box _)           = inj₁ (box _)</a>
+<a id="10720" class="Comment">-- progress (let-box ⊢M₀ ⊢N₀)</a>
+<a id="10750" class="Comment">--   with progress ⊢M₀</a>
+<a id="10773" class="Comment">-- ...  | inj₂ (_ , M₀⟶)      = inj₂ (-, cong-let-box M₀⟶)</a>
+<a id="10832" class="Comment">-- ...  | inj₁ (box _)        = inj₂ (-, β-□)</a>
+<a id="10878" class="Comment">-- progress (Λ?∙ ⊢M₀)         = inj₁ (Λ _ ∙ _)</a>
+<a id="10925" class="Comment">-- progress (⊢M₀ $ ⊢N₀)</a>
+<a id="10949" class="Comment">--   with progress ⊢M₀</a>
+<a id="10972" class="Comment">-- ...  | inj₂ (_ , M₀⟶)      = inj₂ (-, congˡ-$ M₀⟶)</a>
+<a id="11026" class="Comment">-- ...  | inj₁ VM₀@(Λ _ ∙ _)</a>
+<a id="11055" class="Comment">--     with progress ⊢N₀</a>
+<a id="11080" class="Comment">-- ...    | inj₂ (_ , N₀⟶)    = inj₂ (-, congʳ-$ VM₀ N₀⟶)</a>
+<a id="11138" class="Comment">-- ...    | inj₁ VN₀          = inj₂ (-, β-⇒ VN₀)</a>
+</pre></body></html>
