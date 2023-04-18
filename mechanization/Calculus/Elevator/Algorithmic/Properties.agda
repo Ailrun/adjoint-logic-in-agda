@@ -39,23 +39,60 @@ open TP ℳ
 open A ℳ
 open O ℳ
 
+-- Other Properties of Context Operations
+--
+~d⊞-true⇒trueˡ : d [ m ]~d true ⊞ d′ →
+                 ----------------------
+                 d ≡ true
+~d⊞-true⇒trueˡ (contraction Co∈m) = refl
+~d⊞-true⇒trueˡ to-left            = refl
+
+drop⇒-∤-consistent : Γ ∤[ m ] Γ′ →
+                     ------------------
+                     Γ′ ≡ Γ drop[ m ]⇒
+drop⇒-∤-consistent []                    = refl
+drop⇒-∤-consistent (delete m≰ dDel ∷ Γ∤)
+  rewrite dec-no (_ ≤?ₘ _) m≰            = cong (_ ∷_) (drop⇒-∤-consistent Γ∤)
+drop⇒-∤-consistent (keep   m≤      ∷ Γ∤)
+  rewrite proj₂ (dec-yes (_ ≤?ₘ _) m≤)   = cong (_ ∷_) (drop⇒-∤-consistent Γ∤)
+
+~d⊞⁻¹-det : d [ m ]~d d₀ ⊞ d₁ →
+            d′ [ m ]~d d₀ ⊞ d₁ →
+            ---------------------
+            d ≡ d′
+~d⊞⁻¹-det (contraction Co∈m) (contraction Co∈m′) = refl
+~d⊞⁻¹-det to-left            to-left             = refl
+~d⊞⁻¹-det to-right           to-right            = refl
+~d⊞⁻¹-det unusable           unusable            = refl
+
+~⊞⁻¹-det : Δ ~ Δ₀ ⊞ Δ₁ →
+           Δ′ ~ Δ₀ ⊞ Δ₁ →
+           ---------------
+           Δ ≡ Δ′
+~⊞⁻¹-det []        []          = refl
+~⊞⁻¹-det (d~ ∷ Δ~) (d′~ ∷ Δ′~)
+  rewrite ~d⊞⁻¹-det d~ d′~
+        | ~⊞⁻¹-det Δ~ Δ′~      = refl
+
+-- Properties of unused
+--
 unused-idempotent : ∀ Δ →
                     -----------------------------
                     unused (unused Δ) ≡ unused Δ
 unused-idempotent []      = refl
 unused-idempotent (_ ∷ Δ) = cong (_ ∷_) (unused-idempotent Δ)
 
-~⊞-unusedˡ : Δ ~ Δ₀ ⊞ Δ₁ →
-             ---------------------
-             unused Δ ≡ unused Δ₀
-~⊞-unusedˡ []       = refl
-~⊞-unusedˡ (_ ∷ Δ~) = cong (_ ∷_) (~⊞-unusedˡ Δ~)
+unused-++ : ∀ Γ₀ {Γ₁} →
+            -------------------------------------------
+            unused (Γ₀ ++ Γ₁) ≡ unused Γ₀ ++ unused Γ₁
+unused-++ []       = refl
+unused-++ (_ ∷ Γ₀) = cong (_ ∷_) (unused-++ Γ₀)
 
-~⊞-preserves-unused : Δ ~ Δ₀ ⊞ Δ₁ →
-                      ---------------------------------
-                      unused Δ ~ unused Δ₀ ⊞ unused Δ₁
-~⊞-preserves-unused []        = []
-~⊞-preserves-unused (d~ ∷ Δ~) = unusable ∷ ~⊞-preserves-unused Δ~
+unused-length : ∀ Γ →
+                -----------------------------
+                length (unused Γ) ≡ length Γ
+unused-length []      = refl
+unused-length (_ ∷ Γ) = cong suc (unused-length Γ)
 
 ~d⊞-uniqueʳ : d [ m ]~d d′ ⊞ false →
               -----------------------
@@ -69,7 +106,19 @@ unused-idempotent (_ ∷ Δ) = cong (_ ∷_) (unused-idempotent Δ)
              Γ ≡ Γ₀
 ~⊞-uniqueʳ []       []        = refl
 ~⊞-uniqueʳ (_ ∷ Γ₁) (d~ ∷ Γ~)
-  rewrite ~d⊞-uniqueʳ d~  = cong (_ ∷_) (~⊞-uniqueʳ Γ₁ Γ~)
+  rewrite ~d⊞-uniqueʳ d~      = cong (_ ∷_) (~⊞-uniqueʳ Γ₁ Γ~)
+
+~⊞-unusedˡ : Δ ~ Δ₀ ⊞ Δ₁ →
+             ---------------------
+             unused Δ ≡ unused Δ₀
+~⊞-unusedˡ []       = refl
+~⊞-unusedˡ (_ ∷ Δ~) = cong (_ ∷_) (~⊞-unusedˡ Δ~)
+
+~⊞-preserves-unused : Δ ~ Δ₀ ⊞ Δ₁ →
+                      ---------------------------------
+                      unused Δ ~ unused Δ₀ ⊞ unused Δ₁
+~⊞-preserves-unused []        = []
+~⊞-preserves-unused (d~ ∷ Δ~) = unusable ∷ ~⊞-preserves-unused Δ~
 
 ~⊞-unused-assoc : ∀ Δ′ →
                   Δ ~ Δ₀ ⊞ Δ₁ →
@@ -90,8 +139,8 @@ unused-idempotent (_ ∷ Δ) = cong (_ ∷_) (unused-idempotent Δ)
 ~⊞-preserves-drop⇒ m []                   = []
 ~⊞-preserves-drop⇒ m (_∷_ {m = m₀} d~ Δ~)
   with m ≤?ₘ m₀
-...  | yes _ = d~ ∷ ~⊞-preserves-drop⇒ m Δ~
-...  | no  _ = unusable ∷ ~⊞-preserves-drop⇒ m Δ~
+...  | yes _                              = d~ ∷ ~⊞-preserves-drop⇒ m Δ~
+...  | no  _                              = unusable ∷ ~⊞-preserves-drop⇒ m Δ~
 
 unused-cancelˡ-drop⇒ : ∀ m Δ →
                        ---------------------------------
@@ -99,8 +148,8 @@ unused-cancelˡ-drop⇒ : ∀ m Δ →
 unused-cancelˡ-drop⇒ m []                 = refl
 unused-cancelˡ-drop⇒ m ((_ , m₀ , _) ∷ Δ)
   with m ≤?ₘ m₀
-...  | yes _ = cong (_ ∷_) (unused-cancelˡ-drop⇒ m Δ)
-...  | no  _ = cong (_ ∷_) (unused-cancelˡ-drop⇒ m Δ)
+...  | yes _                              = cong (_ ∷_) (unused-cancelˡ-drop⇒ m Δ)
+...  | no  _                              = cong (_ ∷_) (unused-cancelˡ-drop⇒ m Δ)
 
 unused-cancelʳ-drop⇒ : ∀ m Δ →
                        -------------------------------
@@ -108,14 +157,14 @@ unused-cancelʳ-drop⇒ : ∀ m Δ →
 unused-cancelʳ-drop⇒ m []                 = refl
 unused-cancelʳ-drop⇒ m ((_ , m₀ , _) ∷ Δ)
   with m ≤?ₘ m₀
-...  | yes _ = cong (_ ∷_) (unused-cancelʳ-drop⇒ m Δ)
-...  | no  _ = cong (_ ∷_) (unused-cancelʳ-drop⇒ m Δ)
+...  | yes _                              = cong (_ ∷_) (unused-cancelʳ-drop⇒ m Δ)
+...  | no  _                              = cong (_ ∷_) (unused-cancelʳ-drop⇒ m Δ)
 
-~d⊞-true⇒true : d [ m ]~d true ⊞ d′ →
-                ----------------------
-                d ≡ true
-~d⊞-true⇒true (contraction Co∈m) = refl
-~d⊞-true⇒true to-left            = refl
+unused-is-all-del : ∀ Γ →
+                    --------------------
+                    unused Γ is-all-del
+unused-is-all-del []      = []
+unused-is-all-del (_ ∷ Γ) = unusable ∷ unused-is-all-del Γ
 
 ~⊞-preserves-usage∈ : Γ ~ Γ₀ ⊞ Γ₁ →
                       x ⦂[ m ] S ∈ Γ₀ ⇒ Δ₀ →
@@ -123,7 +172,7 @@ unused-cancelʳ-drop⇒ m ((_ , m₀ , _) ∷ Δ)
                       ∃ (λ Δ → Δ ~ Δ₀ ⊞ unused Γ₁ × x ⦂[ m ] S ∈ Γ ⇒ Δ)
 ~⊞-preserves-usage∈ {m = m} (d~ ∷ Γ~) here
   rewrite proj₂ (dec-yes (m ≤?ₘ m) ≤ₘ-refl)
-        | ~d⊞-true⇒true d~                        = -, to-left ∷ ~⊞-preserves-unused Γ~ , here
+        | ~d⊞-true⇒trueˡ d~                       = -, to-left ∷ ~⊞-preserves-unused Γ~ , here
 ~⊞-preserves-usage∈         (d~ ∷ Γ~) (there x∈⇒)
   with _ , Δ~ , x∈⇒′ ← ~⊞-preserves-usage∈ Γ~ x∈⇒ = -, unusable ∷ Δ~ , there x∈⇒′
 
@@ -155,15 +204,9 @@ unused-cancelʳ-drop⇒ m ((_ , m₀ , _) ∷ Δ)
 ~⊞-preserves-usage           Γ~ (`# x∈⇒)
   with _ , Δ~ , x∈⇒′ ← ~⊞-preserves-usage∈ Γ~ x∈⇒                              = -, Δ~ , `# x∈⇒′
 
-drop⇒-∤-consistent : Γ ∤[ m ] Γ′ →
-                     ------------------
-                     Γ′ ≡ Γ drop[ m ]⇒
-drop⇒-∤-consistent []                    = refl
-drop⇒-∤-consistent (delete m≰ dDel ∷ Γ∤)
-  rewrite dec-no (_ ≤?ₘ _) m≰            = cong (_ ∷_) (drop⇒-∤-consistent Γ∤)
-drop⇒-∤-consistent (keep   m≤      ∷ Γ∤)
-  rewrite proj₂ (dec-yes (_ ≤?ₘ _) m≤)   = cong (_ ∷_) (drop⇒-∤-consistent Γ∤)
 
+-- Properties of _[_]is-used-by_ and _is-all-used-by_
+--
 used-by⇒~d⊞ : d [ m ]is-used-by d₀ →
               ----------------------------------------------
               ∃ (λ d₁ → d [ m ]~d d₀ ⊞ d₁ × d₁ [ m ]is-del)
@@ -171,6 +214,73 @@ used-by⇒~d⊞ used             = -, to-left , unusable
 used-by⇒~d⊞ unusable         = -, unusable , unusable
 used-by⇒~d⊞ (weakening Wk∈m) = -, to-right , weakening Wk∈m
 
+~d⊞-preserves-is-used-by : d [ m ]~d d₀ ⊞ d₁ →
+                           d₀ [ m ]is-used-by dS₀ →
+                           d₁ [ m ]is-used-by dS₁ →
+                           -------------------------------------------------------
+                           ∃ (λ dS → dS [ m ]~d dS₀ ⊞ dS₁ × d [ m ]is-used-by dS)
+~d⊞-preserves-is-used-by (contraction Co∈m) used             used             = -, contraction Co∈m , used
+~d⊞-preserves-is-used-by (contraction Co∈m) used             (weakening Wk∈m) = -, to-left , used
+~d⊞-preserves-is-used-by (contraction Co∈m) (weakening Wk∈m) d₁Used           = -, ~d⊞-identityˡ _ , d₁Used
+~d⊞-preserves-is-used-by to-left            d₀Used           unusable         = -, ~d⊞-identityʳ _ , d₀Used
+~d⊞-preserves-is-used-by to-right           unusable         d₁Used           = -, ~d⊞-identityˡ _ , d₁Used
+~d⊞-preserves-is-used-by unusable           unusable         d₁Used           = -, ~d⊞-identityˡ _ , d₁Used
+
+~⊞-preserves-is-all-used-by : Γ ~ Γ₀ ⊞ Γ₁ →
+                              Γ₀ is-all-used-by Δ₀ →
+                              Γ₁ is-all-used-by Δ₁ →
+                              -------------------------------------------
+                              ∃ (λ Δ → Δ ~ Δ₀ ⊞ Δ₁ × Γ is-all-used-by Δ)
+~⊞-preserves-is-all-used-by []        []                []                = -, [] , []
+~⊞-preserves-is-all-used-by (d~ ∷ Γ~) (d₀Used ∷ Γ₀Used) (d₁Used ∷ Γ₁Used)
+  with _ , dS~ , dUsed ← ~d⊞-preserves-is-used-by d~ d₀Used d₁Used
+     | _ , Δ~ , ΓUsed ← ~⊞-preserves-is-all-used-by Γ~ Γ₀Used Γ₁Used      = -, dS~ ∷ Δ~ , dUsed ∷ ΓUsed
+
+is-del⇒is-used-by-false : ∀ m →
+                          d [ m ]is-del →
+                          ------------------------
+                          d [ m ]is-used-by false
+is-del⇒is-used-by-false m unusable         = unusable
+is-del⇒is-used-by-false m (weakening Wk∈m) = weakening Wk∈m
+
+is-all-del⇒is-all-used-by-unused : Γ is-all-del →
+                                   --------------------------
+                                   Γ is-all-used-by unused Γ
+is-all-del⇒is-all-used-by-unused []            = []
+is-all-del⇒is-all-used-by-unused (dDel ∷ ΓDel) = is-del⇒is-used-by-false _ dDel ∷ is-all-del⇒is-all-used-by-unused ΓDel
+
+∤d⁻¹-preserves-is-used-by : d [ m₀ ]∤[ m ]d d′ →
+                            d′ [ m₀ ]is-used-by dS →
+                            -------------------------
+                            d [ m₀ ]is-used-by dS
+∤d⁻¹-preserves-is-used-by (delete _ dDel) unusable = is-del⇒is-used-by-false _ dDel
+∤d⁻¹-preserves-is-used-by (keep _)        d′Used   = d′Used
+
+∤⁻¹-preserves-is-all-used-by : Γ ∤[ m ] Γ′ →
+                               Γ′ is-all-used-by Δ →
+                               ----------------------
+                               Γ is-all-used-by Δ
+∤⁻¹-preserves-is-all-used-by []        []                = []
+∤⁻¹-preserves-is-all-used-by (d∤ ∷ Γ∤) (d′Used ∷ Γ′Used) = ∤d⁻¹-preserves-is-used-by d∤ d′Used ∷ ∤⁻¹-preserves-is-all-used-by Γ∤ Γ′Used
+
+is-used-by⇒~d⊞-is-del : d [ m ]is-used-by dS →
+                        ----------------------------------------------
+                        ∃ (λ d′ → d [ m ]~d dS ⊞ d′ × d′ [ m ]is-del)
+is-used-by⇒~d⊞-is-del used             = -, to-left , unusable
+is-used-by⇒~d⊞-is-del unusable         = -, unusable , unusable
+is-used-by⇒~d⊞-is-del (weakening Wk∈m) = -, to-right , weakening Wk∈m
+
+is-all-used-by⇒~⊞-is-all-del : Γ is-all-used-by Δ →
+                               --------------------------------------
+                               ∃ (λ Γ′ → Γ ~ Δ ⊞ Γ′ × Γ′ is-all-del)
+is-all-used-by⇒~⊞-is-all-del []                            = -, [] , []
+is-all-used-by⇒~⊞-is-all-del (dUsed ∷ ΓUsed)
+  with _ , d~ , d′Del ← is-used-by⇒~d⊞-is-del dUsed
+     | _ , Γ~ , Γ′Del ← is-all-used-by⇒~⊞-is-all-del ΓUsed = -, d~ ∷ Γ~ , d′Del ∷ Γ′Del
+
+
+-- Properties of _⦂[_]_∈_⇒_
+--
 ∉unused : ∀ Γ →
           ------------------------------
           ¬ (x ⦂[ m ] S ∈ unused Γ ⇒ Ψ)
@@ -254,76 +364,8 @@ used-by⇒~d⊞ (weakening Wk∈m) = -, to-right , weakening Wk∈m
 ...  | yes _    | there x∈⇒′ = ¬∈drop⇒ Γ m≰ x∈⇒′
 ...  | no  _    | there x∈⇒′ = ¬∈drop⇒ Γ m≰ x∈⇒′
 
-~d⊞-preserves-is-used-by : d [ m ]~d d₀ ⊞ d₁ →
-                           d₀ [ m ]is-used-by dS₀ →
-                           d₁ [ m ]is-used-by dS₁ →
-                           -------------------------------------------------------
-                           ∃ (λ dS → dS [ m ]~d dS₀ ⊞ dS₁ × d [ m ]is-used-by dS)
-~d⊞-preserves-is-used-by (contraction Co∈m) used             used             = -, contraction Co∈m , used
-~d⊞-preserves-is-used-by (contraction Co∈m) used             (weakening Wk∈m) = -, to-left , used
-~d⊞-preserves-is-used-by (contraction Co∈m) (weakening Wk∈m) d₁Used           = -, ~d⊞-identityˡ _ , d₁Used
-~d⊞-preserves-is-used-by to-left            d₀Used           unusable         = -, ~d⊞-identityʳ _ , d₀Used
-~d⊞-preserves-is-used-by to-right           unusable         d₁Used           = -, ~d⊞-identityˡ _ , d₁Used
-~d⊞-preserves-is-used-by unusable           unusable         d₁Used           = -, ~d⊞-identityˡ _ , d₁Used
-
-~⊞-preserves-is-all-used-by : Γ ~ Γ₀ ⊞ Γ₁ →
-                              Γ₀ is-all-used-by Δ₀ →
-                              Γ₁ is-all-used-by Δ₁ →
-                              -------------------------------------------
-                              ∃ (λ Δ → Δ ~ Δ₀ ⊞ Δ₁ × Γ is-all-used-by Δ)
-~⊞-preserves-is-all-used-by []        []                []                = -, [] , []
-~⊞-preserves-is-all-used-by (d~ ∷ Γ~) (d₀Used ∷ Γ₀Used) (d₁Used ∷ Γ₁Used)
-  with _ , dS~ , dUsed ← ~d⊞-preserves-is-used-by d~ d₀Used d₁Used
-     | _ , Δ~ , ΓUsed ← ~⊞-preserves-is-all-used-by Γ~ Γ₀Used Γ₁Used      = -, dS~ ∷ Δ~ , dUsed ∷ ΓUsed
-
-is-del⇒is-used-by-false : ∀ m →
-                          d [ m ]is-del →
-                          ------------------------
-                          d [ m ]is-used-by false
-is-del⇒is-used-by-false m unusable         = unusable
-is-del⇒is-used-by-false m (weakening Wk∈m) = weakening Wk∈m
-
-is-all-del⇒is-all-used-by-unused : Γ is-all-del →
-                                   --------------------------
-                                   Γ is-all-used-by unused Γ
-is-all-del⇒is-all-used-by-unused []            = []
-is-all-del⇒is-all-used-by-unused (dDel ∷ ΓDel) = is-del⇒is-used-by-false _ dDel ∷ is-all-del⇒is-all-used-by-unused ΓDel
-
-∤d⁻¹-preserves-is-used-by : d [ m₀ ]∤[ m ]d d′ →
-                            d′ [ m₀ ]is-used-by dS →
-                            -------------------------
-                            d [ m₀ ]is-used-by dS
-∤d⁻¹-preserves-is-used-by (delete _ dDel) unusable = is-del⇒is-used-by-false _ dDel
-∤d⁻¹-preserves-is-used-by (keep _)        d′Used   = d′Used
-
-∤⁻¹-preserves-is-all-used-by : Γ ∤[ m ] Γ′ →
-                               Γ′ is-all-used-by Δ →
-                               ----------------------
-                               Γ is-all-used-by Δ
-∤⁻¹-preserves-is-all-used-by []        []                = []
-∤⁻¹-preserves-is-all-used-by (d∤ ∷ Γ∤) (d′Used ∷ Γ′Used) = ∤d⁻¹-preserves-is-used-by d∤ d′Used ∷ ∤⁻¹-preserves-is-all-used-by Γ∤ Γ′Used
-
-unused-is-all-del : ∀ Γ →
-                    --------------------
-                    unused Γ is-all-del
-unused-is-all-del []      = []
-unused-is-all-del (_ ∷ Γ) = unusable ∷ unused-is-all-del Γ
-
-is-used-by⇒~d⊞-is-del : d [ m ]is-used-by dS →
-                        ----------------------------------------------
-                        ∃ (λ d′ → d [ m ]~d dS ⊞ d′ × d′ [ m ]is-del)
-is-used-by⇒~d⊞-is-del used             = -, to-left , unusable
-is-used-by⇒~d⊞-is-del unusable         = -, unusable , unusable
-is-used-by⇒~d⊞-is-del (weakening Wk∈m) = -, to-right , weakening Wk∈m
-
-is-all-used-by⇒~⊞-is-all-del : Γ is-all-used-by Δ →
-                               --------------------------------------
-                               ∃ (λ Γ′ → Γ ~ Δ ⊞ Γ′ × Γ′ is-all-del)
-is-all-used-by⇒~⊞-is-all-del []                            = -, [] , []
-is-all-used-by⇒~⊞-is-all-del (dUsed ∷ ΓUsed)
-  with _ , d~ , d′Del ← is-used-by⇒~d⊞-is-del dUsed
-     | _ , Γ~ , Γ′Del ← is-all-used-by⇒~⊞-is-all-del ΓUsed = -, d~ ∷ Γ~ , d′Del ∷ Γ′Del
-
+-- Completeness of _A⊢[_]_⦂_
+--
 completeness∈ : x ⦂[ m ] S ∈ Γ →
                 --------------------------------------------------
                 ∃ (λ Δ → x ⦂[ m ] S ∈ Γ ⇒ Δ × Γ is-all-used-by Δ)
@@ -365,6 +407,8 @@ completeness (Γ~ ⊢`let-return[-⇒-] ⊢L ⦂ ⊢↓ `in ⊢M)
 completeness (`# x∈)
   with _ , x∈⇒ , ΓUsed ← completeness∈ x∈                                  = -, `# x∈⇒ , ΓUsed
 
+-- Soundness of _A⊢[_]_⦂_
+--
 soundness-helper∈ : x ⦂[ m ] S ∈ Γ ⇒ Δ →
                     ---------------------
                     x ⦂[ m ] S ∈ Δ
@@ -407,38 +451,10 @@ soundness : Γ A⊢[ m ] L ⦂ S →
 soundness (_ , ⊢L⇒ , ΓUsed)
   with _ , Γ~ , Γ′Del ← is-all-used-by⇒~⊞-is-all-del ΓUsed = ~⊞-is-all-del∧⊢⇒⊢ (~⊞-swap Γ~) Γ′Del (soundness-helper ⊢L⇒)
 
+-- Algorithm to infer its type from a term
+--
 infix   4 _⊢[_]_⦂?⇒?
 infix   4 _A⊢[_]_⦂?
-
-unused-++ : ∀ Γ₀ {Γ₁} →
-            -------------------------------------------
-            unused (Γ₀ ++ Γ₁) ≡ unused Γ₀ ++ unused Γ₁
-unused-++ []       = refl
-unused-++ (_ ∷ Γ₀) = cong (_ ∷_) (unused-++ Γ₀)
-
-unused-length : ∀ Γ →
-                -----------------------------
-                length (unused Γ) ≡ length Γ
-unused-length []      = refl
-unused-length (_ ∷ Γ) = cong suc (unused-length Γ)
-
-~d⊞⁻¹-det : d [ m ]~d d₀ ⊞ d₁ →
-            d′ [ m ]~d d₀ ⊞ d₁ →
-            ---------------------
-            d ≡ d′
-~d⊞⁻¹-det (contraction Co∈m) (contraction Co∈m′) = refl
-~d⊞⁻¹-det to-left            to-left             = refl
-~d⊞⁻¹-det to-right           to-right            = refl
-~d⊞⁻¹-det unusable           unusable            = refl
-
-~⊞⁻¹-det : Δ ~ Δ₀ ⊞ Δ₁ →
-           Δ′ ~ Δ₀ ⊞ Δ₁ →
-           ---------------
-           Δ ≡ Δ′
-~⊞⁻¹-det []        []          = refl
-~⊞⁻¹-det (d~ ∷ Δ~) (d′~ ∷ Δ′~)
-  rewrite ~d⊞⁻¹-det d~ d′~
-        | ~⊞⁻¹-det Δ~ Δ′~      = refl
 
 ∈-det : x ⦂[ m ] S ∈ Γ ⇒ Δ →
         x ⦂[ m ] S′ ∈ Γ ⇒ Δ′ →
