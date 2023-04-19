@@ -61,19 +61,19 @@ length-respects-~⊞ (_ ∷ Γ~)
     rewrite eq₀
           | eq₁             = refl , refl
 
-~d⊞-swap : d [ m ]~d d₀ ⊞ d₁ →
-           --------------------
-           d [ m ]~d d₁ ⊞ d₀
-~d⊞-swap (contraction Co∈m) = contraction Co∈m
-~d⊞-swap to-left            = to-right
-~d⊞-swap to-right           = to-left
-~d⊞-swap unusable           = unusable
+~d⊞-commute : d [ m ]~d d₀ ⊞ d₁ →
+              --------------------
+              d [ m ]~d d₁ ⊞ d₀
+~d⊞-commute (contraction Co∈m) = contraction Co∈m
+~d⊞-commute to-left            = to-right
+~d⊞-commute to-right           = to-left
+~d⊞-commute unusable           = unusable
 
-~⊞-swap : Γ ~ Γ₀ ⊞ Γ₁ →
-          --------------
-          Γ ~ Γ₁ ⊞ Γ₀
-~⊞-swap []        = []
-~⊞-swap (d~ ∷ Γ~) = ~d⊞-swap d~ ∷ ~⊞-swap Γ~
+~⊞-commute : Γ ~ Γ₀ ⊞ Γ₁ →
+             --------------
+             Γ ~ Γ₁ ⊞ Γ₀
+~⊞-commute []        = []
+~⊞-commute (d~ ∷ Γ~) = ~d⊞-commute d~ ∷ ~⊞-commute Γ~
 
 ~⊞-preserves-++ : ∀ Δ →
                   Δ ++ Ψ ~ Γ₀ ⊞ Γ₁ →
@@ -98,7 +98,7 @@ length-respects-~⊞ (_ ∷ Γ~)
                 --------------------
                 d [ m ]~d false ⊞ d
 ~d⊞-identityˡ false = unusable
-~d⊞-identityˡ true = to-right
+~d⊞-identityˡ true  = to-right
 
 ~d⊞-identityʳ : ∀ d →
                 --------------------
@@ -106,52 +106,70 @@ length-respects-~⊞ (_ ∷ Γ~)
 ~d⊞-identityʳ false = unusable
 ~d⊞-identityʳ true  = to-left
 
-~d⊞-assoc : d [ m ]~d d₀ ⊞ d₁ →
-            d₀ [ m ]~d d₂ ⊞ d₃ →
-            -----------------------------------------------------
-            ∃ (λ d₁′ → d₁′ [ m ]~d d₃ ⊞ d₁ × d [ m ]~d d₂ ⊞ d₁′)
-~d⊞-assoc d~              to-left            = -, ~d⊞-identityˡ _ , d~
-~d⊞-assoc d~              to-right           = -, d~ , ~d⊞-identityˡ _
-~d⊞-assoc d~              unusable           = -, ~d⊞-identityˡ _ , d~
-~d⊞-assoc (contraction _) (contraction Co∈m) = -, contraction Co∈m , contraction Co∈m
-~d⊞-assoc to-left         (contraction Co∈m) = -, to-left , contraction Co∈m
+~d⊞-assocˡ : d [ m ]~d d₀ ⊞ d₁ →
+             d₀ [ m ]~d d₂ ⊞ d₃ →
+             -----------------------------------------------------
+             ∃ (λ d₁′ → d₁′ [ m ]~d d₃ ⊞ d₁ × d [ m ]~d d₂ ⊞ d₁′)
+~d⊞-assocˡ d~              to-left            = -, ~d⊞-identityˡ _ , d~
+~d⊞-assocˡ d~              to-right           = -, d~ , ~d⊞-identityˡ _
+~d⊞-assocˡ d~              unusable           = -, ~d⊞-identityˡ _ , d~
+~d⊞-assocˡ (contraction _) (contraction Co∈m) = -, contraction Co∈m , contraction Co∈m
+~d⊞-assocˡ to-left         (contraction Co∈m) = -, to-left , contraction Co∈m
 
-~d⊞-contraction-assoc : d [ m₀ ]~d d₀ ⊞ d₁ →
-                        d₀ [ m₀ ]~d d₂ ⊞ d₃ →
-                        [ m₀ ]⊢[ m ]d d₁ →
+~⊞-assocˡ : Γ ~ Γ₀ ⊞ Γ₁ →
+            Γ₀ ~ Γ₂ ⊞ Γ₃ →
+            -----------------------------------------
+            ∃ (λ Γ₁′ → Γ₁′ ~ Γ₃ ⊞ Γ₁ × Γ ~ Γ₂ ⊞ Γ₁′)
+~⊞-assocˡ [] []                          = _ , [] , []
+~⊞-assocˡ (d~ ∷ Γ~) (d₀~ ∷ Γ₀~)
+  with _ , d₁′~ , d~′ ← ~d⊞-assocˡ d~ d₀~
+     | _ , Γ₁′~ , Γ~′ ← ~⊞-assocˡ Γ~ Γ₀~ = -, d₁′~ ∷ Γ₁′~ , d~′ ∷ Γ~′
+
+~⊞-assocʳ : Γ ~ Γ₀ ⊞ Γ₁ →
+            Γ₁ ~ Γ₂ ⊞ Γ₃ →
+            -----------------------------------------
+            ∃ (λ Γ₀′ → Γ₀′ ~ Γ₀ ⊞ Γ₂ × Γ ~ Γ₀′ ⊞ Γ₃)
+~⊞-assocʳ Γ~ Γ₁~
+  with _ , Γ₀′~ , Γ~′ ← ~⊞-assocˡ (~⊞-commute Γ~) (~⊞-commute Γ₁~) = -, ~⊞-commute Γ₀′~ , ~⊞-commute Γ~′
+
+~d⊞-contraction-assocˡ : d [ m₀ ]~d d₀ ⊞ d₁ →
+                         d₀ [ m₀ ]~d d₂ ⊞ d₃ →
+                         [ m₀ ]⊢[ m ]d d₁ →
+                         Bool.T (stₘ m ``Co) →
+                         --------------------------------------
+                         ∃₂ (λ d₂′ d₃′ → d₂′ [ m₀ ]~d d₂ ⊞ d₁
+                                       × d₃′ [ m₀ ]~d d₃ ⊞ d₁
+                                       × d [ m₀ ]~d d₂′ ⊞ d₃′)
+~d⊞-contraction-assocˡ (contraction Co∈m₀) (contraction _) ⊢d         Co∈m = -, -, contraction Co∈m₀ , contraction Co∈m₀ , contraction Co∈m₀
+~d⊞-contraction-assocˡ (contraction Co∈m₀) to-left         ⊢d         Co∈m = -, -, contraction Co∈m₀ , to-right , contraction Co∈m₀
+~d⊞-contraction-assocˡ (contraction Co∈m₀) to-right        ⊢d         Co∈m = -, -, to-right , contraction Co∈m₀ , contraction Co∈m₀
+~d⊞-contraction-assocˡ to-left             d₀~             ⊢d         Co∈m = -, -, ~d⊞-identityʳ _ , ~d⊞-identityʳ _ , d₀~
+~d⊞-contraction-assocˡ to-right            unusable        (valid m≤) Co∈m = -, -, to-right , to-right , contraction (isWellStructuredₘ _ _ ``Co m≤ Co∈m)
+~d⊞-contraction-assocˡ unusable            d₀~             ⊢d         Co∈m = -, -, ~d⊞-identityʳ _ , ~d⊞-identityʳ _ , d₀~
+
+~⊞-contraction-assocˡ : Γ ~ Γ₀ ⊞ Γ₁ →
+                        Γ₀ ~ Γ₂ ⊞ Γ₃ →
+                        ⊢[ m ] Γ₁ →
                         Bool.T (stₘ m ``Co) →
-                        --------------------------------------
-                        ∃₂ (λ d₂′ d₃′ → d₂′ [ m₀ ]~d d₂ ⊞ d₁
-                                      × d₃′ [ m₀ ]~d d₃ ⊞ d₁
-                                      × d [ m₀ ]~d d₂′ ⊞ d₃′)
-~d⊞-contraction-assoc (contraction Co∈m₀) (contraction _) ⊢d         Co∈m = -, -, contraction Co∈m₀ , contraction Co∈m₀ , contraction Co∈m₀
-~d⊞-contraction-assoc (contraction Co∈m₀) to-left         ⊢d         Co∈m = -, -, contraction Co∈m₀ , to-right , contraction Co∈m₀
-~d⊞-contraction-assoc (contraction Co∈m₀) to-right        ⊢d         Co∈m = -, -, to-right , contraction Co∈m₀ , contraction Co∈m₀
-~d⊞-contraction-assoc to-left             d₀~             ⊢d         Co∈m = -, -, ~d⊞-identityʳ _ , ~d⊞-identityʳ _ , d₀~
-~d⊞-contraction-assoc to-right            unusable        (valid m≤) Co∈m = -, -, to-right , to-right , contraction (isWellStructuredₘ _ _ ``Co m≤ Co∈m)
-~d⊞-contraction-assoc unusable            d₀~             ⊢d         Co∈m = -, -, ~d⊞-identityʳ _ , ~d⊞-identityʳ _ , d₀~
+                        -------------------------------
+                        ∃₂ (λ Γ₂′ Γ₃′ → Γ₂′ ~ Γ₂ ⊞ Γ₁
+                                      × Γ₃′ ~ Γ₃ ⊞ Γ₁
+                                      × Γ ~ Γ₂′ ⊞ Γ₃′)
+~⊞-contraction-assocˡ []        []          []                 Co∈m      = -, -, [] , [] , []
+~⊞-contraction-assocˡ (d~ ∷ Γ~) (d₀~ ∷ Γ₀~) ((⊢S , ⊢d₁) ∷ ⊢Γ₁) Co∈m
+  with _ , _ , d₂′~ , d₃′~ , d~′ ← ~d⊞-contraction-assocˡ d~ d₀~ ⊢d₁ Co∈m
+     | _ , _ , Γ₂′~ , Γ₃′~ , Γ~′ ← ~⊞-contraction-assocˡ Γ~ Γ₀~ ⊢Γ₁ Co∈m = -, -, d₂′~ ∷ Γ₂′~ , d₃′~ ∷ Γ₃′~ , d~′ ∷ Γ~′
 
-~⊞-assoc : Γ ~ Γ₀ ⊞ Γ₁ →
-           Γ₀ ~ Γ₂ ⊞ Γ₃ →
-           -----------------------------------------
-           ∃ (λ Γ₁′ → Γ₁′ ~ Γ₃ ⊞ Γ₁ × Γ ~ Γ₂ ⊞ Γ₁′)
-~⊞-assoc [] [] = _ , [] , []
-~⊞-assoc (d~ ∷ Γ~) (d₀~ ∷ Γ₀~)
-  with _ , d₁′~ , d~′ ← ~d⊞-assoc d~ d₀~
-     | _ , Γ₁′~ , Γ~′ ← ~⊞-assoc Γ~ Γ₀~ = -, d₁′~ ∷ Γ₁′~ , d~′ ∷ Γ~′
-
-~⊞-contraction-assoc : Γ ~ Γ₀ ⊞ Γ₁ →
-                       Γ₀ ~ Γ₂ ⊞ Γ₃ →
-                       ⊢[ m ] Γ₁ →
-                       Bool.T (stₘ m ``Co) →
-                       -------------------------------
-                       ∃₂ (λ Γ₂′ Γ₃′ → Γ₂′ ~ Γ₂ ⊞ Γ₁
-                                     × Γ₃′ ~ Γ₃ ⊞ Γ₁
-                                     × Γ ~ Γ₂′ ⊞ Γ₃′)
-~⊞-contraction-assoc []        []          []                 Co∈m      = -, -, [] , [] , []
-~⊞-contraction-assoc (d~ ∷ Γ~) (d₀~ ∷ Γ₀~) ((⊢S , ⊢d₁) ∷ ⊢Γ₁) Co∈m
-  with _ , _ , d₂′~ , d₃′~ , d~′ ← ~d⊞-contraction-assoc d~ d₀~ ⊢d₁ Co∈m
-     | _ , _ , Γ₂′~ , Γ₃′~ , Γ~′ ← ~⊞-contraction-assoc Γ~ Γ₀~ ⊢Γ₁ Co∈m = -, -, d₂′~ ∷ Γ₂′~ , d₃′~ ∷ Γ₃′~ , d~′ ∷ Γ~′
+~⊞-contraction-assocʳ : Γ ~ Γ₀ ⊞ Γ₁ →
+                        Γ₁ ~ Γ₂ ⊞ Γ₃ →
+                        ⊢[ m ] Γ₀ →
+                        Bool.T (stₘ m ``Co) →
+                        -------------------------------
+                        ∃₂ (λ Γ₂′ Γ₃′ → Γ₂′ ~ Γ₀ ⊞ Γ₂
+                                      × Γ₃′ ~ Γ₀ ⊞ Γ₃
+                                      × Γ ~ Γ₂′ ⊞ Γ₃′)
+~⊞-contraction-assocʳ Γ~ Γ₁~ ⊢Γ₀ Co∈m
+  with _ , _ , Γ₂′~ , Γ₃′~ , Γ~′ ← ~⊞-contraction-assocˡ (~⊞-commute Γ~) Γ₁~ ⊢Γ₀ Co∈m = -, -, ~⊞-commute Γ₂′~ , ~⊞-commute Γ₃′~ , Γ~′
 
 ~d⊞-preserves-is-del : d [ m ]is-del →
                        d [ m ]~d d₀ ⊞ d₁ →
@@ -207,19 +225,19 @@ is-all-del⇒∤ m (dDel ∷ ΓDel)
   with _ , d∤ , d′Del ← is-del⇒∤d m dDel
      | _ , Γ∤ , Γ′Del ← is-all-del⇒∤ m ΓDel = -, d∤ ∷ Γ∤ , d′Del ∷ Γ′Del
 
-∤d⇒~d⊞-is-del : d [ m₀ ]∤[ m ]d d′ →
-                ------------------------------------------------
-                ∃ (λ d₁ → d [ m₀ ]~d d′ ⊞ d₁ × d₁ [ m₀ ]is-del)
-∤d⇒~d⊞-is-del (delete ≰m₀ dDel) = -, ~d⊞-identityˡ _ , dDel
-∤d⇒~d⊞-is-del (keep ≤m₀)        = -, ~d⊞-identityʳ _ , unusable
+∤d⇒~d⊞-is-delʳ : d [ m₀ ]∤[ m ]d d′ →
+                 ------------------------------------------------
+                 ∃ (λ d₁ → d [ m₀ ]~d d′ ⊞ d₁ × d₁ [ m₀ ]is-del)
+∤d⇒~d⊞-is-delʳ (delete ≰m₀ dDel) = -, ~d⊞-identityˡ _ , dDel
+∤d⇒~d⊞-is-delʳ (keep ≤m₀)        = -, ~d⊞-identityʳ _ , unusable
 
-∤⇒~⊞-is-all-del : Γ ∤[ m ] Γ′ →
-                  ---------------------------------------
-                  ∃ (λ Γ₁ → Γ ~ Γ′ ⊞ Γ₁ × Γ₁ is-all-del)
-∤⇒~⊞-is-all-del []        = -, [] , []
-∤⇒~⊞-is-all-del (d∤ ∷ Γ∤)
-  with _ , d~ , d₁Del ← ∤d⇒~d⊞-is-del d∤
-     | _ , Γ~ , Γ₁Del ← ∤⇒~⊞-is-all-del Γ∤ = -, d~ ∷ Γ~ , d₁Del ∷ Γ₁Del
+∤⇒~⊞-is-all-delʳ : Γ ∤[ m ] Γ′ →
+                   ---------------------------------------
+                   ∃ (λ Γ₁ → Γ ~ Γ′ ⊞ Γ₁ × Γ₁ is-all-del)
+∤⇒~⊞-is-all-delʳ []                         = -, [] , []
+∤⇒~⊞-is-all-delʳ (d∤ ∷ Γ∤)
+  with _ , d~ , d₁Del ← ∤d⇒~d⊞-is-delʳ d∤
+     | _ , Γ~ , Γ₁Del ← ∤⇒~⊞-is-all-delʳ Γ∤ = -, d~ ∷ Γ~ , d₁Del ∷ Γ₁Del
 
 length-respects-∤ : Γ ∤[ m ] Γ′ →
                     ---------------------
@@ -237,16 +255,6 @@ length-respects-∤ (e∤ ∷ Γ∤) = cong suc (length-respects-∤ Γ∤)
 ∤d⁻¹-preserves-~d⊞ unusable (delete ≰m₀ unusable)          = -, -, unusable , delete ≰m₀ unusable , delete ≰m₀ unusable
 ∤d⁻¹-preserves-~d⊞ unusable (delete ≰m₀ (weakening Wk∈m₀)) = -, -, to-left , delete ≰m₀ (weakening Wk∈m₀) , delete ≰m₀ unusable
 
-∤-preserves-++ : ∀ Δ →
-                 Δ ++ Ψ ∤[ m ] Γ →
-                 ---------------------------
-                 ∃₂ (λ Δ′ Ψ′ → Γ ≡ Δ′ ++ Ψ′
-                             × Δ ∤[ m ] Δ′
-                             × Ψ ∤[ m ] Ψ′)
-∤-preserves-++ []      Ψ∤                            = -, -, refl , [] , Ψ∤
-∤-preserves-++ (_ ∷ Δ) (d∤ ∷ ΔΨ∤)
-  with _ , _ , refl , Δ∤ , Ψ∤ ← ∤-preserves-++ Δ ΔΨ∤ = -, -, refl , d∤ ∷ Δ∤ , Ψ∤
-
 ∤⁻¹-preserves-~⊞ : Γ ~ Γ₀ ⊞ Γ₁ →
                    Γ′ ∤[ m ] Γ →
                    -------------------------------
@@ -257,6 +265,16 @@ length-respects-∤ (e∤ ∷ Γ∤) = cong suc (length-respects-∤ Γ∤)
 ∤⁻¹-preserves-~⊞ (d~ ∷ Γ~) (∤d ∷ ∤Γ)
   with _ , _ , Γ′~ , ∤Γ₀ , ∤Γ₁ ← ∤⁻¹-preserves-~⊞ Γ~ ∤Γ
      | _ , _ , d′~ , ∤d₀ , ∤d₁ ← ∤d⁻¹-preserves-~d⊞ d~ ∤d = -, -, d′~ ∷ Γ′~ , ∤d₀ ∷ ∤Γ₀ , ∤d₁ ∷ ∤Γ₁
+
+∤-preserves-++ : ∀ Δ →
+                 Δ ++ Ψ ∤[ m ] Γ →
+                 ---------------------------
+                 ∃₂ (λ Δ′ Ψ′ → Γ ≡ Δ′ ++ Ψ′
+                             × Δ ∤[ m ] Δ′
+                             × Ψ ∤[ m ] Ψ′)
+∤-preserves-++ []      Ψ∤                            = -, -, refl , [] , Ψ∤
+∤-preserves-++ (_ ∷ Δ) (d∤ ∷ ΔΨ∤)
+  with _ , _ , refl , Δ∤ , Ψ∤ ← ∤-preserves-++ Δ ΔΨ∤ = -, -, refl , d∤ ∷ Δ∤ , Ψ∤
 
 ~d⊞⁻¹-preserves-∤d : d₀ [ m₀ ]∤[ m ]d dS₀ → 
                      d₁ [ m₀ ]∤[ m ]d dS₁ → 
@@ -290,7 +308,7 @@ assoc-∤ : Γ ∤[ m ] Γ′ →
           Γ′ ∤[ m₀ ] Γ″ →
           ---------------------------------------
           ∃ (λ Γ‴ → Γ ∤[ m₀ ] Γ‴ × Γ‴ ∤[ m ] Γ″)
-assoc-∤ []        []          = -, [] , []
+assoc-∤ []        []                  = -, [] , []
 assoc-∤ (d∤ ∷ Γ∤) (d′∤ ∷ Γ′∤)
   with _ , d∤′ , ∤d″ ← assoc-∤d d∤ d′∤
      | _ , Γ∤′ , ∤Γ″ ← assoc-∤ Γ∤ Γ′∤ = -, d∤′ ∷ Γ∤′ , ∤d″ ∷ ∤Γ″
@@ -406,14 +424,21 @@ len∈-inversion (_ ∷ Δ) (there dDel lenΔ∈)
 ≥∧∈-++⇒is-all-del []      x∈              x≥       = []
 ≥∧∈-++⇒is-all-del (_ ∷ Δ) (there dDel x∈) (s≤s x≥) = dDel ∷ ≥∧∈-++⇒is-all-del Δ x∈ x≥
 
-~⊞-is-all-del∧∈⇒∈ : Γ ~ Γ₀ ⊞ Γ₁ →
-                    Γ₀ is-all-del →
-                    x ⦂[ m ] S ∈ Γ₁ →
-                    ------------------
-                    x ⦂[ m ] S ∈ Γ
-~⊞-is-all-del∧∈⇒∈ (contraction Co∈m ∷ Γ~) (d₀Del ∷ Γ₀Del) (here Γ₁Del)     = here (~⊞⁻¹-preserves-is-all-del Γ₀Del Γ₁Del Γ~)
-~⊞-is-all-del∧∈⇒∈ (to-right         ∷ Γ~) (d₀Del ∷ Γ₀Del) (here Γ₁Del)     = here (~⊞⁻¹-preserves-is-all-del Γ₀Del Γ₁Del Γ~)
-~⊞-is-all-del∧∈⇒∈ (d~               ∷ Γ~) (d₀Del ∷ Γ₀Del) (there d₁Del x∈) = there (~d⊞⁻¹-preserves-is-del d₀Del d₁Del d~) (~⊞-is-all-del∧∈⇒∈ Γ~ Γ₀Del x∈)
+~⊞-is-all-del∧∈⇒∈ʳ : Γ ~ Γ₀ ⊞ Γ₁ →
+                     Γ₀ is-all-del →
+                     x ⦂[ m ] S ∈ Γ₁ →
+                     ------------------
+                     x ⦂[ m ] S ∈ Γ
+~⊞-is-all-del∧∈⇒∈ʳ (d~               ∷ Γ~) (d₀Del ∷ Γ₀Del) (there d₁Del x∈) = there (~d⊞⁻¹-preserves-is-del d₀Del d₁Del d~) (~⊞-is-all-del∧∈⇒∈ʳ Γ~ Γ₀Del x∈)
+~⊞-is-all-del∧∈⇒∈ʳ (contraction Co∈m ∷ Γ~) (d₀Del ∷ Γ₀Del) (here Γ₁Del)     = here (~⊞⁻¹-preserves-is-all-del Γ₀Del Γ₁Del Γ~)
+~⊞-is-all-del∧∈⇒∈ʳ (to-right         ∷ Γ~) (d₀Del ∷ Γ₀Del) (here Γ₁Del)     = here (~⊞⁻¹-preserves-is-all-del Γ₀Del Γ₁Del Γ~)
+
+~⊞-is-all-del∧∈⇒∈ˡ : Γ ~ Γ₀ ⊞ Γ₁ →
+                     Γ₁ is-all-del →
+                     x ⦂[ m ] S ∈ Γ₀ →
+                     ------------------
+                     x ⦂[ m ] S ∈ Γ
+~⊞-is-all-del∧∈⇒∈ˡ Γ~ Γ₁Del x∈ = ~⊞-is-all-del∧∈⇒∈ʳ (~⊞-commute Γ~) Γ₁Del x∈
 
 ∤⁻¹-preserves-∈ : ∀ Δ →
                   x ⦂[ m ] S ∈ Δ ++ Γ′ →
@@ -473,61 +498,68 @@ len∈-inversion (_ ∷ Δ) (there dDel lenΔ∈)
   with ⊢d₀ , ⊢d₁ ← ⊢d∧-~d⊞-⇒⊢d ⊢d d~
      | ⊢Γ₀ , ⊢Γ₁ ← ⊢∧-~⊞-⇒⊢ ⊢Γ Γ~    = (⊢S , ⊢d₀) ∷ ⊢Γ₀ , (⊢S , ⊢d₁) ∷ ⊢Γ₁
 
-⊢∧-~⊞-⇒⊢₀ : ⊢[ m ] Γ →
-             Γ ~ Γ₀ ⊞ Γ₁ →
-             --------------
-             ⊢[ m ] Γ₀
-⊢∧-~⊞-⇒⊢₀ ⊢Γ Γ~ = proj₁ (⊢∧-~⊞-⇒⊢ ⊢Γ Γ~)
+⊢∧-~⊞-⇒⊢ˡ : ⊢[ m ] Γ →
+            Γ ~ Γ₀ ⊞ Γ₁ →
+            --------------
+            ⊢[ m ] Γ₀
+⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~ = proj₁ (⊢∧-~⊞-⇒⊢ ⊢Γ Γ~)
 
-⊢∧-~⊞-⇒⊢₁ : ⊢[ m ] Γ →
-             Γ ~ Γ₀ ⊞ Γ₁ →
-             --------------
-             ⊢[ m ] Γ₁
-⊢∧-~⊞-⇒⊢₁ ⊢Γ Γ~ = proj₂ (⊢∧-~⊞-⇒⊢ ⊢Γ Γ~)
+⊢∧-~⊞-⇒⊢ʳ : ⊢[ m ] Γ →
+            Γ ~ Γ₀ ⊞ Γ₁ →
+            --------------
+            ⊢[ m ] Γ₁
+⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~ = proj₂ (⊢∧-~⊞-⇒⊢ ⊢Γ Γ~)
 
-~⊞-is-all-del∧⊢⇒⊢ : Γ ~ Γ₀ ⊞ Γ₁ →
-                    Γ₀ is-all-del →
-                    Γ₁ ⊢[ m ] L ⦂ S →
-                    ------------------
-                    Γ ⊢[ m ] L ⦂ S
+~⊞-is-all-del∧⊢⇒⊢ʳ : Γ ~ Γ₀ ⊞ Γ₁ →
+                     Γ₀ is-all-del →
+                     Γ₁ ⊢[ m ] L ⦂ S →
+                     ------------------
+                     Γ ⊢[ m ] L ⦂ S
 
-~⊞-is-all-del∧⊢⇒⊢                           Γ~ Γ₀Del (`unit Γ₁Del)                          = `unit ΓDel
+~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (`unit Γ₁Del)                          = `unit ΓDel
   where
     ΓDel = ~⊞⁻¹-preserves-is-all-del Γ₀Del Γ₁Del Γ~
 
-~⊞-is-all-del∧⊢⇒⊢                           Γ~ Γ₀Del (`λ⦂-∘ ⊢L)                             = `λ⦂-∘ ⊢L′
+~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (`λ⦂-∘ ⊢L)                             = `λ⦂-∘ ⊢L′
   where
-    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ (to-right ∷ Γ~) (unusable ∷ Γ₀Del) ⊢L
+    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ (to-right ∷ Γ~) (unusable ∷ Γ₀Del) ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢                           Γ~ Γ₀Del (Γ₁~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
-  with _ , Γ₁′~ , Γ~′ ← ~⊞-assoc (~⊞-swap Γ~) (~⊞-swap Γ₁~)                                 = ~⊞-swap Γ~′ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M
+~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (Γ₁~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
+  with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ Γ~ Γ₁~                                                     = Γ~′ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M
   where
-    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ (~⊞-swap Γ₁′~) Γ₀Del ⊢L
+    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ Γ₁′~ Γ₀Del ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢                           Γ~ Γ₀Del (`lift[-⇒-] ⊢L)                        = `lift[-⇒-] ⊢L′
+~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (`lift[-⇒-] ⊢L)                        = `lift[-⇒-] ⊢L′
   where
-    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ Γ~ Γ₀Del ⊢L
+    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ Γ~ Γ₀Del ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢ {L = `unlift[ m₀ ⇒ _ ] L} Γ~ Γ₀Del (Γ₁∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)
+~⊞-is-all-del∧⊢⇒⊢ʳ {L = `unlift[ m₀ ⇒ _ ] L} Γ~ Γ₀Del (Γ₁∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)
   with _ , Γ₀∤ , Γ₀′Del ← is-all-del⇒∤ m₀ Γ₀Del
-    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                         = Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
+    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                          = Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
   where
-    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ Γ′~ Γ₀′Del ⊢L
+    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ Γ′~ Γ₀′Del ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢ {L = `return[ m₀ ⇒ _ ] L} Γ~ Γ₀Del (Γ₁∤ ⊢`return[-⇒-] ⊢L)
+~⊞-is-all-del∧⊢⇒⊢ʳ {L = `return[ m₀ ⇒ _ ] L} Γ~ Γ₀Del (Γ₁∤ ⊢`return[-⇒-] ⊢L)
   with _ , Γ₀∤ , Γ₀′Del ← is-all-del⇒∤ m₀ Γ₀Del
-    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                         = Γ∤ ⊢`return[-⇒-] ⊢L′
+    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                          = Γ∤ ⊢`return[-⇒-] ⊢L′
   where
-    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ Γ′~ Γ₀′Del ⊢L
+    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ Γ′~ Γ₀′Del ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢                           Γ~ Γ₀Del (Γ₁~ ⊢`let-return[-⇒-] ⊢L ⦂ ⊢↓ `in ⊢M)
-  with _ , Γ₁′~ , Γ~′ ← ~⊞-assoc (~⊞-swap Γ~) (~⊞-swap Γ₁~)                                 = ~⊞-swap Γ~′ ⊢`let-return[-⇒-] ⊢L′ ⦂ ⊢↓ `in ⊢M
+~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (Γ₁~ ⊢`let-return[-⇒-] ⊢L ⦂ ⊢↓ `in ⊢M)
+  with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ Γ~ Γ₁~                                                     = Γ~′ ⊢`let-return[-⇒-] ⊢L′ ⦂ ⊢↓ `in ⊢M
   where
-    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ (~⊞-swap Γ₁′~) Γ₀Del ⊢L
+    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ Γ₁′~ Γ₀Del ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢                           Γ~ Γ₀Del (`# x∈)                                = `# x∈′
+~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (`# x∈)                                = `# x∈′
   where
-    x∈′ = ~⊞-is-all-del∧∈⇒∈ Γ~ Γ₀Del x∈
+    x∈′ = ~⊞-is-all-del∧∈⇒∈ʳ Γ~ Γ₀Del x∈
+
+~⊞-is-all-del∧⊢⇒⊢ˡ : Γ ~ Γ₀ ⊞ Γ₁ →
+                     Γ₁ is-all-del →
+                     Γ₀ ⊢[ m ] L ⦂ S →
+                     ------------------
+                     Γ ⊢[ m ] L ⦂ S
+~⊞-is-all-del∧⊢⇒⊢ˡ Γ~ Γ₁Del ⊢L = ~⊞-is-all-del∧⊢⇒⊢ʳ (~⊞-commute Γ~) Γ₁Del ⊢L
 
 ⊢d∧∤d⇒⊢d : [ m₀ ]⊢[ m ]d d →
            d [ m₀ ]∤[ m′ ]d d′ →

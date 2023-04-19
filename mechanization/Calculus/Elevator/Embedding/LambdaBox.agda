@@ -685,21 +685,21 @@ extractˣ⁻ᶜ⁻¹-~ᴹ-depth~ᴹ          kk′~ k″k‴~ (`unlift-`lift ~L)
           eraseˣ ~Γ ⊢ DP.L′ ~ᴹ L →
           Γ ⊢[ pMode ] L ⦂ S →
           ∃ (λ DPS → DPS ~ᵀ S)
-~ᴹ∧⊢⇒~ᵀ ~Γ `unit                (`unit _)                                              = -, `⊤
+~ᴹ∧⊢⇒~ᵀ ~Γ `unit                (`unit _)                                     = -, `⊤
 ~ᴹ∧⊢⇒~ᵀ ~Γ (`box ~L)            (Γ∤ ⊢`return (⊢`lift ⊢L))
   rewrite extractˣᶜ-eraseˣ-extractˣ⁻ᶜ ~Γ
-        | ∤-extractˣᶜ ~Γ Γ∤                                                            = -, `□ (proj₂ (~ᴹ∧⊢⇒~ᵀ (proj₂ (extractˣᶜ ~Γ)) ~L ⊢L))
+        | ∤-extractˣᶜ ~Γ Γ∤                                                   = -, `□ (proj₂ (~ᴹ∧⊢⇒~ᵀ (proj₂ (extractˣᶜ ~Γ)) ~L ⊢L))
 ~ᴹ∧⊢⇒~ᵀ ~Γ (`let-box ~L `in ~M) (Γ~ ⊢`let-return ⊢L ⦂ ⊢↓ `in ⊢M)
-  with _ , `□ ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L (~⊞-is-all-del∧⊢⇒⊢ (~⊞-swap Γ~) (is-all-del² _) ⊢L)   = ~ᴹ∧⊢⇒~ᵀ (~T !∷ᶜ ~Γ) ~M (~⊞-is-all-del∧⊢⇒⊢ (contraction _ ∷ Γ~) (is-all-del² _) ⊢M)
+  with _ , `□ ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L (~⊞-is-all-del∧⊢⇒⊢ˡ Γ~ (is-all-del² _) ⊢L)   = ~ᴹ∧⊢⇒~ᵀ (~T !∷ᶜ ~Γ) ~M (~⊞-is-all-del∧⊢⇒⊢ʳ (contraction _ ∷ Γ~) (is-all-del² _) ⊢M)
 ~ᴹ∧⊢⇒~ᵀ ~Γ (`#¹ u<)             (Γ∤ ⊢`unlift `# u∈ ⦂ ⊢↑)
-  rewrite ∤-extractˣᶜ ~Γ Γ∤                                                            = ∈ᶜ⇒~ᵀ (proj₂ (extractˣᶜ ~Γ)) u∈ 
-~ᴹ∧⊢⇒~ᵀ ~Γ (`λ⦂ ~S ∙ ~L)        (`λ⦂-∘ ⊢L)                                             = -, ~S `→ (proj₂ (~ᴹ∧⊢⇒~ᵀ (~S !∷ᵖ ~Γ) ~L ⊢L))
+  rewrite ∤-extractˣᶜ ~Γ Γ∤                                                   = ∈ᶜ⇒~ᵀ (proj₂ (extractˣᶜ ~Γ)) u∈ 
+~ᴹ∧⊢⇒~ᵀ ~Γ (`λ⦂ ~S ∙ ~L)        (`λ⦂-∘ ⊢L)                                    = -, ~S `→ (proj₂ (~ᴹ∧⊢⇒~ᵀ (~S !∷ᵖ ~Γ) ~L ⊢L))
 ~ᴹ∧⊢⇒~ᵀ ~Γ (~L `$ ~M)           (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
-  with _ , _ `→ ~S ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L (~⊞-is-all-del∧⊢⇒⊢ (~⊞-swap Γ~) (is-all-del² _) ⊢L) = -, ~S
-~ᴹ∧⊢⇒~ᵀ ~Γ (`#⁰ x<)             (`# x∈)                                                = ∈ᵖ⇒~ᵀ ~Γ x∈
+  with _ , _ `→ ~S ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L (~⊞-is-all-del∧⊢⇒⊢ˡ Γ~ (is-all-del² _) ⊢L) = -, ~S
+~ᴹ∧⊢⇒~ᵀ ~Γ (`#⁰ x<)             (`# x∈)                                       = ∈ᵖ⇒~ᵀ ~Γ x∈
 ~ᴹ∧⊢⇒~ᵀ ~Γ (`unlift-`lift ~L)   (Γ∤ ⊢`unlift ⊢`lift ⊢L ⦂ ⊢↑)
   rewrite extractˣᶜ-eraseˣ-extractˣ⁻ᶜ ~Γ
-        | ∤-extractˣᶜ ~Γ Γ∤                                                            = ~ᴹ∧⊢⇒~ᵀ (proj₂ (extractˣᶜ ~Γ)) ~L ⊢L
+        | ∤-extractˣᶜ ~Γ Γ∤                                                   = ~ᴹ∧⊢⇒~ᵀ (proj₂ (extractˣᶜ ~Γ)) ~L ⊢L
 
 -- Soundness and Completeness of _~ᴹ_ Regarding Typings
 --
@@ -737,17 +737,17 @@ extractˣ⁻ᶜ⁻¹-~ᴹ-depth~ᴹ          kk′~ k″k‴~ (`unlift-`lift ~L)
                   -----------------------------
                   DP.Δ DP.⍮ DP.Γ ⊢ DP.L ⦂ DP.S
 ~ᴹ-completeness ~Γ ~S          (`let-box ~L `in ~M) (Γ~ ⊢`let-return ⊢L ⦂ ⊢↓ `in ⊢M)
-  with ⊢L′ ← ~⊞-is-all-del∧⊢⇒⊢ (~⊞-swap Γ~) (is-all-del² _) ⊢L
-    with _ , `□ ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L ⊢L′                                               = DP.`let-box ~ᴹ-completeness ~Γ (`□ ~T) ~L ⊢L′ `in ~ᴹ-completeness (~T !∷ᶜ ~Γ) ~S ~M (~⊞-is-all-del∧⊢⇒⊢ (contraction _ ∷ Γ~) (is-all-del² _) ⊢M)
+  with ⊢L′ ← ~⊞-is-all-del∧⊢⇒⊢ˡ Γ~ (is-all-del² _) ⊢L
+    with _ , `□ ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L ⊢L′                                               = DP.`let-box ~ᴹ-completeness ~Γ (`□ ~T) ~L ⊢L′ `in ~ᴹ-completeness (~T !∷ᶜ ~Γ) ~S ~M (~⊞-is-all-del∧⊢⇒⊢ʳ (contraction _ ∷ Γ~) (is-all-del² _) ⊢M)
 ~ᴹ-completeness ~Γ ~S          (`#¹ u<)             (Γ∤ ⊢`unlift `# u∈ ⦂ ⊢↑)
   rewrite idxˣ⁻ᶜ-extractˣᶜ-eraseˣ ~Γ u<
         | ∤-extractˣᶜ ~Γ Γ∤                                                          = DP.`#¹ idxˣ⁻ᶜ-eraseˣ∈⇒∈ᶜ (proj₂ (extractˣᶜ ~Γ)) ~S u< u∈ 
 ~ᴹ-completeness ~Γ (~S′ `→ ~T) (`λ⦂ ~S ∙ ~L)        (`λ⦂-∘ ⊢L)
   with refl ← ~ᵀ-inj ~S ~S′                                                          = DP.`λ⦂-∙ ~ᴹ-completeness (~S !∷ᵖ ~Γ) ~T ~L ⊢L
 ~ᴹ-completeness ~Γ ~S          (~L `$ ~M)           (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
-  with ⊢L′ ← ~⊞-is-all-del∧⊢⇒⊢ (~⊞-swap Γ~) (is-all-del² _) ⊢L
+  with ⊢L′ ← ~⊞-is-all-del∧⊢⇒⊢ˡ Γ~ (is-all-del² _) ⊢L
     with _ , ~⊸@(~T `→ ~S′) ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L ⊢L′
-      with refl ← ~ᵀ-inj ~S ~S′                                                      = ~ᴹ-completeness ~Γ ~⊸ ~L ⊢L′ DP.`$ ~ᴹ-completeness ~Γ ~T ~M (~⊞-is-all-del∧⊢⇒⊢ Γ~ (is-all-del² _) ⊢M)
+      with refl ← ~ᵀ-inj ~S ~S′                                                      = ~ᴹ-completeness ~Γ ~⊸ ~L ⊢L′ DP.`$ ~ᴹ-completeness ~Γ ~T ~M (~⊞-is-all-del∧⊢⇒⊢ʳ Γ~ (is-all-del² _) ⊢M)
 ~ᴹ-completeness ~Γ ~S          (`#⁰ x<)             (`# x∈)                          = DP.`#⁰ idxˣ⁻ᵖ-eraseˣ∈⇒∈ᵖ ~Γ ~S x< x∈
 ~ᴹ-completeness ~Γ ~S          (`unlift-`lift ~L)   (Γ∤ ⊢`unlift ⊢`lift ⊢L ⦂ ⊢↑)
   rewrite extractˣᶜ-eraseˣ-extractˣ⁻ᶜ ~Γ

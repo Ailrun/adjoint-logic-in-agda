@@ -94,25 +94,41 @@ unused-length : ∀ Γ →
 unused-length []      = refl
 unused-length (_ ∷ Γ) = cong suc (unused-length Γ)
 
-~d⊞-uniqueʳ : d [ m ]~d d′ ⊞ false →
+~d⊞-uniqueˡ : d [ m ]~d d′ ⊞ false →
               -----------------------
               d ≡ d′
-~d⊞-uniqueʳ unusable = refl
-~d⊞-uniqueʳ to-left  = refl
+~d⊞-uniqueˡ unusable = refl
+~d⊞-uniqueˡ to-left  = refl
 
-~⊞-uniqueʳ : ∀ Γ₁ →
+~⊞-uniqueˡ : ∀ Γ₁ →
              Γ ~ Γ₀ ⊞ unused Γ₁ →
              ---------------------
              Γ ≡ Γ₀
-~⊞-uniqueʳ []       []        = refl
-~⊞-uniqueʳ (_ ∷ Γ₁) (d~ ∷ Γ~)
-  rewrite ~d⊞-uniqueʳ d~      = cong (_ ∷_) (~⊞-uniqueʳ Γ₁ Γ~)
+~⊞-uniqueˡ []       []        = refl
+~⊞-uniqueˡ (_ ∷ Γ₁) (d~ ∷ Γ~)
+  rewrite ~d⊞-uniqueˡ d~      = cong (_ ∷_) (~⊞-uniqueˡ Γ₁ Γ~)
+
+~d⊞-uniqueʳ : d [ m ]~d false ⊞ d′ →
+              -----------------------
+              d ≡ d′
+~d⊞-uniqueʳ d~ = ~d⊞-uniqueˡ (~d⊞-commute d~)
+
+~⊞-uniqueʳ : ∀ Γ₀ →
+             Γ ~ unused Γ₀ ⊞ Γ₁ →
+             ---------------------
+             Γ ≡ Γ₁
+~⊞-uniqueʳ Γ₀ Γ~ = ~⊞-uniqueˡ Γ₀ (~⊞-commute Γ~)
 
 ~⊞-unusedˡ : Δ ~ Δ₀ ⊞ Δ₁ →
              ---------------------
              unused Δ ≡ unused Δ₀
 ~⊞-unusedˡ []       = refl
 ~⊞-unusedˡ (_ ∷ Δ~) = cong (_ ∷_) (~⊞-unusedˡ Δ~)
+
+~⊞-unusedʳ : Δ ~ Δ₀ ⊞ Δ₁ →
+             ---------------------
+             unused Δ ≡ unused Δ₁
+~⊞-unusedʳ Δ~ = ~⊞-unusedˡ (~⊞-commute Δ~)
 
 ~⊞-preserves-unused : Δ ~ Δ₀ ⊞ Δ₁ →
                       ---------------------------------
@@ -129,8 +145,8 @@ unused-length (_ ∷ Γ) = cong suc (unused-length Γ)
 ~⊞-unused-assoc []       []        []          []          = -, [] , []
 ~⊞-unused-assoc (_ ∷ Δ′) (d~ ∷ Δ~) (d₀~ ∷ Ψ₀~) (d₁~ ∷ Ψ₁~)
   with _ , Δ″~ , Δ″∼′ ← ~⊞-unused-assoc Δ′ Δ~ Ψ₀~ Ψ₁~
-    rewrite ~d⊞-uniqueʳ d₀~
-          | ~d⊞-uniqueʳ d₁~ = -, ~d⊞-identityʳ _ ∷ Δ″~ , d~ ∷ Δ″∼′
+    rewrite ~d⊞-uniqueˡ d₀~
+          | ~d⊞-uniqueˡ d₁~ = -, ~d⊞-identityʳ _ ∷ Δ″~ , d~ ∷ Δ″∼′
 
 ~⊞-preserves-drop⇒ : ∀ m →
                      Δ ~ Δ₀ ⊞ Δ₁ →
@@ -166,53 +182,59 @@ unused-is-all-del : ∀ Γ →
 unused-is-all-del []      = []
 unused-is-all-del (_ ∷ Γ) = unusable ∷ unused-is-all-del Γ
 
-~⊞-preserves-usage∈ : Γ ~ Γ₀ ⊞ Γ₁ →
-                      x ⦂[ m ] S ∈ Γ₀ ⇒ Δ₀ →
-                      --------------------------------------------------
-                      ∃ (λ Δ → Δ ~ Δ₀ ⊞ unused Γ₁ × x ⦂[ m ] S ∈ Γ ⇒ Δ)
-~⊞-preserves-usage∈ {m = m} (d~ ∷ Γ~) here
+~⊞-preserves-usage∈ˡ : Γ ~ Γ₀ ⊞ Γ₁ →
+                       x ⦂[ m ] S ∈ Γ₀ ⇒ Δ₀ →
+                       --------------------------------------------------
+                       ∃ (λ Δ → Δ ~ Δ₀ ⊞ unused Γ₁ × x ⦂[ m ] S ∈ Γ ⇒ Δ)
+~⊞-preserves-usage∈ˡ {m = m} (d~ ∷ Γ~) here
   rewrite proj₂ (dec-yes (m ≤?ₘ m) ≤ₘ-refl)
-        | ~d⊞-true⇒trueˡ d~                       = -, to-left ∷ ~⊞-preserves-unused Γ~ , here
-~⊞-preserves-usage∈         (d~ ∷ Γ~) (there x∈⇒)
-  with _ , Δ~ , x∈⇒′ ← ~⊞-preserves-usage∈ Γ~ x∈⇒ = -, unusable ∷ Δ~ , there x∈⇒′
+        | ~d⊞-true⇒trueˡ d~                        = -, to-left ∷ ~⊞-preserves-unused Γ~ , here
+~⊞-preserves-usage∈ˡ         (d~ ∷ Γ~) (there x∈⇒)
+  with _ , Δ~ , x∈⇒′ ← ~⊞-preserves-usage∈ˡ Γ~ x∈⇒ = -, unusable ∷ Δ~ , there x∈⇒′
 
-~⊞-preserves-usage : Γ ~ Γ₀ ⊞ Γ₁ →
-                     Γ₀ ⊢[ m ] L ⦂ S ⇒ Δ₀ →
-                     --------------------------------------------------
-                     ∃ (λ Δ → Δ ~ Δ₀ ⊞ unused Γ₁ × Γ ⊢[ m ] L ⦂ S ⇒ Δ)
-~⊞-preserves-usage           Γ~ `unit                                          = -, ~⊞-preserves-unused Γ~ , `unit
-~⊞-preserves-usage           Γ~ (`λ⦂[ dUsed ]-∘ ⊢L⇒)
-  with _ , ~d ∷ Δ~ , ⊢L⇒′ ← ~⊞-preserves-usage (to-left ∷ Γ~) ⊢L⇒
-    rewrite ~d⊞-uniqueʳ ~d                                                     = -, Δ~ , `λ⦂[ dUsed ]-∘ ⊢L⇒′
-~⊞-preserves-usage           Γ~ (Δ₀~ ⊢ ⊢L⇒ ⦂ ⊢⊸ `$ ⊢M⇒)
-  with _ , ~ΔuΓ₁ , ⊢L⇒′ ← ~⊞-preserves-usage Γ~ ⊢L⇒
-     | _ , ~Δ′uΓ₁ , ⊢M′⇒ ← ~⊞-preserves-usage Γ~ ⊢M⇒
-    with _ , Δ~ , Δ~′ ← ~⊞-unused-assoc _ Δ₀~ ~ΔuΓ₁ ~Δ′uΓ₁                     = -, Δ~ , Δ~′ ⊢ ⊢L⇒′ ⦂ ⊢⊸ `$ ⊢M′⇒
-~⊞-preserves-usage           Γ~ (`lift[-⇒-] ⊢L⇒)
-  with _ , Δ~ , ⊢L⇒′ ← ~⊞-preserves-usage Γ~ ⊢L⇒                               = -, Δ~ , `lift[-⇒-] ⊢L⇒′
-~⊞-preserves-usage {Γ₁ = Γ₁} Γ~ (`unlift[-⇒-]_⦂_ {m₀ = m₀} ⊢L⇒ ⊢↑)
-  with _ , Δ~ , ⊢L⇒′ ← ~⊞-preserves-usage (~⊞-preserves-drop⇒ m₀ Γ~) ⊢L⇒
-    rewrite unused-cancelˡ-drop⇒ m₀ Γ₁                                         = -, Δ~ , `unlift[-⇒-] ⊢L⇒′ ⦂ ⊢↑
-~⊞-preserves-usage {Γ₁ = Γ₁} Γ~ (`return[-⇒-]_ {m₀ = m₀} ⊢L⇒)
-  with _ , Δ~ , ⊢L⇒′ ← ~⊞-preserves-usage (~⊞-preserves-drop⇒ m₀ Γ~) ⊢L⇒
-    rewrite unused-cancelˡ-drop⇒ m₀ Γ₁                                         = -, Δ~ , `return[-⇒-] ⊢L⇒′
-~⊞-preserves-usage           Γ~ (Δ₀~ ⊢`let-return[-⇒ dUsed ] ⊢L⇒ ⦂ ⊢↓ `in ⊢M⇒)
-  with _ , ~ΔuΓ₁ , ⊢L⇒′ ← ~⊞-preserves-usage Γ~ ⊢L⇒
-     | _ , ~d ∷ ~Δ′uΓ₁ , ⊢M′⇒ ← ~⊞-preserves-usage (to-left ∷ Γ~) ⊢M⇒
+~⊞-preserves-usageˡ : Γ ~ Γ₀ ⊞ Γ₁ →
+                      Γ₀ ⊢[ m ] L ⦂ S ⇒ Δ₀ →
+                      --------------------------------------------------
+                      ∃ (λ Δ → Δ ~ Δ₀ ⊞ unused Γ₁ × Γ ⊢[ m ] L ⦂ S ⇒ Δ)
+~⊞-preserves-usageˡ           Γ~ `unit                                          = -, ~⊞-preserves-unused Γ~ , `unit
+~⊞-preserves-usageˡ           Γ~ (`λ⦂[ dUsed ]-∘ ⊢L⇒)
+  with _ , ~d ∷ Δ~ , ⊢L⇒′ ← ~⊞-preserves-usageˡ (to-left ∷ Γ~) ⊢L⇒
+    rewrite ~d⊞-uniqueˡ ~d                                                      = -, Δ~ , `λ⦂[ dUsed ]-∘ ⊢L⇒′
+~⊞-preserves-usageˡ           Γ~ (Δ₀~ ⊢ ⊢L⇒ ⦂ ⊢⊸ `$ ⊢M⇒)
+  with _ , ~ΔuΓ₁ , ⊢L⇒′ ← ~⊞-preserves-usageˡ Γ~ ⊢L⇒
+     | _ , ~Δ′uΓ₁ , ⊢M′⇒ ← ~⊞-preserves-usageˡ Γ~ ⊢M⇒
+    with _ , Δ~ , Δ~′ ← ~⊞-unused-assoc _ Δ₀~ ~ΔuΓ₁ ~Δ′uΓ₁                      = -, Δ~ , Δ~′ ⊢ ⊢L⇒′ ⦂ ⊢⊸ `$ ⊢M′⇒
+~⊞-preserves-usageˡ           Γ~ (`lift[-⇒-] ⊢L⇒)
+  with _ , Δ~ , ⊢L⇒′ ← ~⊞-preserves-usageˡ Γ~ ⊢L⇒                               = -, Δ~ , `lift[-⇒-] ⊢L⇒′
+~⊞-preserves-usageˡ {Γ₁ = Γ₁} Γ~ (`unlift[-⇒-]_⦂_ {m₀ = m₀} ⊢L⇒ ⊢↑)
+  with _ , Δ~ , ⊢L⇒′ ← ~⊞-preserves-usageˡ (~⊞-preserves-drop⇒ m₀ Γ~) ⊢L⇒
+    rewrite unused-cancelˡ-drop⇒ m₀ Γ₁                                          = -, Δ~ , `unlift[-⇒-] ⊢L⇒′ ⦂ ⊢↑
+~⊞-preserves-usageˡ {Γ₁ = Γ₁} Γ~ (`return[-⇒-]_ {m₀ = m₀} ⊢L⇒)
+  with _ , Δ~ , ⊢L⇒′ ← ~⊞-preserves-usageˡ (~⊞-preserves-drop⇒ m₀ Γ~) ⊢L⇒
+    rewrite unused-cancelˡ-drop⇒ m₀ Γ₁                                          = -, Δ~ , `return[-⇒-] ⊢L⇒′
+~⊞-preserves-usageˡ           Γ~ (Δ₀~ ⊢`let-return[-⇒ dUsed ] ⊢L⇒ ⦂ ⊢↓ `in ⊢M⇒)
+  with _ , ~ΔuΓ₁ , ⊢L⇒′ ← ~⊞-preserves-usageˡ Γ~ ⊢L⇒
+     | _ , ~d ∷ ~Δ′uΓ₁ , ⊢M′⇒ ← ~⊞-preserves-usageˡ (to-left ∷ Γ~) ⊢M⇒
     with _ , Δ~ , Δ~′ ← ~⊞-unused-assoc _ Δ₀~ ~ΔuΓ₁ ~Δ′uΓ₁
-      rewrite ~d⊞-uniqueʳ ~d                                                   = -, Δ~ , Δ~′ ⊢`let-return[-⇒ dUsed ] ⊢L⇒′ ⦂ ⊢↓ `in ⊢M′⇒
-~⊞-preserves-usage           Γ~ (`# x∈⇒)
-  with _ , Δ~ , x∈⇒′ ← ~⊞-preserves-usage∈ Γ~ x∈⇒                              = -, Δ~ , `# x∈⇒′
+      rewrite ~d⊞-uniqueˡ ~d                                                    = -, Δ~ , Δ~′ ⊢`let-return[-⇒ dUsed ] ⊢L⇒′ ⦂ ⊢↓ `in ⊢M′⇒
+~⊞-preserves-usageˡ           Γ~ (`# x∈⇒)
+  with _ , Δ~ , x∈⇒′ ← ~⊞-preserves-usage∈ˡ Γ~ x∈⇒                              = -, Δ~ , `# x∈⇒′
 
+~⊞-preserves-usageʳ : Γ ~ Γ₀ ⊞ Γ₁ →
+                      Γ₁ ⊢[ m ] L ⦂ S ⇒ Δ₁ →
+                      --------------------------------------------------
+                      ∃ (λ Δ → Δ ~ unused Γ₀ ⊞ Δ₁ × Γ ⊢[ m ] L ⦂ S ⇒ Δ)
+~⊞-preserves-usageʳ Γ~ ⊢L⇒
+  with _ , Δ~ , ⊢L⇒′ ← ~⊞-preserves-usageˡ (~⊞-commute Γ~) ⊢L⇒ = -, ~⊞-commute Δ~ , ⊢L⇒′
 
 -- Properties of _[_]is-used-by_ and _is-all-used-by_
 --
-used-by⇒~d⊞ : d [ m ]is-used-by d₀ →
-              ----------------------------------------------
-              ∃ (λ d₁ → d [ m ]~d d₀ ⊞ d₁ × d₁ [ m ]is-del)
-used-by⇒~d⊞ used             = -, to-left , unusable
-used-by⇒~d⊞ unusable         = -, unusable , unusable
-used-by⇒~d⊞ (weakening Wk∈m) = -, to-right , weakening Wk∈m
+used-by⇒~d⊞ˡ : d [ m ]is-used-by d₀ →
+               ----------------------------------------------
+               ∃ (λ d₁ → d [ m ]~d d₀ ⊞ d₁ × d₁ [ m ]is-del)
+used-by⇒~d⊞ˡ used             = -, to-left , unusable
+used-by⇒~d⊞ˡ unusable         = -, unusable , unusable
+used-by⇒~d⊞ˡ (weakening Wk∈m) = -, to-right , weakening Wk∈m
 
 ~d⊞-preserves-is-used-by : d [ m ]~d d₀ ⊞ d₁ →
                            d₀ [ m ]is-used-by dS₀ →
@@ -263,20 +285,20 @@ is-all-del⇒is-all-used-by-unused (dDel ∷ ΓDel) = is-del⇒is-used-by-false 
 ∤⁻¹-preserves-is-all-used-by []        []                = []
 ∤⁻¹-preserves-is-all-used-by (d∤ ∷ Γ∤) (d′Used ∷ Γ′Used) = ∤d⁻¹-preserves-is-used-by d∤ d′Used ∷ ∤⁻¹-preserves-is-all-used-by Γ∤ Γ′Used
 
-is-used-by⇒~d⊞-is-del : d [ m ]is-used-by dS →
-                        ----------------------------------------------
-                        ∃ (λ d′ → d [ m ]~d dS ⊞ d′ × d′ [ m ]is-del)
-is-used-by⇒~d⊞-is-del used             = -, to-left , unusable
-is-used-by⇒~d⊞-is-del unusable         = -, unusable , unusable
-is-used-by⇒~d⊞-is-del (weakening Wk∈m) = -, to-right , weakening Wk∈m
+is-used-by⇒~d⊞-is-delˡ : d [ m ]is-used-by dS →
+                         ----------------------------------------------
+                         ∃ (λ d′ → d [ m ]~d dS ⊞ d′ × d′ [ m ]is-del)
+is-used-by⇒~d⊞-is-delˡ used             = -, to-left , unusable
+is-used-by⇒~d⊞-is-delˡ unusable         = -, unusable , unusable
+is-used-by⇒~d⊞-is-delˡ (weakening Wk∈m) = -, to-right , weakening Wk∈m
 
-is-all-used-by⇒~⊞-is-all-del : Γ is-all-used-by Δ →
-                               --------------------------------------
-                               ∃ (λ Γ′ → Γ ~ Δ ⊞ Γ′ × Γ′ is-all-del)
-is-all-used-by⇒~⊞-is-all-del []                            = -, [] , []
-is-all-used-by⇒~⊞-is-all-del (dUsed ∷ ΓUsed)
-  with _ , d~ , d′Del ← is-used-by⇒~d⊞-is-del dUsed
-     | _ , Γ~ , Γ′Del ← is-all-used-by⇒~⊞-is-all-del ΓUsed = -, d~ ∷ Γ~ , d′Del ∷ Γ′Del
+is-all-used-by⇒~⊞-is-all-delˡ : Γ is-all-used-by Δ →
+                                --------------------------------------
+                                ∃ (λ Γ′ → Γ ~ Δ ⊞ Γ′ × Γ′ is-all-del)
+is-all-used-by⇒~⊞-is-all-delˡ []                            = -, [] , []
+is-all-used-by⇒~⊞-is-all-delˡ (dUsed ∷ ΓUsed)
+  with _ , d~ , d′Del ← is-used-by⇒~d⊞-is-delˡ dUsed
+     | _ , Γ~ , Γ′Del ← is-all-used-by⇒~⊞-is-all-delˡ ΓUsed = -, d~ ∷ Γ~ , d′Del ∷ Γ′Del
 
 
 -- Properties of _⦂[_]_∈_⇒_
@@ -310,7 +332,7 @@ is-all-used-by⇒~⊞-is-all-del (dUsed ∷ ΓUsed)
 ~⊞-preserves-∈ (to-left ∷ Δ~)          here
   rewrite ~⊞-unusedˡ Δ~                            = inj₁ here
 ~⊞-preserves-∈ (to-right ∷ Δ~)         here
-  rewrite ~⊞-unusedˡ (~⊞-swap Δ~)                  = inj₂ here
+  rewrite ~⊞-unusedʳ Δ~                            = inj₂ here
 
 ∈⇒∧∈⇒⇒∈⇒ : y ⦂[ m ] S ∈ Γ ⇒ Δ →
            x ⦂[ m₀ ] T ∈ Δ ⇒ Ψ →
@@ -382,9 +404,9 @@ completeness (`λ⦂-∘ ⊢L)
 completeness (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
   with _ , ⊢L⇒ , Γ₀Used ← completeness ⊢L
      | _ , ⊢M⇒ , Γ₁Used ← completeness ⊢M
-    with _ , Δ₀~ , ⊢L⇒′ ← ~⊞-preserves-usage Γ~ ⊢L⇒
-       | _ , Δ₁~ , ⊢M⇒′ ← ~⊞-preserves-usage (~⊞-swap Γ~) ⊢M⇒
-      rewrite ~⊞-uniqueʳ _ Δ₀~
+    with _ , Δ₀~ , ⊢L⇒′ ← ~⊞-preserves-usageˡ Γ~ ⊢L⇒
+       | _ , Δ₁~ , ⊢M⇒′ ← ~⊞-preserves-usageʳ Γ~ ⊢M⇒
+      rewrite ~⊞-uniqueˡ _ Δ₀~
             | ~⊞-uniqueʳ _ Δ₁~
         with _ , Δ~ , ΓUsed ← ~⊞-preserves-is-all-used-by Γ~ Γ₀Used Γ₁Used = -, Δ~ ⊢ ⊢L⇒′ ⦂ ⊢⊸ `$ ⊢M⇒′ , ΓUsed
 completeness (`lift[-⇒-] ⊢L)
@@ -398,10 +420,10 @@ completeness (Γ∤ ⊢`return[-⇒-] ⊢L)
 completeness (Γ~ ⊢`let-return[-⇒-] ⊢L ⦂ ⊢↓ `in ⊢M)
   with _ , ⊢L⇒ , Γ₀Used ← completeness ⊢L
      | _ , ⊢M⇒ , dUsed ∷ Γ₁Used ← completeness ⊢M
-    with _ , Δ₀~ , ⊢L⇒′ ← ~⊞-preserves-usage Γ~ ⊢L⇒
-       | _ , d~ ∷ Δ₁~ , ⊢M⇒′ ← ~⊞-preserves-usage (to-left ∷ ~⊞-swap Γ~) ⊢M⇒
-      rewrite ~d⊞-uniqueʳ d~
-            | ~⊞-uniqueʳ _ Δ₀~
+    with _ , Δ₀~ , ⊢L⇒′ ← ~⊞-preserves-usageˡ Γ~ ⊢L⇒
+       | _ , d~ ∷ Δ₁~ , ⊢M⇒′ ← ~⊞-preserves-usageʳ (to-right ∷ Γ~) ⊢M⇒
+      rewrite ~⊞-uniqueˡ _ Δ₀~
+            | ~d⊞-uniqueʳ d~
             | ~⊞-uniqueʳ _ Δ₁~
         with _ , Δ~ , ΓUsed ← ~⊞-preserves-is-all-used-by Γ~ Γ₀Used Γ₁Used = -, Δ~ ⊢`let-return[-⇒ dUsed ] ⊢L⇒′ ⦂ ⊢↓ `in ⊢M⇒′ , ΓUsed
 completeness (`# x∈)
@@ -422,9 +444,9 @@ soundness-helper                 `unit                                          
 soundness-helper         {Δ = Δ} (`λ⦂[ dUsed ]-∘ ⊢L⇒)
   with _ , Δ~ ← left-bias-~⊞ Δ
      | Δ′Del ← left-bias-~⊞-is-all-del Δ
-     | _ , ~d , d₁Del ← used-by⇒~d⊞ dUsed                                                  = `λ⦂-∘ ⊢L
+     | _ , ~d , d₁Del ← used-by⇒~d⊞ˡ dUsed                                                 = `λ⦂-∘ ⊢L
    where
-     ⊢L = ~⊞-is-all-del∧⊢⇒⊢ (~⊞-swap (~d ∷ Δ~)) (d₁Del ∷ Δ′Del) (soundness-helper ⊢L⇒)
+     ⊢L = ~⊞-is-all-del∧⊢⇒⊢ˡ (~d ∷ Δ~) (d₁Del ∷ Δ′Del) (soundness-helper ⊢L⇒)
 
 soundness-helper                 (Δ~ ⊢ ⊢L⇒ ⦂ ⊢⊸ `$ ⊢M⇒)                                    = Δ~ ⊢ soundness-helper ⊢L⇒ ⦂ ⊢⊸ `$ soundness-helper ⊢M⇒
 soundness-helper                 (`lift[-⇒-] ⊢L⇒)                                          = `lift[-⇒-] soundness-helper ⊢L⇒
@@ -439,9 +461,9 @@ soundness-helper {Γ = Γ}         (`return[-⇒-] ⊢L⇒)                     
 soundness-helper                 (_⊢`let-return[-⇒_]_⦂_`in_ {Δ₁ = Δ₁} Δ~ dUsed ⊢L⇒ ⊢↓ ⊢M⇒)
   with _ , Δ₁~ ← left-bias-~⊞ Δ₁
      | Δ₁′Del ← left-bias-~⊞-is-all-del Δ₁
-     | _ , ~d , d₁Del ← used-by⇒~d⊞ dUsed                                                  = Δ~ ⊢`let-return[-⇒-] soundness-helper ⊢L⇒ ⦂ ⊢↓ `in ⊢M
+     | _ , ~d , d₁Del ← used-by⇒~d⊞ˡ dUsed                                                 = Δ~ ⊢`let-return[-⇒-] soundness-helper ⊢L⇒ ⦂ ⊢↓ `in ⊢M
     where
-      ⊢M = ~⊞-is-all-del∧⊢⇒⊢ (~⊞-swap (~d ∷ Δ₁~)) (d₁Del ∷ Δ₁′Del) (soundness-helper ⊢M⇒)
+      ⊢M = ~⊞-is-all-del∧⊢⇒⊢ˡ (~d ∷ Δ₁~) (d₁Del ∷ Δ₁′Del) (soundness-helper ⊢M⇒)
 
 soundness-helper (`# x∈⇒)                                                                  = `# soundness-helper∈ x∈⇒
 
@@ -449,7 +471,7 @@ soundness : Γ A⊢[ m ] L ⦂ S →
             ------------------
             Γ ⊢[ m ] L ⦂ S
 soundness (_ , ⊢L⇒ , ΓUsed)
-  with _ , Γ~ , Γ′Del ← is-all-used-by⇒~⊞-is-all-del ΓUsed = ~⊞-is-all-del∧⊢⇒⊢ (~⊞-swap Γ~) Γ′Del (soundness-helper ⊢L⇒)
+  with _ , Γ~ , Γ′Del ← is-all-used-by⇒~⊞-is-all-delˡ ΓUsed = ~⊞-is-all-del∧⊢⇒⊢ˡ Γ~ Γ′Del (soundness-helper ⊢L⇒)
 
 -- Algorithm to infer its type from a term
 --
