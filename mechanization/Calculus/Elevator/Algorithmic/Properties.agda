@@ -138,10 +138,10 @@ unused-length (_ ∷ Γ) = cong suc (unused-length Γ)
 
 ~⊞-unused-assoc : ∀ Δ′ →
                   Δ ~ Δ₀ ⊞ Δ₁ →
-                  Ψ₀ ~ Δ₀ ⊞ unused Δ′ →
-                  Ψ₁ ~ Δ₁ ⊞ unused Δ′ →
+                  Γ₀ ~ Δ₀ ⊞ unused Δ′ →
+                  Γ₁ ~ Δ₁ ⊞ unused Δ′ →
                   ---------------------------------------------
-                  ∃ (λ Δ″ → Δ″ ~ Δ ⊞ unused Δ′ × Δ″ ~ Ψ₀ ⊞ Ψ₁)
+                  ∃ (λ Δ″ → Δ″ ~ Δ ⊞ unused Δ′ × Δ″ ~ Γ₀ ⊞ Γ₁)
 ~⊞-unused-assoc []       []        []          []          = -, [] , []
 ~⊞-unused-assoc (_ ∷ Δ′) (d~ ∷ Δ~) (d₀~ ∷ Ψ₀~) (d₁~ ∷ Ψ₁~)
   with _ , Δ″~ , Δ″∼′ ← ~⊞-unused-assoc Δ′ Δ~ Ψ₀~ Ψ₁~
@@ -305,13 +305,13 @@ is-all-used-by⇒~⊞-is-all-delˡ (dUsed ∷ ΓUsed)
 --
 ∉unused : ∀ Γ →
           ------------------------------
-          ¬ (x ⦂[ m ] S ∈ unused Γ ⇒ Ψ)
+          ¬ (x ⦂[ m ] S ∈ unused Γ ⇒ Δ)
 ∉unused (_ ∷ Γ) (there x∈⇒) = ∉unused Γ x∈⇒
 
 ∈drop⇒∈ : ∀ Γ →
-          x ⦂[ m₀ ] S ∈ Γ drop[ m ]⇒ ⇒ Ψ →
+          x ⦂[ m₀ ] S ∈ Γ drop[ m ]⇒ ⇒ Δ →
           ---------------------------------
-          x ⦂[ m₀ ] S ∈ Γ ⇒ Ψ
+          x ⦂[ m₀ ] S ∈ Γ ⇒ Δ
 ∈drop⇒∈ {m = m} ((_ , m₁ , d) ∷ Γ) x∈⇒
   with m ≤?ₘ m₁ | x∈⇒
 ...  | yes _    | here
@@ -319,34 +319,34 @@ is-all-used-by⇒~⊞-is-all-delˡ (dUsed ∷ ΓUsed)
 ...  | yes _    | there x∈⇒′         = there (∈drop⇒∈ Γ x∈⇒′)
 ...  | no  _    | there x∈⇒′         = there (∈drop⇒∈ Γ x∈⇒′)
 
-~⊞-preserves-∈ : Δ ~ Δ₀ ⊞ Δ₁ →
-                 x ⦂[ m ] S ∈ Δ ⇒ Ψ →
+~⊞-preserves-∈ : Γ ~ Γ₀ ⊞ Γ₁ →
+                 x ⦂[ m ] S ∈ Γ ⇒ Δ →
                  ----------------------------------------------
-                 (x ⦂[ m ] S ∈ Δ₀ ⇒ Ψ) ⊎ (x ⦂[ m ] S ∈ Δ₁ ⇒ Ψ)
-~⊞-preserves-∈ (_  ∷ Δ~)               (there x∈⇒)
-  with ~⊞-preserves-∈ Δ~ x∈⇒
+                 (x ⦂[ m ] S ∈ Γ₀ ⇒ Δ) ⊎ (x ⦂[ m ] S ∈ Γ₁ ⇒ Δ)
+~⊞-preserves-∈ (_  ∷ Γ~)               (there x∈⇒)
+  with ~⊞-preserves-∈ Γ~ x∈⇒
 ...  | inj₁ x∈⇒′                                   = inj₁ (there x∈⇒′)
 ...  | inj₂ x∈⇒′                                   = inj₂ (there x∈⇒′)
-~⊞-preserves-∈ (contraction Co∈m ∷ Δ~) here
-  rewrite ~⊞-unusedˡ Δ~                            = inj₁ here
-~⊞-preserves-∈ (to-left ∷ Δ~)          here
-  rewrite ~⊞-unusedˡ Δ~                            = inj₁ here
-~⊞-preserves-∈ (to-right ∷ Δ~)         here
-  rewrite ~⊞-unusedʳ Δ~                            = inj₂ here
+~⊞-preserves-∈ (contraction Co∈m ∷ Γ~) here
+  rewrite ~⊞-unusedˡ Γ~                            = inj₁ here
+~⊞-preserves-∈ (to-left ∷ Γ~)          here
+  rewrite ~⊞-unusedˡ Γ~                            = inj₁ here
+~⊞-preserves-∈ (to-right ∷ Γ~)         here
+  rewrite ~⊞-unusedʳ Γ~                            = inj₂ here
 
 ∈⇒∧∈⇒⇒∈⇒ : y ⦂[ m ] S ∈ Γ ⇒ Δ →
-           x ⦂[ m₀ ] T ∈ Δ ⇒ Ψ →
-           ----------------------
-           x ⦂[ m₀ ] T ∈ Γ ⇒ Ψ
+           x ⦂[ m₀ ] T ∈ Δ ⇒ Δ′ →
+           -----------------------
+           x ⦂[ m₀ ] T ∈ Γ ⇒ Δ′
 ∈⇒∧∈⇒⇒∈⇒ {Γ = _ ∷ Γ} here        here
   rewrite unused-idempotent Γ                = here
 ∈⇒∧∈⇒⇒∈⇒             here        (there x∈⇒) with () ← ∉unused _ x∈⇒
 ∈⇒∧∈⇒⇒∈⇒             (there y∈⇒) (there x∈⇒) = there (∈⇒∧∈⇒⇒∈⇒ y∈⇒ x∈⇒)
 
 ⊢∧∈⇒⇒∈⇒ : Γ ⊢[ m ] L ⦂ S ⇒ Δ →
-          x ⦂[ m₀ ] T ∈ Δ ⇒ Ψ →
-          ----------------------
-          x ⦂[ m₀ ] T ∈ Γ ⇒ Ψ
+          x ⦂[ m₀ ] T ∈ Δ ⇒ Δ′ →
+          -----------------------
+          x ⦂[ m₀ ] T ∈ Γ ⇒ Δ′
 ⊢∧∈⇒⇒∈⇒ `unit                                      x∈⇒ with () ← ∉unused _ x∈⇒
 ⊢∧∈⇒⇒∈⇒ (`λ⦂[ dDel ]-∘ ⊢L)                         x∈⇒
   with there x∈⇒′ ← ⊢∧∈⇒⇒∈⇒ ⊢L (there x∈⇒)             = x∈⇒′
