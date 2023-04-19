@@ -25,5 +25,5 @@ import Calculus.LambdaBox.Syntax
 import Calculus.LambdaBox.Typing
 import Calculus.LambdaBox.OpSem
 
--- Embedding, its soundness and completeness, and bisimulation of λ□ in λ↓↑₂
+-- Embedding, its soundness and completeness, and bisimulation from λ□ into λ↓↑₂
 import Calculus.Elevator.Embedding.LambdaBox
