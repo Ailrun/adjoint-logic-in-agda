@@ -75,17 +75,17 @@ length-respects-~⊞ (_ ∷ Γ~)
 ~⊞-commute []        = []
 ~⊞-commute (d~ ∷ Γ~) = ~d⊞-commute d~ ∷ ~⊞-commute Γ~
 
-~⊞-preserves-++ : ∀ Δ →
-                  Δ ++ Ψ ~ Γ₀ ⊞ Γ₁ →
-                  ------------------------------
-                  ∃₂ (λ Δ₀ Δ₁ →
-                    ∃₂ (λ Ψ₀ Ψ₁ → Γ₀ ≡ Δ₀ ++ Ψ₀
-                                × Γ₁ ≡ Δ₁ ++ Ψ₁
-                                × Δ ~ Δ₀ ⊞ Δ₁
-                                × Ψ ~ Ψ₀ ⊞ Ψ₁))
-~⊞-preserves-++ []      Ψ~                                           = -, -, -, -, refl , refl , [] , Ψ~
-~⊞-preserves-++ (_ ∷ Δ) (d~ ∷ ΔΨ~)
-  with _ , _ , _ , _ , refl , refl , Δ~ , Ψ~ ← ~⊞-preserves-++ Δ ΔΨ~ = -, -, -, -, refl , refl , d~ ∷ Δ~ , Ψ~
+~⊞-preserves-++ : ∀ Δ₀ →
+                  Δ₀ ++ Δ₁ ~ Γ₀ ⊞ Γ₁ →
+                  -----------------------------------
+                  ∃₂ (λ Δ₀₀ Δ₀₁ →
+                    ∃₂ (λ Δ₁₀ Δ₁₁ → Γ₀ ≡ Δ₀₀ ++ Δ₁₀
+                                  × Γ₁ ≡ Δ₀₁ ++ Δ₁₁
+                                  × Δ₀ ~ Δ₀₀ ⊞ Δ₀₁
+                                  × Δ₁ ~ Δ₁₀ ⊞ Δ₁₁))
+~⊞-preserves-++ []       Δ₁~                                              = -, -, -, -, refl , refl , [] , Δ₁~
+~⊞-preserves-++ (_ ∷ Δ₀) (d₀~ ∷ Δ₀Δ₁~)
+  with _ , _ , _ , _ , refl , refl , Δ₀~ , Δ₁~ ← ~⊞-preserves-++ Δ₀ Δ₀Δ₁~ = -, -, -, -, refl , refl , d₀~ ∷ Δ₀~ , Δ₁~
 
 ~⊞-++⁺ : Γ ~ Γ₀ ⊞ Γ₁ →
          Δ ~ Δ₀ ⊞ Δ₁ →
@@ -266,15 +266,15 @@ length-respects-∤ (e∤ ∷ Γ∤) = cong suc (length-respects-∤ Γ∤)
   with _ , _ , Γ′~ , ∤Γ₀ , ∤Γ₁ ← ∤⁻¹-preserves-~⊞ Γ~ ∤Γ
      | _ , _ , d′~ , ∤d₀ , ∤d₁ ← ∤d⁻¹-preserves-~d⊞ d~ ∤d = -, -, d′~ ∷ Γ′~ , ∤d₀ ∷ ∤Γ₀ , ∤d₁ ∷ ∤Γ₁
 
-∤-preserves-++ : ∀ Δ →
-                 Δ ++ Ψ ∤[ m ] Γ →
-                 ---------------------------
-                 ∃₂ (λ Δ′ Ψ′ → Γ ≡ Δ′ ++ Ψ′
-                             × Δ ∤[ m ] Δ′
-                             × Ψ ∤[ m ] Ψ′)
-∤-preserves-++ []      Ψ∤                            = -, -, refl , [] , Ψ∤
-∤-preserves-++ (_ ∷ Δ) (d∤ ∷ ΔΨ∤)
-  with _ , _ , refl , Δ∤ , Ψ∤ ← ∤-preserves-++ Δ ΔΨ∤ = -, -, refl , d∤ ∷ Δ∤ , Ψ∤
+∤-preserves-++ : ∀ Δ₀ →
+                 Δ₀ ++ Δ₁ ∤[ m ] Γ →
+                 -------------------------------
+                 ∃₂ (λ Δ₀′ Δ₁′ → Γ ≡ Δ₀′ ++ Δ₁′
+                               × Δ₀ ∤[ m ] Δ₀′
+                               × Δ₁ ∤[ m ] Δ₁′)
+∤-preserves-++ []       Δ₁∤                               = -, -, refl , [] , Δ₁∤
+∤-preserves-++ (_ ∷ Δ₀) (d₀∤ ∷ Δ₀Δ₁∤)
+  with _ , _ , refl , Δ₀∤ , Δ₁∤ ← ∤-preserves-++ Δ₀ Δ₀Δ₁∤ = -, -, refl , d₀∤ ∷ Δ₀∤ , Δ₁∤
 
 ~d⊞⁻¹-preserves-∤d : d₀ [ m₀ ]∤[ m ]d dS₀ → 
                      d₁ [ m₀ ]∤[ m ]d dS₁ → 
@@ -357,67 +357,67 @@ len∈-inversion []      (here ΓDel) = ΓDel , refl , refl , refl
 len∈-inversion (_ ∷ Δ) (there dDel lenΔ∈)
   with ΔΓDel , refl , refl , refl ← len∈-inversion Δ lenΔ∈ = dDel ∷ ΔΓDel , refl , refl , refl
 
-∈⇒+-∈-++ : Ψ is-all-del →
+∈⇒+-∈-++ : Γ′ is-all-del →
            x ⦂[ m ] S ∈ Γ →
-           -------------------------------
-           length Ψ + x ⦂[ m ] S ∈ Ψ ++ Γ
-∈⇒+-∈-++ []            x∈ = x∈
-∈⇒+-∈-++ (eDel ∷ ΨDel) x∈ = there eDel (∈⇒+-∈-++ ΨDel x∈)
+           ---------------------------------
+           length Γ′ + x ⦂[ m ] S ∈ Γ′ ++ Γ
+∈⇒+-∈-++ []             x∈ = x∈
+∈⇒+-∈-++ (dDel ∷ Γ′Del) x∈ = there dDel (∈⇒+-∈-++ Γ′Del x∈)
 
 <∧∈-++⇒∈-++-++ : ∀ Δ →
-                 Ψ is-all-del →
+                 Γ′ is-all-del →
                  x ⦂[ m ] S ∈ Δ ++ Γ →
                  x ℕ.< length Δ →
-                 -------------------------
-                 x ⦂[ m ] S ∈ Δ ++ Ψ ++ Γ
-<∧∈-++⇒∈-++-++ (_ ∷ Δ) ΨDel (here ΔΓDel)    x<       = here (All.++⁺ (All.++⁻ˡ Δ ΔΓDel) (All.++⁺ ΨDel (All.++⁻ʳ Δ ΔΓDel)))
-<∧∈-++⇒∈-++-++ (e ∷ Δ) ΨDel (there eDel x∈) (s≤s x<) = there eDel (<∧∈-++⇒∈-++-++ Δ ΨDel x∈ x<)
+                 --------------------------
+                 x ⦂[ m ] S ∈ Δ ++ Γ′ ++ Γ
+<∧∈-++⇒∈-++-++ (_ ∷ Δ) Γ′Del (here ΔΓDel)    x<       = here (All.++⁺ (All.++⁻ˡ Δ ΔΓDel) (All.++⁺ Γ′Del (All.++⁻ʳ Δ ΔΓDel)))
+<∧∈-++⇒∈-++-++ (e ∷ Δ) Γ′Del (there eDel x∈) (s≤s x<) = there eDel (<∧∈-++⇒∈-++-++ Δ Γ′Del x∈ x<)
 
 ≥∧∈-++⇒+-∈-++-++ : ∀ Δ →
-                   Ψ is-all-del →
+                   Γ′ is-all-del →
                    x ⦂[ m ] S ∈ Δ ++ Γ →
                    x ℕ.≥ length Δ →
-                   ------------------------------------
-                   length Ψ + x ⦂[ m ] S ∈ Δ ++ Ψ ++ Γ
-≥∧∈-++⇒+-∈-++-++                     []      ΨDel x∈              x≥       = ∈⇒+-∈-++ ΨDel x∈
-≥∧∈-++⇒+-∈-++-++ {Ψ = Ψ} {x = suc x} (e ∷ Δ) ΨDel (there eDel x∈) (s≤s x≥)
-  rewrite ℕ.+-suc (length Ψ) x                                             = there eDel (≥∧∈-++⇒+-∈-++-++ Δ ΨDel x∈ x≥)
+                   --------------------------------------
+                   length Γ′ + x ⦂[ m ] S ∈ Δ ++ Γ′ ++ Γ
+≥∧∈-++⇒+-∈-++-++                     []      Γ′Del x∈              x≥         = ∈⇒+-∈-++ Γ′Del x∈
+≥∧∈-++⇒+-∈-++-++ {Γ′ = Γ′} {x = suc x} (e ∷ Δ) Γ′Del (there eDel x∈) (s≤s x≥)
+  rewrite ℕ.+-suc (length Γ′) x                                               = there eDel (≥∧∈-++⇒+-∈-++-++ Δ Γ′Del x∈ x≥)
 
 <∧∈-++-++⇒∈-++ : ∀ Δ Γ →
-                 x ⦂[ m ] T ∈ Δ ++ Γ ++ Ψ →
+                 x ⦂[ m ] T ∈ Δ ++ Γ ++ Γ′ →
                  x ℕ.< length Δ →
-                 --------------------
-                 x ⦂[ m ] T ∈ Δ ++ Ψ
-<∧∈-++-++⇒∈-++ (_ ∷ Δ) Γ (here ΔΓΨDel)   x<       = here (All.++⁺ (All.++⁻ˡ Δ ΔΓΨDel) (All.++⁻ʳ Γ (All.++⁻ʳ Δ ΔΓΨDel)))
+                 ----------------------------
+                 x ⦂[ m ] T ∈ Δ ++ Γ′
+<∧∈-++-++⇒∈-++ (_ ∷ Δ) Γ (here ΔΓΓ′Del)   x<       = here (All.++⁺ (All.++⁻ˡ Δ ΔΓΓ′Del) (All.++⁻ʳ Γ (All.++⁻ʳ Δ ΔΓΓ′Del)))
 <∧∈-++-++⇒∈-++ (_ ∷ Δ) Γ (there dDel x∈) (s≤s x<) = there dDel (<∧∈-++-++⇒∈-++ Δ Γ x∈ x<)
 
 ≥∧∈-++⇒∈ : ∀ Δ →
-           x ⦂[ m ] T ∈ Δ ++ Ψ →
+           x ⦂[ m ] T ∈ Δ ++ Γ →
            x ℕ.≥ length Δ →
            ----------------------------
-           x ℕ.∸ length Δ ⦂[ m ] T ∈ Ψ
+           x ℕ.∸ length Δ ⦂[ m ] T ∈ Γ
 ≥∧∈-++⇒∈ []      x∈           x≥       = x∈
 ≥∧∈-++⇒∈ (_ ∷ Δ) (there _ x∈) (s≤s x≥) = ≥∧∈-++⇒∈ Δ x∈ x≥
 
 ≥∧∈-++-++⇒∈-++ : ∀ Δ Γ →
-                 x ⦂[ m ] T ∈ Δ ++ Γ ++ Ψ →
+                 x ⦂[ m ] T ∈ Δ ++ Γ ++ Γ′ →
                  x ℕ.≥ length Δ + length Γ →
                  ---------------------------------
-                 x ℕ.∸ length Γ ⦂[ m ] T ∈ Δ ++ Ψ
+                 x ℕ.∸ length Γ ⦂[ m ] T ∈ Δ ++ Γ′
 ≥∧∈-++-++⇒∈-++ []      Γ x∈              x≥         = ≥∧∈-++⇒∈ Γ x∈ x≥
 ≥∧∈-++-++⇒∈-++ (_ ∷ Δ) Γ (there dDel x∈) (s≤s x≥)
   rewrite ℕ.+-∸-assoc 1 (ℕ.m+n≤o⇒n≤o (length Δ) x≥) = there dDel (≥∧∈-++-++⇒∈-++ Δ Γ x∈ x≥)
 
 <∧∈-++⇒is-all-del : ∀ Δ →
-                    x ⦂[ m ] T ∈ Δ ++ Ψ →
+                    x ⦂[ m ] T ∈ Δ ++ Γ →
                     x ℕ.< length Δ →
                     ----------------------
-                    Ψ is-all-del
-<∧∈-++⇒is-all-del (_ ∷ Δ) (T.here ΔΨDel) x<       = All.++⁻ʳ Δ ΔΨDel
+                    Γ is-all-del
+<∧∈-++⇒is-all-del (_ ∷ Δ) (T.here ΔΓDel) x<       = All.++⁻ʳ Δ ΔΓDel
 <∧∈-++⇒is-all-del (_ ∷ Δ) (T.there _ x∈) (s≤s x<) = <∧∈-++⇒is-all-del Δ x∈ x<
 
 ≥∧∈-++⇒is-all-del : ∀ Δ →
-                    x ⦂[ m ] T ∈ Δ ++ Ψ →
+                    x ⦂[ m ] T ∈ Δ ++ Γ →
                     x ℕ.≥ length Δ →
                     ----------------------
                     Δ is-all-del
