@@ -20,3 +20,11 @@ wkidx[↑suc]suc≡sucwkidx[↑] n x y
     rewrite proj₂ (dec-yes (_ ℕ.≥? _) y≥x)            = ℕ.+-suc n y
 ...  | no  y≱x
     rewrite dec-no (_ ℕ.≥? _) (λ y≥x → y≱x (s≤s y≥x)) = refl
+
+wkidx[0↑]≡ : ∀ x y →
+             ---------------------
+             wkidx[ 0 ↑ x ] y ≡ y
+wkidx[0↑]≡ x y
+  with y ℕ.≥? x
+...  | yes _ = refl
+...  | no  _ = refl
