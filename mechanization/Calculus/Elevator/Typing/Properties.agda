@@ -17,7 +17,7 @@ open import Data.Nat as ℕ using (suc; _+_; s≤s)
 import Data.Nat.Properties as ℕ
 open import Data.Product as × using (_×_; _,_; proj₁; proj₂; ∃; ∃₂; -,_)
 open import Relation.Nullary using (yes; no)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; cong₂)
 
 import Calculus.Elevator.Syntax as S
 import Calculus.Elevator.Typing as T
@@ -206,6 +206,20 @@ length-respects-~⊞ (_ ∷ Γ~)
                             Γ is-all-del
 ~⊞⁻¹-preserves-is-all-del []              []              []        = []
 ~⊞⁻¹-preserves-is-all-del (d₀Del ∷ Γ₀Del) (d₁Del ∷ Γ₁Del) (d~ ∷ Γ~) = ~d⊞⁻¹-preserves-is-del d₀Del d₁Del d~ ∷ ~⊞⁻¹-preserves-is-all-del Γ₀Del Γ₁Del Γ~
+
+∤d-det : d [ m₀ ]∤[ m ]d d′ →
+         d [ m₀ ]∤[ m ]d d″ →
+         d′ ≡ d″
+∤d-det (delete m≰ _) (delete _ _)  = refl
+∤d-det (delete m≰ _) (keep m≤)     with () ← m≰ m≤
+∤d-det (keep m≤)     (delete m≰ _) with () ← m≰ m≤
+∤d-det (keep m≤)     (keep _)      = refl
+
+∤-det : Γ ∤[ m ] Γ′ →
+        Γ ∤[ m ] Γ″ →
+        Γ′ ≡ Γ″
+∤-det []        [] = refl
+∤-det (d∤ ∷ Γ∤) (d∤′ ∷ Γ∤′) = cong₂ _∷_ (cong (λ d → _ , _ , d) (∤d-det d∤ d∤′)) (∤-det Γ∤ Γ∤′)
 
 is-del⇒∤d : ∀ m →
             d [ m₀ ]is-del →

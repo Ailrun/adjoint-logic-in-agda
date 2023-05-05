@@ -1,3 +1,7 @@
+------------------------------------------------------------
+-- Properties of Static Rules of λ□
+------------------------------------------------------------
+
 {-# OPTIONS --safe #-}
 module Calculus.LambdaBox.Typing.Properties where
 

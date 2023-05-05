@@ -1,5 +1,5 @@
 ------------------------------------------------------------
--- Static Rules for DP Modal Calculus
+-- Static Rules for λ□
 ------------------------------------------------------------
 
 {-# OPTIONS --safe #-}
@@ -13,7 +13,7 @@ open import Calculus.LambdaBox.Syntax
 infix   4 _⦂_∈_
 infix   4 _⍮_⊢_⦂_
 
-data _⦂_∈_ : ℕ → Type → List Type → Set where
+data _⦂_∈_ : ℕ → Type → Context → Set where
   here  : --------------
           0 ⦂ A ∈ A ∷ Φ
 
@@ -40,7 +40,7 @@ data _⍮_⊢_⦂_ : Context → Context → Term → Type → Set where
 
   _`$_          : Ψ₁ ⍮ Ψ₀ ⊢ E ⦂ B `→ A →
                   Ψ₁ ⍮ Ψ₀ ⊢ F ⦂ B →
-                  ---------------------
+                  -----------------------
                   Ψ₁ ⍮ Ψ₀ ⊢ E `$ F ⦂ A
 
   `#¹_          : u ⦂ A ∈ Ψ₁ →

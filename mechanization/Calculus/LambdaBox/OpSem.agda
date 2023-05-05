@@ -1,5 +1,5 @@
 ------------------------------------------------------------
--- Dynamic Rules for DP Modal Calculus
+-- Dynamic Rules for λ□
 ------------------------------------------------------------
 
 {-# OPTIONS --safe #-}
@@ -30,25 +30,25 @@ infix  25 [_/¹_]_
 infix  25 [_/⁰_]_
 
 wk[_↑¹_]_ : ℕ → ℕ → Term → Term
-wk[ n ↑¹ u ] `unit = `unit
-wk[ n ↑¹ u ] `box E = `box (wk[ n ↑¹ u ] E)
+wk[ n ↑¹ u ] `unit              = `unit
+wk[ n ↑¹ u ] `box E             = `box (wk[ n ↑¹ u ] E)
 wk[ n ↑¹ u ] (`let-box E `in F) = `let-box wk[ n ↑¹ u ] E `in wk[ n ↑¹ suc u ] F
-wk[ n ↑¹ u ] (`λ⦂ A ∙ E) = `λ⦂ A ∙ wk[ n ↑¹ u ] E
-wk[ n ↑¹ u ] (E `$ F) = wk[ n ↑¹ u ] E `$ wk[ n ↑¹ u ] F
-wk[ n ↑¹ u ] (`#¹ v) = `#¹ wkidx[ n ↑ u ] v
-wk[ n ↑¹ u ] (`#⁰ y) = `#⁰ y
+wk[ n ↑¹ u ] (`λ⦂ A ∙ E)        = `λ⦂ A ∙ wk[ n ↑¹ u ] E
+wk[ n ↑¹ u ] (E `$ F)           = wk[ n ↑¹ u ] E `$ wk[ n ↑¹ u ] F
+wk[ n ↑¹ u ] (`#¹ v)            = `#¹ wkidx[ n ↑ u ] v
+wk[ n ↑¹ u ] (`#⁰ y)            = `#⁰ y
 
 wk¹_ : Term → Term
 wk¹_ = wk[ 1 ↑¹ 0 ]_
 
 wk[_↑⁰_]_ : ℕ → ℕ → Term → Term
-wk[ n ↑⁰ x ] `unit = `unit
-wk[ n ↑⁰ x ] `box E = `box E
+wk[ n ↑⁰ x ] `unit              = `unit
+wk[ n ↑⁰ x ] `box E             = `box E
 wk[ n ↑⁰ x ] (`let-box E `in F) = `let-box wk[ n ↑⁰ x ] E `in wk[ n ↑⁰ x ] F
-wk[ n ↑⁰ x ] (`λ⦂ A ∙ E) = `λ⦂ A ∙ wk[ n ↑⁰ suc x ] E
-wk[ n ↑⁰ x ] (E `$ F) = wk[ n ↑⁰ x ] E `$ wk[ n ↑⁰ x ] F
-wk[ n ↑⁰ x ] (`#¹ v) = `#¹ v
-wk[ n ↑⁰ x ] (`#⁰ y) = `#⁰ wkidx[ n ↑ x ] y
+wk[ n ↑⁰ x ] (`λ⦂ A ∙ E)        = `λ⦂ A ∙ wk[ n ↑⁰ suc x ] E
+wk[ n ↑⁰ x ] (E `$ F)           = wk[ n ↑⁰ x ] E `$ wk[ n ↑⁰ x ] F
+wk[ n ↑⁰ x ] (`#¹ v)            = `#¹ v
+wk[ n ↑⁰ x ] (`#⁰ y)            = `#⁰ wkidx[ n ↑ x ] y
 
 wk⁰_ : Term → Term
 wk⁰_ = wk[ 1 ↑⁰ 0 ]_

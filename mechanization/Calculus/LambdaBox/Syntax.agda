@@ -1,3 +1,7 @@
+------------------------------------------------------------
+-- Syntax for DP Modal Calculus [Davies & Pfenning 2001]
+------------------------------------------------------------
+
 {-# OPTIONS --safe #-}
 module Calculus.LambdaBox.Syntax where
 
@@ -21,7 +25,6 @@ data Term : Set where
   `#¹_          : ℕ → Term
   `#⁰_          : ℕ → Term
 
-Context : Set
 Context = List Type
 
 variable

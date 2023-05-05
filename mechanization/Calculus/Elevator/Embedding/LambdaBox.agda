@@ -1,5 +1,5 @@
 ------------------------------------------------------------
--- Embedding of λ□ (Davies & Pfenning 2001) into λ↓↑₂
+-- Embedding of λ□ [Davies & Pfenning 2001] into λ↓↑₂
 ------------------------------------------------------------
 --
 -- This module provides an embedding relation between λ□ and λ↑↓₂,
@@ -104,40 +104,40 @@ pattern ξ-`return≤`lift L⟶        = ξ-`return≤ (ξ-`lift L⟶)
 -- Embedding Relation for Types
 --
 data _~ᵀ_ : DP.Type → Type → Set where
-  `⊤   : ---------------------
+  `⊤   : ------------
          DP.`⊤ ~ᵀ `⊤
 
   `□   : A ~ᵀ S →
-         ------------------------
+         ---------------------
          DP.`□ A ~ᵀ `↓ (`↑ S)
 
   _`→_ : A ~ᵀ S →
          B ~ᵀ T →
-         --------------------------
+         --------------------
          A DP.`→ B ~ᵀ S `⊸ T
 
 -- Embedding Relation for Contexts
 --
 data _⍮_~ˣ_ : DP.Context → DP.Context → Context → Set where
-  []   : --------------
-         [] ⍮ [] ~ˣ []
+  []    : --------------
+          [] ⍮ [] ~ˣ []
 
   _!∷ᶜ_ : A ~ᵀ S →
           Ψ₁ ⍮ Ψ₀ ~ˣ Γ →
-          ------------------------------------------------
+          -----------------------------------------
           A ∷ Ψ₁ ⍮ Ψ₀ ~ˣ (`↑ S , cMode , true) ∷ Γ
 
   ?∷ᶜ_  : Ψ₁ ⍮ Ψ₀ ~ˣ Γ →
-          ------------------------------------------
+          --------------------------------------
           Ψ₁ ⍮ Ψ₀ ~ˣ (`↑ S , cMode , false) ∷ Γ
 
   _!∷ᵖ_ : A ~ᵀ S →
           Ψ₁ ⍮ Ψ₀ ~ˣ Γ →
-          ---------------------------------------------
+          --------------------------------------
           Ψ₁ ⍮ A ∷ Ψ₀ ~ˣ (S , pMode , true) ∷ Γ
 
   ?∷ᵖ_  : Ψ₁ ⍮ Ψ₀ ~ˣ Γ →
-          ---------------------------------------
+          -----------------------------------
           Ψ₁ ⍮ Ψ₀ ~ˣ (S , pMode , false) ∷ Γ
 
 -- Embedding Relation for Context Skeleton
@@ -145,23 +145,23 @@ data _⍮_~ˣ_ : DP.Context → DP.Context → Context → Set where
 -- To track de Bruijn indices in the embedding relation,
 -- We need to track the structure of the context embedding.
 data _⍮_~ˣ⁻ : ℕ → ℕ → Set where
-  []   : -----------
+  []   : ----------
          0 ⍮ 0 ~ˣ⁻
 
   ?∷ᶜ_ : k ⍮ k′ ~ˣ⁻ →
-         --------------
+         -------------
          k ⍮ k′ ~ˣ⁻
 
   !∷ᶜ_ : k ⍮ k′ ~ˣ⁻ →
-         ----------------
+         ---------------
          suc k ⍮ k′ ~ˣ⁻
 
   ?∷ᵖ_ : k ⍮ k′ ~ˣ⁻ →
-         --------------
+         -------------
          k ⍮ k′ ~ˣ⁻
 
   !∷ᵖ_ : k ⍮ k′ ~ˣ⁻ →
-         ----------------
+         ---------------
          k ⍮ suc k′ ~ˣ⁻
 
 -- Operations for The Context Embeddings
@@ -169,11 +169,11 @@ variable
   kk′~ : k ⍮ k′ ~ˣ⁻
 
 eraseˣ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ → length Ψ₁ ⍮ length Ψ₀ ~ˣ⁻
-eraseˣ []          = []
-eraseˣ   (?∷ᶜ ΔΓ~) = ?∷ᶜ eraseˣ ΔΓ~
-eraseˣ (_ !∷ᶜ ΔΓ~) = !∷ᶜ eraseˣ ΔΓ~
-eraseˣ   (?∷ᵖ ΔΓ~) = ?∷ᵖ eraseˣ ΔΓ~
-eraseˣ (_ !∷ᵖ ΔΓ~) = !∷ᵖ eraseˣ ΔΓ~
+eraseˣ []         = []
+eraseˣ   (?∷ᶜ ~Γ) = ?∷ᶜ eraseˣ ~Γ
+eraseˣ (_ !∷ᶜ ~Γ) = !∷ᶜ eraseˣ ~Γ
+eraseˣ   (?∷ᵖ ~Γ) = ?∷ᵖ eraseˣ ~Γ
+eraseˣ (_ !∷ᵖ ~Γ) = !∷ᵖ eraseˣ ~Γ
 
 _++ˣ⁻_ : k ⍮ k′ ~ˣ⁻ → k″ ⍮ k‴ ~ˣ⁻ → k + k″ ⍮ k′ + k‴ ~ˣ⁻
 []         ++ˣ⁻ k″k‴~ = k″k‴~
@@ -190,13 +190,13 @@ extractˣ⁻ᶜ (?∷ᵖ kk′~) = ?∷ᵖ extractˣ⁻ᶜ kk′~
 extractˣ⁻ᶜ (!∷ᵖ kk′~) = ?∷ᵖ extractˣ⁻ᶜ kk′~
 
 extractˣᶜ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ →
-            ---------------------------
+            -------------------------
             ∃ (λ Γ′ → Ψ₁ ⍮ [] ~ˣ Γ′)
-extractˣᶜ []                         = _ , []
-extractˣᶜ (?∷ᶜ_ {_} {_} {_} {S} ΔΓ~) = (`↑ S , _ , _) ∷ _ , ?∷ᶜ proj₂ (extractˣᶜ ΔΓ~)
-extractˣᶜ (S~ !∷ᶜ ΔΓ~)               = _ , S~ !∷ᶜ proj₂ (extractˣᶜ ΔΓ~)
-extractˣᶜ (?∷ᵖ_ {_} {_} {_} {S} ΔΓ~) = (S , _ , _) ∷ _ , ?∷ᵖ proj₂ (extractˣᶜ ΔΓ~)
-extractˣᶜ (_!∷ᵖ_ {_} {S} S~ ΔΓ~)     = (S , _ , _) ∷ _ , ?∷ᵖ proj₂ (extractˣᶜ ΔΓ~)
+extractˣᶜ []                        = _ , []
+extractˣᶜ (?∷ᶜ_ {_} {_} {_} {S} ~Γ) = (`↑ S , _ , _) ∷ _ , ?∷ᶜ proj₂ (extractˣᶜ ~Γ)
+extractˣᶜ (S~ !∷ᶜ ~Γ)               = _ , S~ !∷ᶜ proj₂ (extractˣᶜ ~Γ)
+extractˣᶜ (?∷ᵖ_ {_} {_} {_} {S} ~Γ) = (S , _ , _) ∷ _ , ?∷ᵖ proj₂ (extractˣᶜ ~Γ)
+extractˣᶜ (_!∷ᵖ_ {_} {S} S~ ~Γ)     = (S , _ , _) ∷ _ , ?∷ᵖ proj₂ (extractˣᶜ ~Γ)
 
 lengthˣ⁻ : k ⍮ k′ ~ˣ⁻ → ℕ
 lengthˣ⁻ []         = 0
@@ -398,7 +398,7 @@ idxˣ⁻ᶜ-extractˣ⁻ᶜ {k = suc _} {u = suc u} (!∷ᶜ kk′~) (s≤s u<) 
 lengthˣ⁻-extractˣ⁻ᶜ : (kk′~ : k ⍮ k′ ~ˣ⁻) →
                       -------------------------------------------
                       lengthˣ⁻ (extractˣ⁻ᶜ kk′~) ≡ lengthˣ⁻ kk′~
-lengthˣ⁻-extractˣ⁻ᶜ [] = refl
+lengthˣ⁻-extractˣ⁻ᶜ []         = refl
 lengthˣ⁻-extractˣ⁻ᶜ (?∷ᶜ kk′~) = cong suc (lengthˣ⁻-extractˣ⁻ᶜ kk′~)
 lengthˣ⁻-extractˣ⁻ᶜ (!∷ᶜ kk′~) = cong suc (lengthˣ⁻-extractˣ⁻ᶜ kk′~)
 lengthˣ⁻-extractˣ⁻ᶜ (?∷ᵖ kk′~) = cong suc (lengthˣ⁻-extractˣ⁻ᶜ kk′~)
@@ -677,7 +677,7 @@ extractˣ⁻ᶜ⁻¹-~ᴹ-depth~ᴹ          kk′~ k″k‴~ (`unlift-`lift ~L)
 ~ᴹ∧++⊢⇒⊢-helper (`box ~L)            (DP.`box ⊢E)            rec     = DP.`box ⊢E
 ~ᴹ∧++⊢⇒⊢-helper (`let-box ~L `in ~M) (DP.`let-box ⊢E `in ⊢F) (acc r) = DP.`let-box ~ᴹ∧++⊢⇒⊢-helper ~L ⊢E (r _ (s≤s (ℕ.m≤m⊔n _ _))) `in ~ᴹ∧++⊢⇒⊢-helper ~M ⊢F (r _ (s≤s (ℕ.m≤n⊔m _ _)))
 ~ᴹ∧++⊢⇒⊢-helper (`#¹ u<)             (DP.`#¹ u∈)             rec     = DP.`#¹ u∈
-~ᴹ∧++⊢⇒⊢-helper (`λ⦂ ~S ∙ ~L) (DP.`λ⦂-∙ ⊢E)                  (acc r) = DP.`λ⦂-∙ (~ᴹ∧++⊢⇒⊢-helper ~L ⊢E (r _ (ℕ.n<1+n _)))
+~ᴹ∧++⊢⇒⊢-helper (`λ⦂ ~S ∙ ~L)        (DP.`λ⦂-∙ ⊢E)           (acc r) = DP.`λ⦂-∙ (~ᴹ∧++⊢⇒⊢-helper ~L ⊢E (r _ (ℕ.n<1+n _)))
 ~ᴹ∧++⊢⇒⊢-helper (~L `$ ~M)           (⊢E DP.`$ ⊢F)           (acc r) = ~ᴹ∧++⊢⇒⊢-helper ~L ⊢E (r _ (s≤s (ℕ.m≤m⊔n _ _))) DP.`$ ~ᴹ∧++⊢⇒⊢-helper ~M ⊢F (r _ (s≤s (ℕ.m≤n⊔m _ _)))
 ~ᴹ∧++⊢⇒⊢-helper (`#⁰ x<)             (DP.`#⁰ x∈)             rec     = DP.`#⁰ DP.>∈-++⇒∈ _ x< x∈
 ~ᴹ∧++⊢⇒⊢-helper (`unlift-`lift ~L)   ⊢E                      (acc r) = ~ᴹ∧++⊢⇒⊢-helper
@@ -693,7 +693,7 @@ extractˣ⁻ᶜ⁻¹-~ᴹ-depth~ᴹ          kk′~ k″k‴~ (`unlift-`lift ~L)
 ~ᴹ∧++⊢⇒⊢ ~L ⊢E = ~ᴹ∧++⊢⇒⊢-helper ~L ⊢E (ℕ.<-wellFounded _)
 
 ~ᴹ∧⊢⇒~ᵀ : (~Γ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ) →
-          eraseˣ ~Γ ⊢ E′ ~ᴹ L →
+          eraseˣ ~Γ ⊢ E ~ᴹ L →
           Γ ⊢[ pMode ] L ⦂ S →
           ∃ (λ A → A ~ᵀ S)
 ~ᴹ∧⊢⇒~ᵀ ~Γ `unit                (`unit _)                                     = -, `⊤
@@ -714,9 +714,9 @@ extractˣ⁻ᶜ⁻¹-~ᴹ-depth~ᴹ          kk′~ k″k‴~ (`unlift-`lift ~L)
 
 -- Soundness and Completeness of _~ᴹ_ Regarding Typings
 --
-~ᴹ-soundness : (ΔΓ~ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ) →
+~ᴹ-soundness : (~Γ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ) →
                A ~ᵀ S →
-               eraseˣ ΔΓ~ ⊢ E ~ᴹ L →
+               eraseˣ ~Γ ⊢ E ~ᴹ L →
                Ψ₁ DP.⍮ Ψ₀ ⊢ E ⦂ A →
                -----------------------
                Γ ⊢[ pMode ] L ⦂ S
@@ -741,9 +741,9 @@ extractˣ⁻ᶜ⁻¹-~ᴹ-depth~ᴹ          kk′~ k″k‴~ (`unlift-`lift ~L)
      | ∤Γ′ ← extractˣᶜ-∤ ~Γ
      | eq ← extractˣᶜ-eraseˣ-extractˣ⁻ᶜ ~Γ                                        = ∤Γ′ ⊢`return`lift (~ᴹ-soundness ~Γ′ ~S (subst (_⊢ _ ~ᴹ _) eq ~L) ⊢E)
 
-~ᴹ-completeness : (ΔΓ~ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ) →
+~ᴹ-completeness : (~Γ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ) →
                   A ~ᵀ S →
-                  eraseˣ ΔΓ~ ⊢ E ~ᴹ L →
+                  eraseˣ ~Γ ⊢ E ~ᴹ L →
                   Γ ⊢[ pMode ] L ⦂ S →
                   -----------------------
                   Ψ₁ DP.⍮ Ψ₀ ⊢ E ⦂ A
@@ -894,11 +894,11 @@ Value~ᴹ-normalize ~L VE = Value~ᴹ-normalize-helper ~L VE (ℕ.<-wellFounded 
                                                                            , WL″
                                                                            , extractˣ⁻ᶜ⁻¹-~ᴹ [] _ ~L″
 
-`box-~ᴹ-inv : kk′~ ⊢ DP.`box F ~ᴹ M →
+`box-~ᴹ-inv : kk′~ ⊢ DP.`box E ~ᴹ L →
               ------------------------------------
-              ∃ (λ M′ → M ⟶* `return`lift M′
-                      × DeferredTerm[ cMode ≤] M′
-                      × kk′~ ⊢ F ~ᴹ M′)
+              ∃ (λ L′ → L ⟶* `return`lift L′
+                      × DeferredTerm[ cMode ≤] L′
+                      × kk′~ ⊢ E ~ᴹ L′)
 `box-~ᴹ-inv ~L = `box-~ᴹ-inv-helper ~L (ℕ.<-wellFounded _)
 
 `λ⦂-∙-~ᴹ-inv-helper : (~L : kk′~ ⊢ DP.`λ⦂ A ∙ E ~ᴹ L) →
@@ -1156,10 +1156,9 @@ wk[↑⁰]~ᴹwk[↑]ᵖ {k} {k′} {k₀}           kk′~ 0k₀~ {k″k‴~} (
                       | ℕ.+-suc k k″
                   with u′< ← ℕ.≤-pred u<
                     rewrite ≥⇒lengthˣ⁻+idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~ u′≥k u′< u∸k≤ = `#¹ u′<
-...        | yes u≡k
+...        | yes refl
           with s≤s _ ← u∸k<
-            rewrite u≡k
-                  | ℕ.n∸n≡0 k
+            rewrite ℕ.n∸n≡0 k
                   | proj₂ (dec-yes (_ ℕ.≟ _) (ℕ.+-identityʳ (lengthˣ⁻ kk′~)))      = `unlift-`lift ~L
 [/¹]~ᴹ[/]ᶜ {k} {k′} {_}  {_}  {E} kk′~         ~L (`λ⦂ ~S ∙ ~M)
   with ~L′ ← wk[↑¹]~ᴹwk[↑]ᶜ [] (?∷ᵖ []) ~L
@@ -1284,10 +1283,9 @@ wk[↑⁰]~ᴹwk[↑]ᵖ {k} {k′} {k₀}           kk′~ 0k₀~ {k″k‴~} (
                       | ℕ.+-suc k′ k‴
                   with x′< ← ℕ.≤-pred x<
                     rewrite ≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ kk′~ k″k‴~ x′≥k′ x′< x∸k′≤ = `#⁰ x′<
-...        | yes x≡k′
+...        | yes refl
           with s≤s _ ← x∸k′<
-            rewrite x≡k′
-                  | ℕ.n∸n≡0 k′
+            rewrite ℕ.n∸n≡0 k′
                   | proj₂ (dec-yes (_ ℕ.≟ _) (ℕ.+-identityʳ (lengthˣ⁻ kk′~)))        = ~L
 [/⁰]~ᴹ[/]ᵖ {_} {k′} {_}  {_}  {E}     kk′~ {k″k‴~} ~L (`unlift-`lift ~M)
   rewrite ~ᴹ∧≥⇒[/⁰]≡ E ~M (z≤n {k′})
