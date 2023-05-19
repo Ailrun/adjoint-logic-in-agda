@@ -59,13 +59,6 @@ cMode ≤?ₘ² pMode = no λ ()
 pMode ≤?ₘ² cMode = yes p≤c
 pMode ≤?ₘ² pMode = yes refl
 
-isDecPartialOrderₘ² : IsDecPartialOrder _≡_ _≤ₘ²_
-isDecPartialOrderₘ² = record
-                      { isPartialOrder = isPartialOrderₘ²
-                      ; _≟_ = _≟ₘ²_
-                      ; _≤?_ = _≤?ₘ²_
-                      }
-
 stₘ² : Mode² → ModeSpecSt → Bool
 stₘ² m st = true
 
@@ -83,7 +76,9 @@ opₘ² pMode ``↓ = true
 ℳ² = record
      { Mode = Mode²
      ; _≤ₘ_ = _≤ₘ²_
-     ; isDecPartialOrderₘ = isDecPartialOrderₘ²
+     ; isPreorderₘ = isPreorderₘ²
+     ; _≟ₘ_ = _≟ₘ²_
+     ; _≤?ₘ_ = _≤?ₘ²_
      ; stₘ = stₘ²
      ; opₘ = opₘ²
      ; isWellStructuredₘ = λ _ _ _ _ t → t

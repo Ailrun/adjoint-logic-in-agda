@@ -12,6 +12,7 @@ open import Relation.Binary
 import Relation.Binary.Construct.NonStrictToStrict as Strict
 open import Relation.Binary.PropositionalEquality using (_≡_; _≢_)
 open import Relation.Nullary
+open import Relation.Nullary.Decidable using (_×-dec_; ¬?)
 
 data ModeSpecSt : Set where
   ``Wk ``Co : ModeSpecSt
@@ -23,29 +24,25 @@ record ModeSpec ℓ₁ ℓ₂ : Set (lsuc (ℓ₁ ⊔ ℓ₂)) where
   field
     Mode : Set ℓ₁
     _≤ₘ_ : Rel Mode (ℓ₁ ⊔ ℓ₂)
-    isDecPartialOrderₘ : IsDecPartialOrder _≡_ _≤ₘ_
+    isPreorderₘ : IsPreorder _≡_ _≤ₘ_
+    _≟ₘ_ : Decidable (_≡_ {A = Mode})
+    _≤?ₘ_ : Decidable _≤ₘ_
     stₘ : Mode → ModeSpecSt → Bool
     opₘ : Mode → ModeSpecOp → Bool
     isWellStructuredₘ : ∀ m₁ m₂ s → m₁ ≤ₘ m₂ → Bool.T (stₘ m₁ s) → Bool.T (stₘ m₂ s)
 
+  preorderₘ : Preorder ℓ₁ ℓ₁ (ℓ₁ ⊔ ℓ₂)
+  preorderₘ = record
+    { Carrier = Mode
+    ; _≈_ = _≡_
+    ; _∼_ = _≤ₘ_
+    ; isPreorder = isPreorderₘ
+    }
+
   _<ₘ_ = Strict._<_ _≡_ _≤ₘ_
   <ₘ⇒≤ₘ = proj₁
 
-  decPosetₘ : DecPoset ℓ₁ ℓ₁ (ℓ₁ ⊔ ℓ₂)
-  decPosetₘ = record
-    { Carrier = Mode
-    ; _≈_ = _≡_
-    ; _≤_ = _≤ₘ_
-    ; isDecPartialOrder = isDecPartialOrderₘ
-    }
+  _<?ₘ_ : Decidable _<ₘ_
+  m₁ <?ₘ m₂ = m₁ ≤?ₘ m₂ ×-dec ¬? (m₁ ≟ₘ m₂)
 
-  decStrictPartialOrderₘ : DecStrictPartialOrder ℓ₁ ℓ₁ (ℓ₁ ⊔ ℓ₂)
-  decStrictPartialOrderₘ = record
-    { Carrier = Mode
-    ; _≈_ = _≡_
-    ; _<_ = _<ₘ_
-    ; isDecStrictPartialOrder = Strict.<-isDecStrictPartialOrder _≡_ _≤ₘ_ isDecPartialOrderₘ
-    }
-
-  open DecPoset decPosetₘ using () renaming (refl to ≤ₘ-refl; trans to ≤ₘ-trans; _≟_ to _≟ₘ_; _≤?_ to _≤?ₘ_) public
-  open DecStrictPartialOrder decStrictPartialOrderₘ using () renaming (_<?_ to _<?ₘ_) public
+  open Preorder preorderₘ using () renaming (refl to ≤ₘ-refl; trans to ≤ₘ-trans) public
