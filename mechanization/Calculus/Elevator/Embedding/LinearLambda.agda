@@ -225,6 +225,8 @@ data _~~ˣ⁻_⊞_ : k ⍮ k′ ~ˣ⁻ → k₀ ⍮ k₁ ~ˣ⁻ → k₂ ⍮ k�
                  ------------------------------------
                  !∷ˡ kk′~ ~~ˣ⁻ ?∷ˡ kk′~₀ ⊞ !∷ˡ kk′~₁
 
+-- Embedding Relation for Terms
+--
 data _~ᵛ_∈ᵘ_ : ℕ → ℕ → k ⍮ k′ ~ˣ⁻ → Set where
   here     : kk′~ is-all-dis⁰~ˣ⁻ →
              ----------------------
@@ -251,49 +253,6 @@ data _~ᵛ_∈ˡ_ : ℕ → ℕ → k ⍮ k′ ~ˣ⁻ → Set where
              ------------------------------
              suc BP.x ~ᵛ suc x ∈ˡ ?∷ˡ kk′~
 
-data _~FVof_ : k ⍮ k′ ~ˣ⁻ → Term → Set where
-  FV`unit              : kk′~ is-all-dis⁰~ˣ⁻ →
-                         ----------------------
-                         kk′~ ~FVof `unit
-
-  FV`lift              : kk′~ ~FVof L →
-                         -------------------
-                         kk′~ ~FVof `lift L
-
-  FV`unlift            : kk′~ ~FVof L →
-                         ---------------------
-                         kk′~ ~FVof `unlift L
-
-  FV`return            : kk′~ ~FVof L →
-                         ---------------------
-                         kk′~ ~FVof `return L
-
-  FV_⊢`let-return_`in_ : kk′~ ~~ˣ⁻ kk′~₀ ⊞ kk′~₁ →
-                         kk′~₀ ~FVof L →
-                         !∷ᵘ kk′~₁ ~FVof M →
-                         -------------------------------
-                         kk′~ ~FVof `let-return L `in M
-
-  FV`#¹_               : BP.u ~ᵛ u ∈ᵘ kk′~ →
-                         --------------------
-                         kk′~ ~FVof `# u
-
-  FV`λ⦂-∘_             : !∷ˡ kk′~ ~FVof L →
-                         ----------------------
-                         kk′~ ~FVof `λ⦂ˡ S ∘ L
-
-  FV_⊢_`$_             : kk′~ ~~ˣ⁻ kk′~₀ ⊞ kk′~₁ →
-                         kk′~₀ ~FVof L →
-                         kk′~₁ ~FVof M →
-                         --------------------------
-                         kk′~ ~FVof L `$ M
-
-  FV`#⁰_               : BP.x ~ᵛ x ∈ˡ kk′~ →
-                         --------------------
-                         kk′~ ~FVof `# x
-
--- Embedding Relation for Terms
---
 data _⊢_~ᴹ_ : k ⍮ k′ ~ˣ⁻ → BP.Term → Term → Set where
   `unit            : kk′~ is-all-dis⁰~ˣ⁻ →
                      -------------------------
@@ -344,6 +303,49 @@ depth~ᴹ (`λ⦂ ~S ∘ ~L)            = suc (depth~ᴹ ~L)
 depth~ᴹ (_ ⊢ ~L `$ ~M)           = suc (depth~ᴹ ~L ℕ.⊔ depth~ᴹ ~M)
 depth~ᴹ (`#⁰ x)                  = 0
 depth~ᴹ (`unlift-`lift _ ~L)     = suc (depth~ᴹ ~L)
+
+-- Free variables of Term represented in _⍮_~ˣ⁻
+--
+data _~FVof_ : k ⍮ k′ ~ˣ⁻ → Term → Set where
+  FV`unit              : kk′~ is-all-dis⁰~ˣ⁻ →
+                         ----------------------
+                         kk′~ ~FVof `unit
+
+  FV`lift              : kk′~ ~FVof L →
+                         -------------------
+                         kk′~ ~FVof `lift L
+
+  FV`unlift            : kk′~ ~FVof L →
+                         ---------------------
+                         kk′~ ~FVof `unlift L
+
+  FV`return            : kk′~ ~FVof L →
+                         ---------------------
+                         kk′~ ~FVof `return L
+
+  FV_⊢`let-return_`in_ : kk′~ ~~ˣ⁻ kk′~₀ ⊞ kk′~₁ →
+                         kk′~₀ ~FVof L →
+                         !∷ᵘ kk′~₁ ~FVof M →
+                         -------------------------------
+                         kk′~ ~FVof `let-return L `in M
+
+  FV`#¹_               : BP.u ~ᵛ u ∈ᵘ kk′~ →
+                         --------------------
+                         kk′~ ~FVof `# u
+
+  FV`λ⦂-∘_             : !∷ˡ kk′~ ~FVof L →
+                         ----------------------
+                         kk′~ ~FVof `λ⦂ˡ S ∘ L
+
+  FV_⊢_`$_             : kk′~ ~~ˣ⁻ kk′~₀ ⊞ kk′~₁ →
+                         kk′~₀ ~FVof L →
+                         kk′~₁ ~FVof M →
+                         --------------------------
+                         kk′~ ~FVof L `$ M
+
+  FV`#⁰_               : BP.x ~ᵛ x ∈ˡ kk′~ →
+                         --------------------
+                         kk′~ ~FVof `# x
 
 -- Properties of _~ᵀ_
 --
@@ -666,20 +668,6 @@ is-all-dis⁰~ˣ⁻-++⁻ʳ (?∷ˡ kk′~) (?∷ˡ kk′~kk′~′Dis) = is-all
            ?∷ˡ (subst (k ⍮_~ˣ⁻) eq kn~) ≡ subst (k ⍮_~ˣ⁻) (cong suc eq) (?∷ˡ kn~)
 ?∷ˡsubst _ refl = refl
 
-subst⊢~ᴹʳ : ∀ {n m kk′~} →
-            (n≡m : n ≡ m) →
-            subst (k ⍮_~ˣ⁻) n≡m kk′~ ⊢ I ~ᴹ L →
-            ------------------------------------
-            kk′~ ⊢ I ~ᴹ L
-subst⊢~ᴹʳ refl ~L = ~L
-
-subst⊢~ᴹʳ-depth : ∀ {n m kk′~} →
-                  (n≡m : n ≡ m) →
-                  (~L : subst (k ⍮_~ˣ⁻) n≡m kk′~ ⊢ I ~ᴹ L) →
-                  -------------------------------------------
-                  depth~ᴹ ~L ≡ depth~ᴹ (subst⊢~ᴹʳ n≡m ~L)
-subst⊢~ᴹʳ-depth refl _ = refl
-
 ~~ˣ⁻subst⊞ʳ : ∀ {n m} {kk′~ : k ⍮ k′ ~ˣ⁻} {kk′~₀ : k₀ ⍮ n ~ˣ⁻} {kk′~₁ : k₂ ⍮ k₃ ~ˣ⁻} →
               (n≡m : n ≡ m) →
               kk′~ ~~ˣ⁻ subst (k₀ ⍮_~ˣ⁻) n≡m kk′~₀ ⊞ kk′~₁ →
@@ -724,19 +712,19 @@ subst~FVofʳ⁻¹ refl FVL = FVL
                         × Σ (ψ₁ ⍮ ψ₀₁ ~ˣ Γ₁) (λ ~Γ₁ →
                                                 let eq = proj₂ (BP.length-respects-~⊞ ψ₀~) in
                                                 kk′~₁ ≡ subst (length ψ₁ ⍮_~ˣ⁻) eq (eraseˣ ~Γ₁)))
-~ˣ-cancelˡ-~⊞ BP.[] [] [] [] = -, [] , [] , refl
+~ˣ-cancelˡ-~⊞ BP.[]                  []          []            []                  = -, [] , [] , refl
 ~ˣ-cancelˡ-~⊞ ψ₀~                    (~S !∷ᵘ ~Γ) (~S′ !∷ᵘ ~Γ₀) (!∷ᵘ kk′~~)
   with _ , Γ~ , ~Γ₁ , refl ← ~ˣ-cancelˡ-~⊞ ψ₀~ ~Γ ~Γ₀ kk′~~
-     | refl ← ~ᵀ-det ~S ~S′ = -, contraction _ ∷ Γ~ , ~S !∷ᵘ ~Γ₁ , !∷ᵘsubst (eraseˣ ~Γ₁) (proj₂ (BP.length-respects-~⊞ ψ₀~))
+     | refl ← ~ᵀ-det ~S ~S′                                                        = -, contraction _ ∷ Γ~ , ~S !∷ᵘ ~Γ₁ , !∷ᵘsubst (eraseˣ ~Γ₁) (proj₂ (BP.length-respects-~⊞ ψ₀~))
 ~ˣ-cancelˡ-~⊞ (BP.unusable BP.∷ ψ₀~) (~S ?∷ˡ ~Γ) (~S′ ?∷ˡ ~Γ₀) (?∷ˡ kk′~~)
   with _ , Γ~ , ~Γ₁ , refl ← ~ˣ-cancelˡ-~⊞ ψ₀~ ~Γ ~Γ₀ kk′~~
-     | refl ← ~ᵀ-det ~S ~S′ = -, unusable ∷ Γ~ , ~S ?∷ˡ ~Γ₁ , ?∷ˡsubst (eraseˣ ~Γ₁) (proj₂ (BP.length-respects-~⊞ ψ₀~))
+     | refl ← ~ᵀ-det ~S ~S′                                                        = -, unusable ∷ Γ~ , ~S ?∷ˡ ~Γ₁ , ?∷ˡsubst (eraseˣ ~Γ₁) (proj₂ (BP.length-respects-~⊞ ψ₀~))
 ~ˣ-cancelˡ-~⊞ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ) (~S′ ?∷ˡ ~Γ₀) (to-right!∷ˡ kk′~~)
   with _ , Γ~ , ~Γ₁ , refl ← ~ˣ-cancelˡ-~⊞ ψ₀~ ~Γ ~Γ₀ kk′~~
-     | refl ← ~ᵀ-det ~S ~S′ = -, to-right ∷ Γ~ , ~S !∷ˡ ~Γ₁ , !∷ˡsubst (eraseˣ ~Γ₁) (proj₂ (BP.length-respects-~⊞ ψ₀~))
+     | refl ← ~ᵀ-det ~S ~S′                                                        = -, to-right ∷ Γ~ , ~S !∷ˡ ~Γ₁ , !∷ˡsubst (eraseˣ ~Γ₁) (proj₂ (BP.length-respects-~⊞ ψ₀~))
 ~ˣ-cancelˡ-~⊞ (BP.to-left  BP.∷ ψ₀~) (~S !∷ˡ ~Γ) (~S′ !∷ˡ ~Γ₀) (to-left!∷ˡ kk′~~)
   with _ , Γ~ , ~Γ₁ , refl ← ~ˣ-cancelˡ-~⊞ ψ₀~ ~Γ ~Γ₀ kk′~~
-     | refl ← ~ᵀ-det ~S ~S′ = -, to-left ∷ Γ~ , ~S ?∷ˡ ~Γ₁ , ?∷ˡsubst (eraseˣ ~Γ₁) (proj₂ (BP.length-respects-~⊞ ψ₀~))
+     | refl ← ~ᵀ-det ~S ~S′                                                        = -, to-left ∷ Γ~ , ~S ?∷ˡ ~Γ₁ , ?∷ˡsubst (eraseˣ ~Γ₁) (proj₂ (BP.length-respects-~⊞ ψ₀~))
 
 ~d⊞-contract-is-del : d [ m ]~d d₀ ⊞ d₁ →
                       d′ [ m ]~d d₀ ⊞ d₂ →
@@ -787,7 +775,15 @@ subst~FVofʳ⁻¹ refl FVL = FVL
                                       × ψ₀ BP.~ ψ₀₀ ⊞ ψ₀₁
                                       × Σ (ψ₁ ⍮ ψ₀₀ ~ˣ Γ₀′) (λ ~Γ₀′ →
                                           Σ (ψ₁ ⍮ ψ₀₁ ~ˣ Γ₁′) (λ ~Γ₁′ → eraseˣ ~Γ ~~ˣ⁻ eraseˣ ~Γ₀′ ⊞ eraseˣ ~Γ₁′)))))
-~⊞-preserves-~ˣ []                   []          = -, -, -, -, -, -, [] , [] , [] , [] , [] , BP.[] , [] , [] , []
+~⊞-preserves-~ˣ []                   []                                                                                = -, -, -, -, -, -, []
+                                                                                                                       , []
+                                                                                                                       , []
+                                                                                                                       , []
+                                                                                                                       , []
+                                                                                                                       , BP.[]
+                                                                                                                       , []
+                                                                                                                       , []
+                                                                                                                       , []
 ~⊞-preserves-~ˣ (contraction _ ∷ Γ~) (~S !∷ᵘ ~Γ)
   with _ , _ , _ , _ , _ , _ , Γ~′ , Γ₀′~ , Γ₀″Del , Γ₁′~ , Γ₁″Del , ψ₀~ , ~Γ₀′ , ~Γ₁′ , kk′~~ ← ~⊞-preserves-~ˣ Γ~ ~Γ = -, -, -, -, -, -, contraction _ ∷ Γ~′
                                                                                                                        , contraction _ ∷ Γ₀′~
@@ -989,10 +985,10 @@ BP~⊞-preserves-~ˣ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ)
                kk′~₂ ~FVof L →
                --------------------------
                kk′~₀ ≡ kk′~₂
-~FVof-unique kk′~~ kk′~~′ (FV`unit kk′~₀Dis) (FV`unit kk′~₂Dis) = ~~ˣ⁻⊞-is-all-dis⁰~ˣ⁻-unique kk′~~ kk′~~′ kk′~₀Dis kk′~₂Dis
-~FVof-unique kk′~~ kk′~~′ (FV`lift FVL) (FV`lift FVL′) = ~FVof-unique kk′~~ kk′~~′ FVL FVL′
-~FVof-unique kk′~~ kk′~~′ (FV`unlift FVL) (FV`unlift FVL′) = ~FVof-unique kk′~~ kk′~~′ FVL FVL′
-~FVof-unique kk′~~ kk′~~′ (FV`return FVL) (FV`return FVL′) = ~FVof-unique kk′~~ kk′~~′ FVL FVL′
+~FVof-unique kk′~~ kk′~~′ (FV`unit kk′~₀Dis)                   (FV`unit kk′~₂Dis)                     = ~~ˣ⁻⊞-is-all-dis⁰~ˣ⁻-unique kk′~~ kk′~~′ kk′~₀Dis kk′~₂Dis
+~FVof-unique kk′~~ kk′~~′ (FV`lift FVL)                        (FV`lift FVL′)                         = ~FVof-unique kk′~~ kk′~~′ FVL FVL′
+~FVof-unique kk′~~ kk′~~′ (FV`unlift FVL)                      (FV`unlift FVL′)                       = ~FVof-unique kk′~~ kk′~~′ FVL FVL′
+~FVof-unique kk′~~ kk′~~′ (FV`return FVL)                      (FV`return FVL′)                       = ~FVof-unique kk′~~ kk′~~′ FVL FVL′
 ~FVof-unique kk′~~ kk′~~′ (FV kk′~₀~ ⊢`let-return FVL `in FVM) (FV kk′~₂~ ⊢`let-return FVL′ `in FVM′)
   with kk′~₄′ , kk′~₄′~ , kk′~~₄ ← ~~ˣ⁻⊞-assocˡ kk′~~ (~~ˣ⁻⊞-commute kk′~₀~)
      | kk′~₅′ , kk′~₅′~ , kk′~~₅ ← ~~ˣ⁻⊞-assocˡ kk′~~ kk′~₀~
@@ -1005,11 +1001,11 @@ BP~⊞-preserves-~ˣ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ)
        | refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~₆
        | refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~₇
       with refl ← ~FVof-unique kk′~~₅ kk′~~₇ FVL FVL′
-         | refl ← ~FVof-unique (!∷ᵘ kk′~~₄) (!∷ᵘ kk′~~₆) FVM FVM′ = ~~ˣ⁻⊞⁻¹-det kk′~₀~ kk′~₂~
-~FVof-unique kk′~~ kk′~~′ (FV`#¹ ~u) (FV`#¹ ~u′) = ~ᵛ∈ᵘ-uniqueʳ kk′~~ kk′~~′ ~u ~u′
-~FVof-unique kk′~~ kk′~~′ (FV`#¹ ~u) (FV`#⁰ ~x) with () ← ~ᵛ∈ᵘ∧~ᵛ∈ˡ⇒⊥ kk′~~ kk′~~′ ~u ~x
-~FVof-unique kk′~~ kk′~~′ (FV`λ⦂-∘ FVL) (FV`λ⦂-∘ FVL′) = !∷ˡ-inj (~FVof-unique (to-left!∷ˡ kk′~~) (to-left!∷ˡ kk′~~′) FVL FVL′)
-~FVof-unique kk′~~ kk′~~′ (FV kk′~₀~ ⊢ FVL `$ FVM) (FV kk′~₂~ ⊢ FVL′ `$ FVM′)
+         | refl ← ~FVof-unique (!∷ᵘ kk′~~₄) (!∷ᵘ kk′~~₆) FVM FVM′                                     = ~~ˣ⁻⊞⁻¹-det kk′~₀~ kk′~₂~
+~FVof-unique kk′~~ kk′~~′ (FV`#¹ ~u)                           (FV`#¹ ~u′)                            = ~ᵛ∈ᵘ-uniqueʳ kk′~~ kk′~~′ ~u ~u′
+~FVof-unique kk′~~ kk′~~′ (FV`#¹ ~u)                           (FV`#⁰ ~x)                             with () ← ~ᵛ∈ᵘ∧~ᵛ∈ˡ⇒⊥ kk′~~ kk′~~′ ~u ~x
+~FVof-unique kk′~~ kk′~~′ (FV`λ⦂-∘ FVL)                        (FV`λ⦂-∘ FVL′)                         = !∷ˡ-inj (~FVof-unique (to-left!∷ˡ kk′~~) (to-left!∷ˡ kk′~~′) FVL FVL′)
+~FVof-unique kk′~~ kk′~~′ (FV kk′~₀~ ⊢ FVL `$ FVM)             (FV kk′~₂~ ⊢ FVL′ `$ FVM′)
   with kk′~₄′ , kk′~₄′~ , kk′~~₄ ← ~~ˣ⁻⊞-assocˡ kk′~~ (~~ˣ⁻⊞-commute kk′~₀~)
      | kk′~₅′ , kk′~₅′~ , kk′~~₅ ← ~~ˣ⁻⊞-assocˡ kk′~~ kk′~₀~
      | kk′~₆′ , kk′~₆′~ , kk′~~₆ ← ~~ˣ⁻⊞-assocˡ kk′~~′ (~~ˣ⁻⊞-commute kk′~₂~)
@@ -1022,8 +1018,8 @@ BP~⊞-preserves-~ˣ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ)
        | refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~₇
       with refl ← ~FVof-unique kk′~~₅ kk′~~₇ FVL FVL′
          | refl ← ~FVof-unique kk′~~₄ kk′~~₆ FVM FVM′ = ~~ˣ⁻⊞⁻¹-det kk′~₀~ kk′~₂~
-~FVof-unique kk′~~ kk′~~′ (FV`#⁰ ~x) (FV`#¹ ~u) with () ← ~ᵛ∈ᵘ∧~ᵛ∈ˡ⇒⊥ kk′~~′ kk′~~ ~u ~x
-~FVof-unique kk′~~ kk′~~′ (FV`#⁰ ~x) (FV`#⁰ ~x′) = ~ᵛ∈ˡ-uniqueʳ kk′~~ kk′~~′ ~x ~x′
+~FVof-unique kk′~~ kk′~~′ (FV`#⁰ ~x)                           (FV`#¹ ~u)                             with () ← ~ᵛ∈ᵘ∧~ᵛ∈ˡ⇒⊥ kk′~~′ kk′~~ ~u ~x
+~FVof-unique kk′~~ kk′~~′ (FV`#⁰ ~x)                           (FV`#⁰ ~x′)                            = ~ᵛ∈ˡ-uniqueʳ kk′~~ kk′~~′ ~x ~x′
 
 -- Properties of _~ᴹ_ and ~ᵀ
 --
@@ -1049,23 +1045,23 @@ BP~⊞-preserves-~ˣ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ)
           Γ ⊢[ lMode ] L ⦂ S →
           ---------------------
           ∃ (λ P → P ~ᵀ S)
-~ᴹ∧⊢⇒~ᵀ ~Γ (`unit _) (`unit _) = -, `⊤
-~ᴹ∧⊢⇒~ᵀ ~Γ (`bang _ ~L) (Γ∤ ⊢`return`lift ⊢L)
+~ᴹ∧⊢⇒~ᵀ ~Γ (`unit _)                (`unit _)                              = -, `⊤
+~ᴹ∧⊢⇒~ᵀ ~Γ (`bang _ ~L)             (Γ∤ ⊢`return`lift ⊢L)
   with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤
-    with _ , ~S ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L ⊢L = -, `! ~S
+    with _ , ~S ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L ⊢L                                         = -, `! ~S
 ~ᴹ∧⊢⇒~ᵀ ~Γ (_ ⊢`let-bang ~L `in ~M) (Γ~ ⊢`let-return ⊢L ⦂ ⊢↓ `in ⊢M)
   with _ , _ , _ , _ , _ , _ , Γ~′ , Γ₀′~ , Γ₀″Del , Γ₁′~ , Γ₁″Del , ψ₀~ , ~Γ₀′ , ~Γ₁′ , kk′~~ ← ~⊞-preserves-~ˣ Γ~ ~Γ
-    with _ , `! ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ₀′ ~L (~⊞-is-all-del∧⊢⇒⊢ˡ Γ₀′~ Γ₀″Del ⊢L) = ~ᴹ∧⊢⇒~ᵀ (~T !∷ᵘ ~Γ₁′) ~M (~⊞-is-all-del∧⊢⇒⊢ˡ (contraction _ ∷ Γ₁′~) (weakening _ ∷ Γ₁″Del) ⊢M)
-~ᴹ∧⊢⇒~ᵀ ~Γ (`#¹ u∈) (Γ∤ ⊢`unlift`# u∈′ ⦂ ⊢↑)
-  with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤ = ~ᴹ∧∈ᵘ⇒~ᵀ ~Γ u∈′
-~ᴹ∧⊢⇒~ᵀ ~Γ (`λ⦂ ~S ∘ ~L) (`λ⦂-∘ ⊢L)
-  with _ , ~T ← ~ᴹ∧⊢⇒~ᵀ (~S !∷ˡ ~Γ) ~L ⊢L = -, ~S `⊸ ~T
-~ᴹ∧⊢⇒~ᵀ ~Γ (_ ⊢ ~L `$ ~M) (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
+    with _ , `! ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ₀′ ~L (~⊞-is-all-del∧⊢⇒⊢ˡ Γ₀′~ Γ₀″Del ⊢L)   = ~ᴹ∧⊢⇒~ᵀ (~T !∷ᵘ ~Γ₁′) ~M (~⊞-is-all-del∧⊢⇒⊢ˡ (contraction _ ∷ Γ₁′~) (weakening _ ∷ Γ₁″Del) ⊢M)
+~ᴹ∧⊢⇒~ᵀ ~Γ (`#¹ u∈)                 (Γ∤ ⊢`unlift`# u∈′ ⦂ ⊢↑)
+  with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤                                                 = ~ᴹ∧∈ᵘ⇒~ᵀ ~Γ u∈′
+~ᴹ∧⊢⇒~ᵀ ~Γ (`λ⦂ ~S ∘ ~L)            (`λ⦂-∘ ⊢L)
+  with _ , ~T ← ~ᴹ∧⊢⇒~ᵀ (~S !∷ˡ ~Γ) ~L ⊢L                                  = -, ~S `⊸ ~T
+~ᴹ∧⊢⇒~ᵀ ~Γ (_ ⊢ ~L `$ ~M)           (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
   with _ , _ , _ , _ , _ , _ , Γ~′ , Γ₀′~ , Γ₀″Del , Γ₁′~ , Γ₁″Del , ψ₀~ , ~Γ₀′ , ~Γ₁′ , kk′~~ ← ~⊞-preserves-~ˣ Γ~ ~Γ
     with _ , _ `⊸ ~S ← ~ᴹ∧⊢⇒~ᵀ ~Γ₀′ ~L (~⊞-is-all-del∧⊢⇒⊢ˡ Γ₀′~ Γ₀″Del ⊢L) = -, ~S
-~ᴹ∧⊢⇒~ᵀ ~Γ (`#⁰ x∈) (`# x∈′) = ~ᴹ∧∈ˡ⇒~ᵀ ~Γ x∈′
-~ᴹ∧⊢⇒~ᵀ ~Γ (`unlift-`lift _ ~L) (Γ∤ ⊢`unlift`lift ⊢L ⦂ ⊢↑)
-  with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤ = ~ᴹ∧⊢⇒~ᵀ ~Γ ~L ⊢L
+~ᴹ∧⊢⇒~ᵀ ~Γ (`#⁰ x∈)                 (`# x∈′)                               = ~ᴹ∧∈ˡ⇒~ᵀ ~Γ x∈′
+~ᴹ∧⊢⇒~ᵀ ~Γ (`unlift-`lift _ ~L)     (Γ∤ ⊢`unlift`lift ⊢L ⦂ ⊢↑)
+  with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤                                                 = ~ᴹ∧⊢⇒~ᵀ ~Γ ~L ⊢L
 
 -- Properties of _~ᴹ_ and ~FVof
 --
@@ -1074,35 +1070,35 @@ BP~⊞-preserves-~ˣ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ)
              Γ ⊢[ lMode ] L ⦂ S →
              ----------------------
              eraseˣ ~Γ ~FVof L
-~ᴹ∧⊢⇒~FVof ~Γ (`unit _) (`unit ΓDel) = FV`unit (~ˣ∧is-all-dis⇒is-all-dis⁰~ˣ⁻ ~Γ (~ˣ∧is-all-del⇒is-all-dis ~Γ ΓDel))
-~ᴹ∧⊢⇒~FVof ~Γ (`bang _ ~L) (Γ∤ ⊢`return`lift ⊢L)
+~ᴹ∧⊢⇒~FVof ~Γ (`unit _)                (`unit ΓDel)                                                                = FV`unit (~ˣ∧is-all-dis⇒is-all-dis⁰~ˣ⁻ ~Γ (~ˣ∧is-all-del⇒is-all-dis ~Γ ΓDel))
+~ᴹ∧⊢⇒~FVof ~Γ (`bang _ ~L)             (Γ∤ ⊢`return`lift ⊢L)
   with kk′~Dis ← ~ˣ∧is-all-dis⇒is-all-dis⁰~ˣ⁻ ~Γ (~ˣ∧∤⇒is-all-dis ~Γ Γ∤)
-    with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤ = FV`return (FV`lift (~ᴹ∧⊢⇒~FVof ~Γ ~L ⊢L))
+    with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤                                                                                       = FV`return (FV`lift (~ᴹ∧⊢⇒~FVof ~Γ ~L ⊢L))
 ~ᴹ∧⊢⇒~FVof ~Γ (_ ⊢`let-bang ~L `in ~M) (Γ~ ⊢`let-return ⊢L ⦂ ⊢↓ `in ⊢M)
   with _ , _ , _ , _ , _ , _ , Γ~′ , Γ₀′~ , Γ₀″Del , Γ₁′~ , Γ₁″Del , ψ₀~ , ~Γ₀′ , ~Γ₁′ , kk′~~ ← ~⊞-preserves-~ˣ Γ~ ~Γ
     with ⊢L′ ← ~⊞-is-all-del∧⊢⇒⊢ˡ Γ₀′~ Γ₀″Del ⊢L
-      with _ , `! ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ₀′ ~L ⊢L′ = FV kk′~~ ⊢`let-return ~ᴹ∧⊢⇒~FVof ~Γ₀′ ~L ⊢L′ `in (~ᴹ∧⊢⇒~FVof (~T !∷ᵘ ~Γ₁′) ~M (~⊞-is-all-del∧⊢⇒⊢ˡ (contraction _ ∷ Γ₁′~) (weakening _ ∷ Γ₁″Del) ⊢M))
-~ᴹ∧⊢⇒~FVof ~Γ (`#¹ u∈) (Γ∤ ⊢`unlift`# u∈′ ⦂ ⊢↑)
-  with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤ = FV`unlift (FV`#¹ proj₂ (~ˣ∧∈ᵘ⇒~ᵛ∈ᵘ ~Γ u∈′))
-~ᴹ∧⊢⇒~FVof ~Γ (`λ⦂ ~S ∘ ~L) (`λ⦂-∘ ⊢L) = FV`λ⦂-∘ (~ᴹ∧⊢⇒~FVof (~S !∷ˡ ~Γ) ~L ⊢L)
-~ᴹ∧⊢⇒~FVof ~Γ (_ ⊢ ~L `$ ~M) (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
-  with _ , _ , _ , _ , _ , _ , Γ~′ , Γ₀′~ , Γ₀″Del , Γ₁′~ , Γ₁″Del , ψ₀~ , ~Γ₀′ , ~Γ₁′ , kk′~~ ← ~⊞-preserves-~ˣ Γ~ ~Γ = FV kk′~~ ⊢ ~ᴹ∧⊢⇒~FVof ~Γ₀′ ~L (~⊞-is-all-del∧⊢⇒⊢ˡ Γ₀′~ Γ₀″Del ⊢L) `$ ~ᴹ∧⊢⇒~FVof ~Γ₁′ ~M (~⊞-is-all-del∧⊢⇒⊢ˡ Γ₁′~ Γ₁″Del ⊢M)
-~ᴹ∧⊢⇒~FVof ~Γ (`#⁰ x∈) (`# x∈′) = FV`#⁰ proj₂ (~ˣ∧∈ˡ⇒~ᵛ∈ˡ ~Γ x∈′)
-~ᴹ∧⊢⇒~FVof ~Γ (`unlift-`lift _ ~L) (Γ∤ ⊢`unlift`lift ⊢L ⦂ ⊢↑)
+      with _ , `! ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ₀′ ~L ⊢L′                                                                         = FV kk′~~ ⊢`let-return ~ᴹ∧⊢⇒~FVof ~Γ₀′ ~L ⊢L′ `in (~ᴹ∧⊢⇒~FVof (~T !∷ᵘ ~Γ₁′) ~M (~⊞-is-all-del∧⊢⇒⊢ˡ (contraction _ ∷ Γ₁′~) (weakening _ ∷ Γ₁″Del) ⊢M))
+~ᴹ∧⊢⇒~FVof ~Γ (`#¹ u∈)                 (Γ∤ ⊢`unlift`# u∈′ ⦂ ⊢↑)
+  with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤                                                                                         = FV`unlift (FV`#¹ proj₂ (~ˣ∧∈ᵘ⇒~ᵛ∈ᵘ ~Γ u∈′))
+~ᴹ∧⊢⇒~FVof ~Γ (`λ⦂ ~S ∘ ~L)            (`λ⦂-∘ ⊢L)                                                                  = FV`λ⦂-∘ (~ᴹ∧⊢⇒~FVof (~S !∷ˡ ~Γ) ~L ⊢L)
+~ᴹ∧⊢⇒~FVof ~Γ (_ ⊢ ~L `$ ~M)           (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
+  with _ , _ , _ , _ , _ , _ , _ , Γ₀′~ , Γ₀″Del , Γ₁′~ , Γ₁″Del , _ , ~Γ₀′ , ~Γ₁′ , kk′~~ ← ~⊞-preserves-~ˣ Γ~ ~Γ = FV kk′~~ ⊢ ~ᴹ∧⊢⇒~FVof ~Γ₀′ ~L (~⊞-is-all-del∧⊢⇒⊢ˡ Γ₀′~ Γ₀″Del ⊢L) `$ ~ᴹ∧⊢⇒~FVof ~Γ₁′ ~M (~⊞-is-all-del∧⊢⇒⊢ˡ Γ₁′~ Γ₁″Del ⊢M)
+~ᴹ∧⊢⇒~FVof ~Γ (`#⁰ x∈)                 (`# x∈′)                                                                    = FV`#⁰ proj₂ (~ˣ∧∈ˡ⇒~ᵛ∈ˡ ~Γ x∈′)
+~ᴹ∧⊢⇒~FVof ~Γ (`unlift-`lift _ ~L)     (Γ∤ ⊢`unlift`lift ⊢L ⦂ ⊢↑)
   with kk′~Dis ← ~ˣ∧is-all-dis⇒is-all-dis⁰~ˣ⁻ ~Γ (~ˣ∧∤⇒is-all-dis ~Γ Γ∤)
-    with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤ = FV`unlift (FV`lift (~ᴹ∧⊢⇒~FVof ~Γ ~L ⊢L))
+    with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤                                                                                       = FV`unlift (FV`lift (~ᴹ∧⊢⇒~FVof ~Γ ~L ⊢L))
 
 ~ᴹ⇒~FVof : kk′~ ⊢ I ~ᴹ L →
            ----------------
            kk′~ ~FVof L
-~ᴹ⇒~FVof (`unit kk′~Dis) = FV`unit kk′~Dis
-~ᴹ⇒~FVof (`bang kk′~Dis ~L) = FV`return (FV`lift (~ᴹ⇒~FVof ~L))
+~ᴹ⇒~FVof (`unit kk′~Dis)              = FV`unit kk′~Dis
+~ᴹ⇒~FVof (`bang kk′~Dis ~L)           = FV`return (FV`lift (~ᴹ⇒~FVof ~L))
 ~ᴹ⇒~FVof (kk′~~ ⊢`let-bang ~L `in ~M) = FV kk′~~ ⊢`let-return ~ᴹ⇒~FVof ~L `in ~ᴹ⇒~FVof ~M
-~ᴹ⇒~FVof (`#¹ u∈) = FV`unlift (FV`#¹ u∈)
-~ᴹ⇒~FVof (`λ⦂ ~S ∘ ~L) = FV`λ⦂-∘ ~ᴹ⇒~FVof ~L
-~ᴹ⇒~FVof (kk′~~ ⊢ ~L `$ ~M) = FV kk′~~ ⊢ ~ᴹ⇒~FVof ~L `$ ~ᴹ⇒~FVof ~M
-~ᴹ⇒~FVof (`#⁰ x∈) = FV`#⁰ x∈
-~ᴹ⇒~FVof (`unlift-`lift kk′~Dis ~L) = FV`unlift (FV`lift (~ᴹ⇒~FVof ~L))
+~ᴹ⇒~FVof (`#¹ u∈)                     = FV`unlift (FV`#¹ u∈)
+~ᴹ⇒~FVof (`λ⦂ ~S ∘ ~L)                = FV`λ⦂-∘ ~ᴹ⇒~FVof ~L
+~ᴹ⇒~FVof (kk′~~ ⊢ ~L `$ ~M)           = FV kk′~~ ⊢ ~ᴹ⇒~FVof ~L `$ ~ᴹ⇒~FVof ~M
+~ᴹ⇒~FVof (`#⁰ x∈)                     = FV`#⁰ x∈
+~ᴹ⇒~FVof (`unlift-`lift kk′~Dis ~L)   = FV`unlift (FV`lift (~ᴹ⇒~FVof ~L))
 
 ~ᴹ∧BP⊢⇒~FVof : (~Γ : ψ₁ ⍮ ψ₀ ~ˣ Γ) →
                kk′~ ~~ˣ⁻ eraseˣ ~Γ ⊞ kk′~₁ →
@@ -1111,8 +1107,8 @@ BP~⊞-preserves-~ˣ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ)
                ψ₁ BP.⍮ ψ₀ ⊢ I ⦂ P →
                ------------------------------
                eraseˣ ~Γ ~FVof L
-~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`unit _) (BP.`unit ψ₀Dis) = FV`unit (~ˣ∧is-all-dis⇒is-all-dis⁰~ˣ⁻ ~Γ ψ₀Dis)
-~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`bang _ ~L) (ψ₀Dis BP.⊢`bang ⊢I) = FV`return (FV`lift (~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ ~L ⊢I))
+~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`unit _)                     (BP.`unit ψ₀Dis)              = FV`unit (~ˣ∧is-all-dis⇒is-all-dis⁰~ˣ⁻ ~Γ ψ₀Dis)
+~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`bang _ ~L)                  (ψ₀Dis BP.⊢`bang ⊢I)          = FV`return (FV`lift (~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ ~L ⊢I))
 ~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (kk′~₂~ ⊢`let-bang ~L `in ~M) (ψ₀~ BP.⊢`let-bang ⊢I `in ⊢J)
   with _ , _ , Γ~ , ~Γ₀ , ~Γ₁ , kk′~′~ ← BP~⊞-preserves-~ˣ ψ₀~ ~Γ
     with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~
@@ -1122,14 +1118,14 @@ BP~⊞-preserves-~ˣ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ)
       with _ , kk′~Γ₁′~ , kk′~~₀ ← ~~ˣ⁻⊞-assocˡ kk′~~ kk′~′~
          | _ , kk′~₃′~ , kk′~~₀′ ← ~~ˣ⁻⊞-assocˡ kk′~~′ kk′~₂~
          | _ , kk′~Γ₀′~ , kk′~~₁ ← ~~ˣ⁻⊞-assocˡ kk′~~ (~~ˣ⁻⊞-commute kk′~′~)
-         | _ , kk′~₂′~ , kk′~~₁′ ← ~~ˣ⁻⊞-assocˡ kk′~~′ (~~ˣ⁻⊞-commute kk′~₂~) = FV kk′~′~ ⊢`let-return ~ᴹ∧BP⊢⇒~FVof ~Γ₀ kk′~~₀ kk′~~₀′ ~L ⊢I `in ~ᴹ∧BP⊢⇒~FVof (proj₂ (~ᵀ-total _) !∷ᵘ ~Γ₁) (!∷ᵘ kk′~~₁) (!∷ᵘ kk′~~₁′) ~M ⊢J
-~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`#¹ ~u) (ψ₀Dis BP.⊢`#¹ u∈)
+         | _ , kk′~₂′~ , kk′~~₁′ ← ~~ˣ⁻⊞-assocˡ kk′~~′ (~~ˣ⁻⊞-commute kk′~₂~)            = FV kk′~′~ ⊢`let-return ~ᴹ∧BP⊢⇒~FVof ~Γ₀ kk′~~₀ kk′~~₀′ ~L ⊢I `in ~ᴹ∧BP⊢⇒~FVof (proj₂ (~ᵀ-total _) !∷ᵘ ~Γ₁) (!∷ᵘ kk′~~₁) (!∷ᵘ kk′~~₁′) ~M ⊢J
+~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`#¹ ~u)                      (ψ₀Dis BP.⊢`#¹ u∈)
   with _ , ~u′ ← ~ˣ∧∈¹⇒~ᵛ∈ᵘ ~Γ ψ₀Dis u∈
     with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~
        | refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~′
       with refl ← ~ᵛ∈ᵘ-uniqueˡ kk′~~′ kk′~~ ~u ~u′ = FV`unlift (FV`#¹ ~u)
-~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`λ⦂ ~S ∘ ~L) (BP.`λ⦂-∘ ⊢I) = FV`λ⦂-∘ ~ᴹ∧BP⊢⇒~FVof (~S !∷ˡ ~Γ) (to-left!∷ˡ kk′~~) (to-left!∷ˡ kk′~~′) ~L ⊢I
-~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (kk′~₂~ ⊢ ~L `$ ~M) (ψ₀~ BP.⊢ ⊢I `$ ⊢J)
+~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`λ⦂ ~S ∘ ~L)                 (BP.`λ⦂-∘ ⊢I)                 = FV`λ⦂-∘ ~ᴹ∧BP⊢⇒~FVof (~S !∷ˡ ~Γ) (to-left!∷ˡ kk′~~) (to-left!∷ˡ kk′~~′) ~L ⊢I
+~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (kk′~₂~ ⊢ ~L `$ ~M)           (ψ₀~ BP.⊢ ⊢I `$ ⊢J)
   with _ , _ , Γ~ , ~Γ₀ , ~Γ₁ , kk′~′~ ← BP~⊞-preserves-~ˣ ψ₀~ ~Γ
     with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~
        | refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~′
@@ -1138,16 +1134,30 @@ BP~⊞-preserves-~ˣ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ)
       with _ , kk′~Γ₁′~ , kk′~~₀ ← ~~ˣ⁻⊞-assocˡ kk′~~ kk′~′~
          | _ , kk′~₃′~ , kk′~~₀′ ← ~~ˣ⁻⊞-assocˡ kk′~~′ kk′~₂~
          | _ , kk′~Γ₀′~ , kk′~~₁ ← ~~ˣ⁻⊞-assocˡ kk′~~ (~~ˣ⁻⊞-commute kk′~′~)
-         | _ , kk′~₂′~ , kk′~~₁′ ← ~~ˣ⁻⊞-assocˡ kk′~~′ (~~ˣ⁻⊞-commute kk′~₂~) = FV kk′~′~ ⊢ ~ᴹ∧BP⊢⇒~FVof ~Γ₀ kk′~~₀ kk′~~₀′ ~L ⊢I `$ ~ᴹ∧BP⊢⇒~FVof ~Γ₁ kk′~~₁ kk′~~₁′ ~M ⊢J
-~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`#⁰ ~x) (BP.`#⁰ x∈)
+         | _ , kk′~₂′~ , kk′~~₁′ ← ~~ˣ⁻⊞-assocˡ kk′~~′ (~~ˣ⁻⊞-commute kk′~₂~)            = FV kk′~′~ ⊢ ~ᴹ∧BP⊢⇒~FVof ~Γ₀ kk′~~₀ kk′~~₀′ ~L ⊢I `$ ~ᴹ∧BP⊢⇒~FVof ~Γ₁ kk′~~₁ kk′~~₁′ ~M ⊢J
+~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`#⁰ ~x)                      (BP.`#⁰ x∈)
   with _ , ~x′ ← ~ˣ∧∈⁰⇒~ᵛ∈ˡ ~Γ x∈
     with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~
        | refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~′
-      with refl ← ~ᵛ∈ˡ-uniqueˡ kk′~~′ kk′~~ ~x ~x′ = FV`#⁰ ~x
-~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`unlift-`lift _ ~L) ⊢I = FV`unlift (FV`lift (~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ ~L ⊢I))
+      with refl ← ~ᵛ∈ˡ-uniqueˡ kk′~~′ kk′~~ ~x ~x′                                       = FV`#⁰ ~x
+~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ (`unlift-`lift _ ~L)          ⊢I                            = FV`unlift (FV`lift (~ᴹ∧BP⊢⇒~FVof ~Γ kk′~~ kk′~~′ ~L ⊢I))
 
 -- Soundness and Completeness of _~ᴹ_ Regarding Typings
 --
+subst⊢~ᴹʳ : ∀ {n m kk′~} →
+            (n≡m : n ≡ m) →
+            subst (k ⍮_~ˣ⁻) n≡m kk′~ ⊢ I ~ᴹ L →
+            ------------------------------------
+            kk′~ ⊢ I ~ᴹ L
+subst⊢~ᴹʳ refl ~L = ~L
+
+subst⊢~ᴹʳ-depth : ∀ {n m kk′~} →
+                  (n≡m : n ≡ m) →
+                  (~L : subst (k ⍮_~ˣ⁻) n≡m kk′~ ⊢ I ~ᴹ L) →
+                  -------------------------------------------
+                  depth~ᴹ ~L ≡ depth~ᴹ (subst⊢~ᴹʳ n≡m ~L)
+subst⊢~ᴹʳ-depth refl _ = refl
+
 ~ᴹ-soundness-∈ᵘ : (~Γ : ψ₁ ⍮ ψ₀ ~ˣ Γ) →
                   P ~ᵀ S →
                   u′ ~ᵛ u ∈ᵘ eraseˣ ~Γ →
@@ -1252,7 +1262,7 @@ BP~⊞-preserves-~ˣ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ)
           with refl ← ~FVof-unique kk′~~ (~~ˣ⁻subst⊞ʳ⁻¹ eq₀₀ kk′~~′) (~ᴹ⇒~FVof ~L) FVL
              | refl ← trans
                         (~FVof-unique (!∷ᵘ (~~ˣ⁻⊞-commute kk′~~)) (~~ˣ⁻subst⊞ʳ⁻¹ eq₀₁ (~~ˣ⁻⊞-commute (!∷ᵘ kk′~~′))) (~ᴹ⇒~FVof ~M) FVM)
-                        (sym (!∷ᵘsubst (eraseˣ ~Γ₁′) eq₀₁))                             = ψ₀~ BP.⊢`let-bang ⊢I `in ⊢J
+                        (sym (!∷ᵘsubst (eraseˣ ~Γ₁′) eq₀₁))                                                            = ψ₀~ BP.⊢`let-bang ⊢I `in ⊢J
   where
     ⊢I = ~ᴹ-completeness ~Γ₀′ (`! ~T) (subst⊢~ᴹʳ eq₀₀ ~L) (~⊞-is-all-del∧⊢⇒⊢ʳ (~⊞-commute Γ₀′~) Γ₀″Del ⊢L)
     ⊢J = ~ᴹ-completeness
@@ -1260,12 +1270,12 @@ BP~⊞-preserves-~ˣ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ)
            ~S
            (subst⊢~ᴹʳ eq₀₁ (subst (_⊢ _ ~ᴹ _) (!∷ᵘsubst (eraseˣ ~Γ₁′) eq₀₁) ~M))
            (~⊞-is-all-del∧⊢⇒⊢ʳ (contraction _ ∷ ~⊞-commute Γ₁′~) (weakening _ ∷ Γ₁″Del) ⊢M)
-~ᴹ-completeness ~Γ ~S          (`#¹ ~u)              (Γ∤ ⊢`unlift`# u∈ ⦂ ⊢↑)
+~ᴹ-completeness ~Γ ~S          (`#¹ ~u)                     (Γ∤ ⊢`unlift`# u∈ ⦂ ⊢↑)
   with ψ₀Dis ← ~ˣ∧∤⇒is-all-dis ~Γ Γ∤
-     | refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤ = ψ₀Dis BP.⊢`#¹ ~ᴹ-completeness-∈ᵘ ~Γ ~S ~u u∈
-~ᴹ-completeness ~Γ (~S′ `⊸ ~T) (`λ⦂ ~S ∘ ~L)         (`λ⦂-∘ ⊢L)
-  with refl ← ~ᵀ-inj ~S ~S′                                                                   = BP.`λ⦂-∘ ~ᴹ-completeness (~S !∷ˡ ~Γ) ~T ~L ⊢L
-~ᴹ-completeness ~Γ ~S          (kk′~~ ⊢ ~L `$ ~M)            (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
+     | refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤                                                                                             = ψ₀Dis BP.⊢`#¹ ~ᴹ-completeness-∈ᵘ ~Γ ~S ~u u∈
+~ᴹ-completeness ~Γ (~S′ `⊸ ~T) (`λ⦂ ~S ∘ ~L)                (`λ⦂-∘ ⊢L)
+  with refl ← ~ᵀ-inj ~S ~S′                                                                                            = BP.`λ⦂-∘ ~ᴹ-completeness (~S !∷ˡ ~Γ) ~T ~L ⊢L
+~ᴹ-completeness ~Γ ~S          (kk′~~ ⊢ ~L `$ ~M)           (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
   with _ , _ , _ , _ , _ , _ , Γ~′ , Γ₀′~ , Γ₀″Del , Γ₁′~ , Γ₁″Del , ψ₀~ , ~Γ₀′ , ~Γ₁′ , kk′~~′ ← ~⊞-preserves-~ˣ Γ~ ~Γ
     with eq₀₀ , eq₀₁ ← BP.length-respects-~⊞ ψ₀~
        | refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~
@@ -1279,12 +1289,12 @@ BP~⊞-preserves-~ˣ (BP.to-right BP.∷ ψ₀~) (~S !∷ˡ ~Γ)
   where
     ⊢I = ~ᴹ-completeness ~Γ₀′ (~T `⊸ ~S) (subst⊢~ᴹʳ eq₀₀ ~L) (~⊞-is-all-del∧⊢⇒⊢ʳ (~⊞-commute Γ₀′~) Γ₀″Del ⊢L)
     ⊢J = ~ᴹ-completeness ~Γ₁′ ~T (subst⊢~ᴹʳ eq₀₁ ~M) (~⊞-is-all-del∧⊢⇒⊢ʳ (~⊞-commute Γ₁′~) Γ₁″Del ⊢M)
-~ᴹ-completeness ~Γ ~S          (`#⁰ ~x)              (`# x∈)                                  = BP.`#⁰ ~ᴹ-completeness-∈ˡ ~Γ ~S ~x x∈
-~ᴹ-completeness ~Γ ~S          (`unlift-`lift kk′~Dis ~L)    (Γ∤ ⊢`unlift`lift ⊢L ⦂ ⊢↑)
-  with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤                                   = ~ᴹ-completeness ~Γ ~S ~L ⊢L
-~ᴹ-completeness ~Γ `⊤          (`unit kk′~Dis)               (`unit ΓDel)                     = BP.`unit (~ˣ∧is-all-del⇒is-all-dis ~Γ ΓDel)
-~ᴹ-completeness ~Γ (`! ~S)     (`bang kk′~Dis ~L)            (Γ∤ ⊢`return`lift ⊢L)
-  with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤                                                                    = ~ˣ∧∤⇒is-all-dis ~Γ Γ∤ BP.⊢`bang ~ᴹ-completeness ~Γ ~S ~L ⊢L
+~ᴹ-completeness ~Γ ~S          (`#⁰ ~x)                     (`# x∈)                                                    = BP.`#⁰ ~ᴹ-completeness-∈ˡ ~Γ ~S ~x x∈
+~ᴹ-completeness ~Γ ~S          (`unlift-`lift kk′~Dis ~L)   (Γ∤ ⊢`unlift`lift ⊢L ⦂ ⊢↑)
+  with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤                                                                                             = ~ᴹ-completeness ~Γ ~S ~L ⊢L
+~ᴹ-completeness ~Γ `⊤          (`unit kk′~Dis)              (`unit ΓDel)                                               = BP.`unit (~ˣ∧is-all-del⇒is-all-dis ~Γ ΓDel)
+~ᴹ-completeness ~Γ (`! ~S)     (`bang kk′~Dis ~L)           (Γ∤ ⊢`return`lift ⊢L)
+  with refl ← ~ˣ∧∤⇒≡ ~Γ Γ∤                                                                                             = ~ˣ∧∤⇒is-all-dis ~Γ Γ∤ BP.⊢`bang ~ᴹ-completeness ~Γ ~S ~L ⊢L
 
 
 -- Properties of _~ᴹ_ Regarding OpSems
@@ -1402,15 +1412,15 @@ Value~ᴹ-normalize ~L VI = Value~ᴹ-normalize-helper ~L VI (ℕ.<-wellFounded 
                              × DeferredTerm[ uMode ≤] L′
                              × kk′~ ⊢ I ~ᴹ L′)
 `bang-~ᴹ-inv-helper (`bang kk′~Dis ~L)         rec
-  with _ , ⟶*L′[≤] , WL′ , ~L′ , L′≤ ← ~ᴹ-normalize[≤] ~L                  = -, ξ-of-↝*-⟶* _⟶[ _ ≤]_ `return`lift ξ-`return`lift ⟶*L′[≤]
-                                                                           , WL′
-                                                                           , ~L′
+  with _ , ⟶*L′[≤] , WL′ , ~L′ , L′≤ ← ~ᴹ-normalize[≤] ~L                    = -, ξ-of-↝*-⟶* _⟶[ _ ≤]_ `return`lift ξ-`return`lift ⟶*L′[≤]
+                                                                             , WL′
+                                                                             , ~L′
 `bang-~ᴹ-inv-helper (`unlift-`lift kk′~Dis ~L) (acc r)
   with _ , ⟶*L′[≤] , WL′ , ~L′ , L′≤ ← ~ᴹ-normalize[≤] ~L
     with _ , ⟶*`bangL″ , WL″ , ~L″ ← `bang-~ᴹ-inv-helper ~L′ (r _ (s≤s L′≤)) = -, ξ-of-↝*-⟶* _⟶[ uMode ≤]_ `unlift`lift ξ-`unlift`lift ⟶*L′[≤]
-                                                                               ◅◅ β-`↑ WL′ ◅ ⟶*`bangL″
-                                                                           , WL″
-                                                                           , ~L″
+                                                                                 ◅◅ β-`↑ WL′ ◅ ⟶*`bangL″
+                                                                             , WL″
+                                                                             , ~L″
 
 `bang-~ᴹ-inv : kk′~ ⊢ BP.`bang I ~ᴹ L →
               ------------------------------------
@@ -1425,7 +1435,7 @@ Value~ᴹ-normalize ~L VI = Value~ᴹ-normalize-helper ~L VI (ℕ.<-wellFounded 
                       ∃₂ (λ S′ L′ → L ⟶* `λ⦂ˡ S′ ∘ L′
                                   × !∷ˡ kk′~ ⊢ I ~ᴹ L′
                                   × P ~ᵀ S′)
-`λ⦂-∙-~ᴹ-inv-helper (`λ⦂ ~S ∘ ~L)      rec                                         = -, -, ε
+`λ⦂-∙-~ᴹ-inv-helper (`λ⦂ ~S ∘ ~L)              rec                                 = -, -, ε
                                                                                    , ~L
                                                                                    , ~S
 `λ⦂-∙-~ᴹ-inv-helper (`unlift-`lift kk′~Dis ~L) (acc r)
@@ -1454,7 +1464,7 @@ Value~ᴹ-normalize ~L VI = Value~ᴹ-normalize-helper ~L VI (ℕ.<-wellFounded 
                   k″k‴~ is-all-dis⁰~ˣ⁻ →
                   -------------------------------
                   BP.x ℕ.< k′
-~ᵛ∧is-all-dis⇒< []         ~x k″k‴~Dis with () ← ~ᵛ⇒¬is-all-dis ~x k″k‴~Dis
+~ᵛ∧is-all-dis⇒< []         ~x            k″k‴~Dis with () ← ~ᵛ⇒¬is-all-dis ~x k″k‴~Dis
 ~ᵛ∧is-all-dis⇒< (!∷ᵘ kk′~) (there!∷ᵘ ~x) k″k‴~Dis = ~ᵛ∧is-all-dis⇒< kk′~ ~x k″k‴~Dis
 ~ᵛ∧is-all-dis⇒< (?∷ˡ kk′~) (there?∷ˡ ~x) k″k‴~Dis = s≤s (~ᵛ∧is-all-dis⇒< kk′~ ~x k″k‴~Dis)
 ~ᵛ∧is-all-dis⇒< (!∷ˡ kk′~) (here _)      k″k‴~Dis = s≤s z≤n
@@ -1565,28 +1575,28 @@ wk[↑⁰]~ᴹwk[↑] : (kk′~ : k ⍮ k′ ~ˣ⁻) {0k₀~ : 0 ⍮ k₀ ~ˣ⁻
                  kk′~ ++ˣ⁻ k″k‴~ ⊢ I ~ᴹ L →
                  -----------------------------------------------------------------------------------------
                  kk′~ ++ˣ⁻ 0k₀~ ++ˣ⁻ k″k‴~ ⊢ BP.wk[ k₀ ↑⁰ k′ ] I ~ᴹ wk[ lengthˣ⁻ 0k₀~ ↑ lengthˣ⁻ kk′~ ] L
-wk[↑⁰]~ᴹwk[↑] {_} {_}  {k₀} kk′~ 0k₀~Dis (`bang kk′~k″k‴~Dis ~L) = `bang kk′~0k₀~k″k‴~Dis (subst (_ ⊢_~ᴹ _) (~ᴹ∧≥⇒wk[↑⁰]≡ k₀ kk′~ ~L (is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~k″k‴~Dis) ℕ.≤-refl) (wk[↑⁰]~ᴹwk[↑] kk′~ 0k₀~Dis ~L))
+wk[↑⁰]~ᴹwk[↑] {_} {_}  {k₀} kk′~ 0k₀~Dis (`bang kk′~k″k‴~Dis ~L)                                          = `bang kk′~0k₀~k″k‴~Dis (subst (_ ⊢_~ᴹ _) (~ᴹ∧≥⇒wk[↑⁰]≡ k₀ kk′~ ~L (is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~k″k‴~Dis) ℕ.≤-refl) (wk[↑⁰]~ᴹwk[↑] kk′~ 0k₀~Dis ~L))
   where
     kk′~0k₀~k″k‴~Dis = is-all-dis⁰~ˣ⁻-++⁺
                          (is-all-dis⁰~ˣ⁻-++⁻ˡ kk′~ kk′~k″k‴~Dis)
                          (is-all-dis⁰~ˣ⁻-++⁺ 0k₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~k″k‴~Dis))
-wk[↑⁰]~ᴹwk[↑]          kk′~ 0k₀~Dis (`unlift-`lift kk′~k″k‴~Dis ~L) = `unlift-`lift kk′~0k₀~k″k‴~Dis (wk[↑⁰]~ᴹwk[↑] kk′~ 0k₀~Dis ~L)
+wk[↑⁰]~ᴹwk[↑]               kk′~ 0k₀~Dis (`unlift-`lift kk′~k″k‴~Dis ~L)                                  = `unlift-`lift kk′~0k₀~k″k‴~Dis (wk[↑⁰]~ᴹwk[↑] kk′~ 0k₀~Dis ~L)
   where
     kk′~0k₀~k″k‴~Dis = is-all-dis⁰~ˣ⁻-++⁺
                          (is-all-dis⁰~ˣ⁻-++⁻ˡ kk′~ kk′~k″k‴~Dis)
                          (is-all-dis⁰~ˣ⁻-++⁺ 0k₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~k″k‴~Dis))
-wk[↑⁰]~ᴹwk[↑]          kk′~ 0k₀~Dis (`unit kk′~k″k‴~Dis)                              = `unit kk′~0k₀~k″k‴~Dis
+wk[↑⁰]~ᴹwk[↑]               kk′~ 0k₀~Dis (`unit kk′~k″k‴~Dis)                                             = `unit kk′~0k₀~k″k‴~Dis
   where
     kk′~0k₀~k″k‴~Dis = is-all-dis⁰~ˣ⁻-++⁺
                          (is-all-dis⁰~ˣ⁻-++⁻ˡ kk′~ kk′~k″k‴~Dis)
                          (is-all-dis⁰~ˣ⁻-++⁺ 0k₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~k″k‴~Dis))
-wk[↑⁰]~ᴹwk[↑]          kk′~ 0k₀~Dis (kk′~k″k‴~~ ⊢`let-bang ~L `in ~M)
+wk[↑⁰]~ᴹwk[↑]               kk′~ 0k₀~Dis (kk′~k″k‴~~ ⊢`let-bang ~L `in ~M)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~k″k‴~~
     with kk′~₀~ , kk′~₁~ , _ , _ , refl , refl , kk′~~ , k″k‴~~ ← ~~ˣ⁻⊞-preserves-++ kk′~ kk′~k″k‴~~
-      with eq₀ , eq₁ ← lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~ = kk′~0k₀~k″k‴~~ ⊢`let-bang subst-~ᴹwk[↑-] eq₀ _ (wk[↑⁰]~ᴹwk[↑] kk′~₀~ 0k₀~Dis ~L) `in subst-~ᴹwk[↑-] (cong suc eq₁) _ (wk[↑⁰]~ᴹwk[↑] (!∷ᵘ kk′~₁~) 0k₀~Dis ~M)
+      with eq₀ , eq₁ ← lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~                                                      = kk′~0k₀~k″k‴~~ ⊢`let-bang subst-~ᴹwk[↑-] eq₀ _ (wk[↑⁰]~ᴹwk[↑] kk′~₀~ 0k₀~Dis ~L) `in subst-~ᴹwk[↑-] (cong suc eq₁) _ (wk[↑⁰]~ᴹwk[↑] (!∷ᵘ kk′~₁~) 0k₀~Dis ~M)
   where
     kk′~0k₀~k″k‴~~ = ~~ˣ⁻⊞-++ kk′~~ (~~ˣ⁻⊞-++ (is-all-dis⁰~ˣ⁻-self~~ˣ⁻⊞ 0k₀~Dis) k″k‴~~)
-wk[↑⁰]~ᴹwk[↑]          kk′~ 0k₀~Dis (`#¹ ~u) = `#¹ lemma kk′~ 0k₀~Dis ~u
+wk[↑⁰]~ᴹwk[↑]               kk′~ 0k₀~Dis (`#¹ ~u)                                                         = `#¹ lemma kk′~ 0k₀~Dis ~u
   where
     lemma : (kk′~ : k ⍮ k′ ~ˣ⁻) {0k₀~ : 0 ⍮ k₀ ~ˣ⁻} {k″k‴~ : k″ ⍮ k‴ ~ˣ⁻} →
             0k₀~ is-all-dis⁰~ˣ⁻ →
@@ -1601,16 +1611,16 @@ wk[↑⁰]~ᴹwk[↑]          kk′~ 0k₀~Dis (`#¹ ~u) = `#¹ lemma kk′~ 0k
       rewrite wkidx[↑suc]suc≡sucwkidx[↑] (lengthˣ⁻ 0k₀~) (lengthˣ⁻ kk′~) u                    = there?∷ˡ (lemma kk′~ (?∷ˡ 0k₀~Dis) ~u)
     lemma                                 (!∷ᵘ kk′~)        (?∷ˡ 0k₀~Dis) (here kk′~k″k‴~Dis) = here ((is-all-dis⁰~ˣ⁻-++⁺ (is-all-dis⁰~ˣ⁻-++⁻ˡ kk′~ kk′~k″k‴~Dis) (?∷ˡ (is-all-dis⁰~ˣ⁻-++⁺ 0k₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~k″k‴~Dis)))))
     
-wk[↑⁰]~ᴹwk[↑] {k} {k′} kk′~ 0k₀~Dis (`λ⦂ ~S ∘ ~L)
+wk[↑⁰]~ᴹwk[↑] {k} {k′}      kk′~ 0k₀~Dis (`λ⦂ ~S ∘ ~L)
   with ~L′ ← wk[↑⁰]~ᴹwk[↑] (!∷ˡ kk′~) 0k₀~Dis ~L
     rewrite ℕ.+-suc k k′                                                                                  = `λ⦂ ~S ∘ ~L′
-wk[↑⁰]~ᴹwk[↑]          kk′~ 0k₀~Dis (kk′~k″k‴~~ ⊢ ~L `$ ~M)
+wk[↑⁰]~ᴹwk[↑]               kk′~ 0k₀~Dis (kk′~k″k‴~~ ⊢ ~L `$ ~M)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~k″k‴~~
     with kk′~₀~ , kk′~₁~ , _ , _ , refl , refl , kk′~~ , k″k‴~~ ← ~~ˣ⁻⊞-preserves-++ kk′~ kk′~k″k‴~~
-      with eq₀ , eq₁ ← lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~                           = kk′~0k₀~k″k‴~~ ⊢ subst-~ᴹwk[↑-] eq₀ _ (wk[↑⁰]~ᴹwk[↑] kk′~₀~ 0k₀~Dis ~L) `$ subst-~ᴹwk[↑-] eq₁ _ (wk[↑⁰]~ᴹwk[↑] kk′~₁~ 0k₀~Dis ~M)
+      with eq₀ , eq₁ ← lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~                                                      = kk′~0k₀~k″k‴~~ ⊢ subst-~ᴹwk[↑-] eq₀ _ (wk[↑⁰]~ᴹwk[↑] kk′~₀~ 0k₀~Dis ~L) `$ subst-~ᴹwk[↑-] eq₁ _ (wk[↑⁰]~ᴹwk[↑] kk′~₁~ 0k₀~Dis ~M)
   where
     kk′~0k₀~k″k‴~~ = ~~ˣ⁻⊞-++ kk′~~ (~~ˣ⁻⊞-++ (is-all-dis⁰~ˣ⁻-self~~ˣ⁻⊞ 0k₀~Dis) k″k‴~~)
-wk[↑⁰]~ᴹwk[↑]          kk′~ 0k₀~Dis (`#⁰ ~x) = `#⁰ lemma kk′~ 0k₀~Dis ~x
+wk[↑⁰]~ᴹwk[↑]               kk′~ 0k₀~Dis (`#⁰ ~x)                                                         = `#⁰ lemma kk′~ 0k₀~Dis ~x
   where
     lemma : (kk′~ : k ⍮ k′ ~ˣ⁻) {0k₀~ : 0 ⍮ k₀ ~ˣ⁻} {k″k‴~ : k″ ⍮ k‴ ~ˣ⁻} →
             0k₀~ is-all-dis⁰~ˣ⁻ →
@@ -1840,22 +1850,22 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
                              kk′~₁ ⊢ I ~ᴹ L →
                              --------------------------
                              kk′~ ⊢ I ~ᴹ L
-~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (`unit kk′~₁Dis) = `unit (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ kk′~₀Dis kk′~₁Dis kk′~~)
-~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (`bang kk′~₁Dis ~L) = `bang (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ kk′~₀Dis kk′~₁Dis kk′~~) (~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis ~L)
+~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (`unit kk′~₁Dis)                                   = `unit (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ kk′~₀Dis kk′~₁Dis kk′~~)
+~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (`bang kk′~₁Dis ~L)                                = `bang (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ kk′~₀Dis kk′~₁Dis kk′~~) (~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis ~L)
 ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (kk′~₁~ ⊢`let-bang ~L `in ~M)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~
      | refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~₁~
     with _ , _ , kk′~₂′~ , kk′~₃′~ , kk′~~′ ← ~~ˣ⁻⊞-contraction-assocʳ kk′~~ kk′~₁~ kk′~₀Dis = kk′~~′ ⊢`let-bang ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~₂′~ kk′~₀Dis ~L `in ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ (!∷ᵘ kk′~₃′~) (!∷ᵘ kk′~₀Dis) ~M
 ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (`#¹ ~u)
-  with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~ = `#¹ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ᵘ⇒∈ᵘ kk′~~ kk′~₀Dis ~u
-~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (`λ⦂ ~S ∘ ~L) = `λ⦂ ~S ∘ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ (to-right!∷ˡ kk′~~) (?∷ˡ kk′~₀Dis) ~L
+  with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~                                         = `#¹ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ᵘ⇒∈ᵘ kk′~~ kk′~₀Dis ~u
+~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (`λ⦂ ~S ∘ ~L)                                      = `λ⦂ ~S ∘ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ (to-right!∷ˡ kk′~~) (?∷ˡ kk′~₀Dis) ~L
 ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (kk′~₁~ ⊢ ~L `$ ~M)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~
      | refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~₁~
     with _ , _ , kk′~₂′~ , kk′~₃′~ , kk′~~′ ← ~~ˣ⁻⊞-contraction-assocʳ kk′~~ kk′~₁~ kk′~₀Dis = kk′~~′ ⊢ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~₂′~ kk′~₀Dis ~L `$ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~₃′~ kk′~₀Dis ~M
 ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (`#⁰ ~x)
-  with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~ = `#⁰ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ˡ⇒∈ˡ kk′~~ kk′~₀Dis ~x
-~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (`unlift-`lift kk′~₁Dis ~L) = `unlift-`lift (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ kk′~₀Dis kk′~₁Dis kk′~~) (~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis ~L)
+  with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~                                         = `#⁰ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ˡ⇒∈ˡ kk′~~ kk′~₀Dis ~x
+~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis (`unlift-`lift kk′~₁Dis ~L)                        = `unlift-`lift (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ kk′~₀Dis kk′~₁Dis kk′~~) (~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ kk′~~ kk′~₀Dis ~L)
 
 !∷ᵘ[/¹]~ᴹ[/]ᵘ : {kk′~ k₀k′₀~ k₁k′₁~ : k ⍮ k′ ~ˣ⁻} {k″k‴~ k″₀k‴₀~ k″₁k‴₁~ : k″ ⍮ k‴ ~ˣ⁻} →
                 kk′~ ~~ˣ⁻ k₀k′₀~ ⊞ k₁k′₁~ →
@@ -1866,19 +1876,19 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
                 k₁k′₁~ ++ˣ⁻ !∷ᵘ k″₁k‴₁~ ⊢ J ~ᴹ M →
                 ----------------------------------------------------------------------------
                 kk′~ ++ˣ⁻ k″k‴~ ⊢ BP.[ I /¹ k ] J ~ᴹ [ `lift L /[ uMode ] lengthˣ⁻ kk′~ ] M
-!∷ᵘ[/¹]~ᴹ[/]ᵘ {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`unit k₁k′₁~!∷ᵘk″₁k‴₁~Dis) = `unit kk′~k″k‴~Dis
+!∷ᵘ[/¹]~ᴹ[/]ᵘ     {J = _}          {_}                   {_}    {_}      {k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`unit k₁k′₁~!∷ᵘk″₁k‴₁~Dis)              = `unit kk′~k″k‴~Dis
   where
     kk′~k″k‴~Dis = is-all-dis⁰~ˣ⁻-++⁺ (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ k₀k′₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ˡ k₁k′₁~ k₁k′₁~!∷ᵘk″₁k‴₁~Dis) kk′~~) (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ k″₀k‴₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ʳ (!∷ᵘ [])  (is-all-dis⁰~ˣ⁻-++⁻ʳ k₁k′₁~ k₁k′₁~!∷ᵘk″₁k‴₁~Dis)) k″k‴~~)
-!∷ᵘ[/¹]~ᴹ[/]ᵘ {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`bang k₁k′₁~!∷ᵘk″₁k‴₁~Dis ~M) = `bang kk′~k″k‴~Dis (!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L ~M)
+!∷ᵘ[/¹]~ᴹ[/]ᵘ     {J = _}          {_}                   {_}    {_}      {k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`bang k₁k′₁~!∷ᵘk″₁k‴₁~Dis ~M)           = `bang kk′~k″k‴~Dis (!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L ~M)
   where
     kk′~k″k‴~Dis = is-all-dis⁰~ˣ⁻-++⁺ (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ k₀k′₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ˡ k₁k′₁~ k₁k′₁~!∷ᵘk″₁k‴₁~Dis) kk′~~) (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ k″₀k‴₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ʳ (!∷ᵘ [])  (is-all-dis⁰~ˣ⁻-++⁻ʳ k₁k′₁~ k₁k′₁~!∷ᵘk″₁k‴₁~Dis)) k″k‴~~)
-!∷ᵘ[/¹]~ᴹ[/]ᵘ {M = `let-return M `in N} {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (k₁k′₁~!∷ᵘk″₁k‴₁~~ ⊢`let-bang ~M `in ~N)
+!∷ᵘ[/¹]~ᴹ[/]ᵘ     {J = _}          {`let-return M `in N} {_}    {_}      {k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (k₁k′₁~!∷ᵘk″₁k‴₁~~ ⊢`let-bang ~M `in ~N)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index k₁k′₁~!∷ᵘk″₁k‴₁~~
     with _ , _ , _ , _ , refl , refl , k₁k′₁~~ , !∷ᵘ k″₁k‴₁~~ ← ~~ˣ⁻⊞-preserves-++ k₁k′₁~ k₁k′₁~!∷ᵘk″₁k‴₁~~
       with _ , _ , kk′~₂~ , kk′~₃~ , kk′~~′ ← ~~ˣ⁻⊞-contraction-assocʳ kk′~~ k₁k′₁~~ k₀k′₀~Dis
          | _ , _ , k″k‴~₂~ , k″k‴~₃~ , k″k‴~~′ ← ~~ˣ⁻⊞-contraction-assocʳ k″k‴~~ k″₁k‴₁~~ k″₀k‴₀~Dis
-        with eq₀ , eq₁ ← lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~′ = ~~ˣ⁻⊞-++ kk′~~′ k″k‴~~′ ⊢`let-bang subst-~ᴹ[/-] eq₀ M (!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~₂~ k″k‴~₂~ k₀k′₀~Dis k″₀k‴₀~Dis ~L ~M) `in subst-~ᴹ[/-] (cong suc eq₁) N (!∷ᵘ[/¹]~ᴹ[/]ᵘ (!∷ᵘ kk′~₃~) k″k‴~₃~ (!∷ᵘ k₀k′₀~Dis) k″₀k‴₀~Dis (wk[↑¹]~ᴹwk[↑] [] (!∷ᵘ []) ~L) ~N)
-!∷ᵘ[/¹]~ᴹ[/]ᵘ {k} {J = BP.`#¹ BPv} {M = `unlift`# v} {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`#¹ ~v)
+        with eq₀ , eq₁ ← lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~′                                                                                                         = ~~ˣ⁻⊞-++ kk′~~′ k″k‴~~′ ⊢`let-bang subst-~ᴹ[/-] eq₀ M (!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~₂~ k″k‴~₂~ k₀k′₀~Dis k″₀k‴₀~Dis ~L ~M) `in subst-~ᴹ[/-] (cong suc eq₁) N (!∷ᵘ[/¹]~ᴹ[/]ᵘ (!∷ᵘ kk′~₃~) k″k‴~₃~ (!∷ᵘ k₀k′₀~Dis) k″₀k‴₀~Dis (wk[↑¹]~ᴹwk[↑] [] (!∷ᵘ []) ~L) ~N)
+!∷ᵘ[/¹]~ᴹ[/]ᵘ {k} {J = BP.`#¹ BPv} {`unlift`# v}         {_}    {_}      {k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`#¹ ~v)
   with eq₀ , eq₁ ← lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~
      | k₀k′₀~k″₀k‴₀~Dis ← is-all-dis⁰~ˣ⁻-++⁺ k₀k′₀~Dis k″₀k‴₀~Dis
      | kk′~k″k‴~~ ← ~~ˣ⁻⊞-++ kk′~~ k″k‴~~
@@ -1886,28 +1896,28 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
 ...    | no  BPv≱k
       with BPv<k ← ℕ.≰⇒> BPv≱k
         with v<kk′~ ← ℕ.<-transˡ (∈ᵘ∧<⇒< k₁k′₁~ ~v BPv<k) (ℕ.≤-reflexive eq₁)
-          rewrite dec-no (_ ℕ.≥? _) (ℕ.<⇒≱ v<kk′~) = `#¹ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ᵘ⇒∈ᵘ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ᵘ!∷ᵘ∧<⇒~ᵛ∈ᵘ k₁k′₁~ ~v BPv<k)
+          rewrite dec-no (_ ℕ.≥? _) (ℕ.<⇒≱ v<kk′~)                                                                                                              = `#¹ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ᵘ⇒∈ᵘ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ᵘ!∷ᵘ∧<⇒~ᵛ∈ᵘ k₁k′₁~ ~v BPv<k)
 ...    | yes BPv≥k
       with BPv ℕ.≟ k
 ...      | no  BPv≢k
         with BPv>k ← ℕ.≤∧≢⇒< BPv≥k (≢-sym BPv≢k)
           with v>kk′~ ← ℕ.<-transʳ (ℕ.≤-reflexive (sym eq₁)) (∈ᵘ∧>⇒> k₁k′₁~ ~v BPv>k)
             rewrite proj₂ (dec-yes (_ ℕ.≥? _) (ℕ.<⇒≤ v>kk′~))
-                  | dec-no (_ ℕ.≟ _) (≢-sym (ℕ.<⇒≢ v>kk′~)) = `#¹ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ᵘ⇒∈ᵘ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ᵘ!∷ᵘ∧>⇒pred~ᵛpred∈ᵘ k₁k′₁~ ~v BPv>k)
+                  | dec-no (_ ℕ.≟ _) (≢-sym (ℕ.<⇒≢ v>kk′~))                                                                                                     = `#¹ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ᵘ⇒∈ᵘ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ᵘ!∷ᵘ∧>⇒pred~ᵛpred∈ᵘ k₁k′₁~ ~v BPv>k)
 ...      | yes refl
         with v≡kk′~ ← trans (∈ᵘ!∷ᵘ∧≡⇒≡ k₁k′₁~ ~v refl) eq₁
            | k₁k′₁~Dis , k″₁k‴₁~Dis ← ~ᵛ∈ᵘ!∷ᵘ∧≡⇒is-all-dis⁰~ˣ⁻ k₁k′₁~ ~v refl
           with k₁k′₁~k″₁k‴₁~Dis ← is-all-dis⁰~ˣ⁻-++⁺ k₁k′₁~Dis k″₁k‴₁~Dis
           rewrite proj₂ (dec-yes (_ ℕ.≥? _) (ℕ.≤-reflexive (sym v≡kk′~)))
-                | proj₂ (dec-yes (_ ℕ.≟ _) v≡kk′~) = `unlift-`lift (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ k₀k′₀~k″₀k‴₀~Dis k₁k′₁~k″₁k‴₁~Dis kk′~k″k‴~~) (~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ (~~ˣ⁻⊞-commute kk′~k″k‴~~) k₁k′₁~k″₁k‴₁~Dis ~L)
-!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`λ⦂ ~S ∘ ~M) = `λ⦂ ~S ∘ (!∷ᵘ[/¹]~ᴹ[/]ᵘ (to-right!∷ˡ kk′~~) k″k‴~~ (?∷ˡ k₀k′₀~Dis) k″₀k‴₀~Dis (subst (_ ⊢_~ᴹ _) (~ᴹ∧≥⇒wk[↑⁰]≡ 1 [] ~L (is-all-dis⁰~ˣ⁻-++⁺ k₀k′₀~Dis k″₀k‴₀~Dis) z≤n) (wk[↑⁰]~ᴹwk[↑] [] (?∷ˡ []) ~L) ) ~M)
-!∷ᵘ[/¹]~ᴹ[/]ᵘ {M = M `$ N} {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (k₁k′₁~!∷ᵘk″₁k‴₁~~ ⊢ ~M `$ ~N)
+                | proj₂ (dec-yes (_ ℕ.≟ _) v≡kk′~)                                                                                                              = `unlift-`lift (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ k₀k′₀~k″₀k‴₀~Dis k₁k′₁~k″₁k‴₁~Dis kk′~k″k‴~~) (~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ (~~ˣ⁻⊞-commute kk′~k″k‴~~) k₁k′₁~k″₁k‴₁~Dis ~L)
+!∷ᵘ[/¹]~ᴹ[/]ᵘ                                                                     kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`λ⦂ ~S ∘ ~M)                            = `λ⦂ ~S ∘ (!∷ᵘ[/¹]~ᴹ[/]ᵘ (to-right!∷ˡ kk′~~) k″k‴~~ (?∷ˡ k₀k′₀~Dis) k″₀k‴₀~Dis (subst (_ ⊢_~ᴹ _) (~ᴹ∧≥⇒wk[↑⁰]≡ 1 [] ~L (is-all-dis⁰~ˣ⁻-++⁺ k₀k′₀~Dis k″₀k‴₀~Dis) z≤n) (wk[↑⁰]~ᴹwk[↑] [] (?∷ˡ []) ~L) ) ~M)
+!∷ᵘ[/¹]~ᴹ[/]ᵘ     {J = _}          {M `$ N}              {_}    {_}      {k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (k₁k′₁~!∷ᵘk″₁k‴₁~~ ⊢ ~M `$ ~N)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index k₁k′₁~!∷ᵘk″₁k‴₁~~
     with _ , _ , _ , _ , refl , refl , k₁k′₁~~ , !∷ᵘ k″₁k‴₁~~ ← ~~ˣ⁻⊞-preserves-++ k₁k′₁~ k₁k′₁~!∷ᵘk″₁k‴₁~~
       with _ , _ , kk′~₂~ , kk′~₃~ , kk′~~′ ← ~~ˣ⁻⊞-contraction-assocʳ kk′~~ k₁k′₁~~ k₀k′₀~Dis
          | _ , _ , k″k‴~₂~ , k″k‴~₃~ , k″k‴~~′ ← ~~ˣ⁻⊞-contraction-assocʳ k″k‴~~ k″₁k‴₁~~ k″₀k‴₀~Dis
-        with eq₀ , eq₁ ← lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~′ = ~~ˣ⁻⊞-++ kk′~~′ k″k‴~~′ ⊢ subst-~ᴹ[/-] eq₀ M (!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~₂~ k″k‴~₂~ k₀k′₀~Dis k″₀k‴₀~Dis ~L ~M) `$ subst-~ᴹ[/-] eq₁ N (!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~₃~ k″k‴~₃~ k₀k′₀~Dis k″₀k‴₀~Dis ~L ~N)
-!∷ᵘ[/¹]~ᴹ[/]ᵘ {J = BP.`#⁰ BPy} {M = `# y} {kk′~ = kk′~} {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`#⁰ ~y)
+        with eq₀ , eq₁ ← lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~′                                                                                                         = ~~ˣ⁻⊞-++ kk′~~′ k″k‴~~′ ⊢ subst-~ᴹ[/-] eq₀ M (!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~₂~ k″k‴~₂~ k₀k′₀~Dis k″₀k‴₀~Dis ~L ~M) `$ subst-~ᴹ[/-] eq₁ N (!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~₃~ k″k‴~₃~ k₀k′₀~Dis k″₀k‴₀~Dis ~L ~N)
+!∷ᵘ[/¹]~ᴹ[/]ᵘ     {J = BP.`#⁰ BPy} {`# y}                {kk′~} {_}      {k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`#⁰ ~y)
   with eq₀ , eq₁ ← lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~
      | k₀k′₀~k″₀k‴₀~Dis ← is-all-dis⁰~ˣ⁻-++⁺ k₀k′₀~Dis k″₀k‴₀~Dis
      | kk′~k″k‴~~ ← ~~ˣ⁻⊞-++ kk′~~ k″k‴~~
@@ -1917,8 +1927,8 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
 ...    | yes y≥kk′~
       with y≢kk′~ ← subst (_ ≢_) (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~)) (∈ˡ!∷ᵘ⇒≢ k₁k′₁~ ~y)
         with y>kk′~ ← ℕ.≤∧≢⇒< y≥kk′~ (≢-sym y≢kk′~)
-          rewrite dec-no (_ ℕ.≟ _) y≢kk′~ = `#⁰ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ˡ⇒∈ˡ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ˡ!∷ᵘ∧>⇒~ᵛpred∈ˡ k₁k′₁~ ~y (ℕ.<-transʳ (ℕ.≤-reflexive eq₁) y>kk′~))
-!∷ᵘ[/¹]~ᴹ[/]ᵘ {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`unlift-`lift k₁k′₁~!∷ᵘk″₁k‴₁~Dis ~M) = `unlift-`lift kk′~k″k‴~Dis (!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L ~M)
+          rewrite dec-no (_ ℕ.≟ _) y≢kk′~                                                                                                                       = `#⁰ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ˡ⇒∈ˡ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ˡ!∷ᵘ∧>⇒~ᵛpred∈ˡ k₁k′₁~ ~y (ℕ.<-transʳ (ℕ.≤-reflexive eq₁) y>kk′~))
+!∷ᵘ[/¹]~ᴹ[/]ᵘ     {J = _}          {_}                   {_}    {_}      {k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`unlift-`lift k₁k′₁~!∷ᵘk″₁k‴₁~Dis ~M)   = `unlift-`lift kk′~k″k‴~Dis (!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L ~M)
   where
     kk′~k″k‴~Dis = is-all-dis⁰~ˣ⁻-++⁺ (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ k₀k′₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ˡ k₁k′₁~ k₁k′₁~!∷ᵘk″₁k‴₁~Dis) kk′~~) (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ k″₀k‴₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ʳ (!∷ᵘ [])  (is-all-dis⁰~ˣ⁻-++⁻ʳ k₁k′₁~ k₁k′₁~!∷ᵘk″₁k‴₁~Dis)) k″k‴~~)
 
@@ -1928,19 +1938,19 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
                             kk′~ ++ˣ⁻ kk′~′ ⊢ J ~ᴹ M →
                             ---------------------------
                             BP.[ I /⁰ x ] J ≡ J
-≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′Dis (`unit _) = refl
-≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′Dis (`bang _ ~M) = refl
+≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡               x≥ kk′~′Dis (`unit _)                         = refl
+≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡               x≥ kk′~′Dis (`bang _ ~M)                      = refl
 ≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ {kk′~ = kk′~} x≥ kk′~′Dis (kk′~kk′~′~ ⊢`let-bang ~M `in ~N)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~kk′~′~
     with _ , _ , _ , _ , refl , refl , kk′~~ , kk′~′~ ← ~~ˣ⁻⊞-preserves-++ kk′~ kk′~kk′~′~
-      with kk′~′₀Dis , kk′~′₁Dis ← ~~ˣ⁻⊞-preserves-is-all-dis⁰~ˣ⁻ kk′~′Dis kk′~′~ = cong₂ BP.`let-bang_`in_ (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′₀Dis ~M) (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′₁Dis ~N)
-≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′Dis (`#¹ ~v) = refl
-≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′Dis (`λ⦂ ~S ∘ ~M) = cong (BP.`λ⦂ _ ∘_) (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ (s≤s x≥) kk′~′Dis ~M)
+      with kk′~′₀Dis , kk′~′₁Dis ← ~~ˣ⁻⊞-preserves-is-all-dis⁰~ˣ⁻ kk′~′Dis kk′~′~     = cong₂ BP.`let-bang_`in_ (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′₀Dis ~M) (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′₁Dis ~N)
+≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡               x≥ kk′~′Dis (`#¹ ~v)                          = refl
+≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡               x≥ kk′~′Dis (`λ⦂ ~S ∘ ~M)                     = cong (BP.`λ⦂ _ ∘_) (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ (s≤s x≥) kk′~′Dis ~M)
 ≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ {kk′~ = kk′~} x≥ kk′~′Dis (kk′~kk′~′~ ⊢ ~M `$ ~N)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~kk′~′~
     with _ , _ , _ , _ , refl , refl , kk′~~ , kk′~′~ ← ~~ˣ⁻⊞-preserves-++ kk′~ kk′~kk′~′~
-      with kk′~′₀Dis , kk′~′₁Dis ← ~~ˣ⁻⊞-preserves-is-all-dis⁰~ˣ⁻ kk′~′Dis kk′~′~ = cong₂ BP._`$_ (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′₀Dis ~M) (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′₁Dis ~N)
-≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′Dis (`#⁰ ~y) = lemma x≥ kk′~′Dis ~y
+      with kk′~′₀Dis , kk′~′₁Dis ← ~~ˣ⁻⊞-preserves-is-all-dis⁰~ˣ⁻ kk′~′Dis kk′~′~     = cong₂ BP._`$_ (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′₀Dis ~M) (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′₁Dis ~N)
+≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡               x≥ kk′~′Dis (`#⁰ ~y)                          = lemma x≥ kk′~′Dis ~y
   where
     lemma⊥ : {kk′~ : k ⍮ k′ ~ˣ⁻} →
              kk′~ is-all-dis⁰~ˣ⁻ →
@@ -1967,43 +1977,43 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
             idx[ I / x ] BP.y along BP.`#⁰_ ≡ (BP.`#⁰ BP.y)
     lemma x≥ kk′~′Dis ~y
       rewrite dec-no (_ ℕ.≥? _) (ℕ.<⇒≱ (ℕ.<-transˡ (lemma< kk′~′Dis ~y) x≥)) = refl
-≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′Dis (`unlift-`lift _ ~M) = ≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′Dis ~M
+≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡               x≥ kk′~′Dis (`unlift-`lift _ ~M)              = ≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′Dis ~M
 
 ?∷ˡ[/⁰]~ᴹ[/]ˡ : (kk′~ : k ⍮ k′ ~ˣ⁻) {k″k‴~ : k″ ⍮ k‴ ~ˣ⁻} →
                 kk′~ ++ˣ⁻ ?∷ˡ k″k‴~ ⊢ J ~ᴹ M →
                 ----------------------------------------------------------------------------
                 kk′~ ++ˣ⁻ k″k‴~ ⊢ BP.[ I /⁰ k′ ] J ~ᴹ [ L /[ lMode ] lengthˣ⁻ kk′~ ] M
-?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~ (`unit kk′~?∷ˡk″k‴~Dis)
-  with ?∷ˡ k″k‴~Dis ← is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~?∷ˡk″k‴~Dis    = `unit (is-all-dis⁰~ˣ⁻-++⁺ (is-all-dis⁰~ˣ⁻-++⁻ˡ kk′~ kk′~?∷ˡk″k‴~Dis) k″k‴~Dis)
-?∷ˡ[/⁰]~ᴹ[/]ˡ {k′ = k′} {I = I} kk′~ (`bang kk′~?∷ˡk″k‴~Dis ~M)
-  with ?∷ˡ k″k‴~Dis ← is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~?∷ˡk″k‴~Dis    = `bang (is-all-dis⁰~ˣ⁻-++⁺ (is-all-dis⁰~ˣ⁻-++⁻ˡ kk′~ kk′~?∷ˡk″k‴~Dis) k″k‴~Dis) (subst (_ ⊢_~ᴹ _) (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ {I = I} {kk′~ = []} (z≤n {k′}) kk′~?∷ˡk″k‴~Dis ~M) (?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~ ~M))
-?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~ (_⊢`let-bang_`in_ {L = M} {M = N} kk′~?∷ˡk″k‴~~ ~M  ~N)
+?∷ˡ[/⁰]~ᴹ[/]ˡ                                             kk′~ (`unit kk′~?∷ˡk″k‴~Dis)
+  with ?∷ˡ k″k‴~Dis ← is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~?∷ˡk″k‴~Dis                                                         = `unit (is-all-dis⁰~ˣ⁻-++⁺ (is-all-dis⁰~ˣ⁻-++⁻ˡ kk′~ kk′~?∷ˡk″k‴~Dis) k″k‴~Dis)
+?∷ˡ[/⁰]~ᴹ[/]ˡ {_} {k′} {J = _} {_}                    {I} kk′~ (`bang kk′~?∷ˡk″k‴~Dis ~M)
+  with ?∷ˡ k″k‴~Dis ← is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~?∷ˡk″k‴~Dis                                                         = `bang (is-all-dis⁰~ˣ⁻-++⁺ (is-all-dis⁰~ˣ⁻-++⁻ˡ kk′~ kk′~?∷ˡk″k‴~Dis) k″k‴~Dis) (subst (_ ⊢_~ᴹ _) (≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ {I = I} {kk′~ = []} (z≤n {k′}) kk′~?∷ˡk″k‴~Dis ~M) (?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~ ~M))
+?∷ˡ[/⁰]~ᴹ[/]ˡ                                             kk′~ (_⊢`let-bang_`in_ {L = M} {M = N} kk′~?∷ˡk″k‴~~ ~M  ~N)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~?∷ˡk″k‴~~
-    with kk′~₀ , kk′~₁ , _ , _ , refl , refl , kk′~~ , ?∷ˡ k″k‴~~ ← ~~ˣ⁻⊞-preserves-++ kk′~ kk′~?∷ˡk″k‴~~ = ~~ˣ⁻⊞-++ kk′~~ k″k‴~~ ⊢`let-bang subst-~ᴹ[/-] (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~)) M (?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₀ ~M) `in subst-~ᴹ[/-] (cong suc (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~))) N (?∷ˡ[/⁰]~ᴹ[/]ˡ (!∷ᵘ kk′~₁) ~N)
-?∷ˡ[/⁰]~ᴹ[/]ˡ {M = `unlift`# v} kk′~ (`#¹ ~v)
+    with kk′~₀ , kk′~₁ , _ , _ , refl , refl , kk′~~ , ?∷ˡ k″k‴~~ ← ~~ˣ⁻⊞-preserves-++ kk′~ kk′~?∷ˡk″k‴~~              = ~~ˣ⁻⊞-++ kk′~~ k″k‴~~ ⊢`let-bang subst-~ᴹ[/-] (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~)) M (?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₀ ~M) `in subst-~ᴹ[/-] (cong suc (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~))) N (?∷ˡ[/⁰]~ᴹ[/]ˡ (!∷ᵘ kk′~₁) ~N)
+?∷ˡ[/⁰]~ᴹ[/]ˡ {_} {_}  {J = _}          {`unlift`# v}     kk′~ (`#¹ ~v)
   with v ℕ.≥? lengthˣ⁻ kk′~
 ...  | no  v≱kk′~ = `#¹ ~ᵛ∈ᵘ?∷ˡ∧<⇒~ᵛ∈ᵘ kk′~ ~v (ℕ.≰⇒> v≱kk′~)
 ...  | yes v≥kk′~
     with v≢kk′~ ← ∈ᵘ?∷ˡ⇒≢ kk′~ ~v
       rewrite dec-no (_ ℕ.≟ _) v≢kk′~ = `#¹ ~ᵛ∈ᵘ?∷ˡ∧>⇒~ᵛpred∈ᵘ kk′~ ~v (ℕ.≤∧≢⇒< v≥kk′~ (≢-sym v≢kk′~))
-?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~ (`λ⦂ ~S ∘ ~M) = `λ⦂ ~S ∘ ?∷ˡ[/⁰]~ᴹ[/]ˡ (!∷ˡ kk′~) ~M
-?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~ (_⊢_`$_ {L = M} {M = N} kk′~?∷ˡk″k‴~~ ~M ~N)
+?∷ˡ[/⁰]~ᴹ[/]ˡ                                             kk′~ (`λ⦂ ~S ∘ ~M)                                           = `λ⦂ ~S ∘ ?∷ˡ[/⁰]~ᴹ[/]ˡ (!∷ˡ kk′~) ~M
+?∷ˡ[/⁰]~ᴹ[/]ˡ                                             kk′~ (_⊢_`$_ {L = M} {M = N} kk′~?∷ˡk″k‴~~ ~M ~N)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~?∷ˡk″k‴~~
-    with kk′~₀ , kk′~₁ , _ , _ , refl , refl , kk′~~ , ?∷ˡ k″k‴~~ ← ~~ˣ⁻⊞-preserves-++ kk′~ kk′~?∷ˡk″k‴~~ = ~~ˣ⁻⊞-++ kk′~~ k″k‴~~ ⊢ subst-~ᴹ[/-] (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~)) M (?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₀ ~M) `$ subst-~ᴹ[/-] (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~)) N (?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₁ ~N)
-?∷ˡ[/⁰]~ᴹ[/]ˡ {_} {k′} {J = BP.`#⁰ BPy} {M = `# y} kk′~ (`#⁰ ~y)
+    with kk′~₀ , kk′~₁ , _ , _ , refl , refl , kk′~~ , ?∷ˡ k″k‴~~ ← ~~ˣ⁻⊞-preserves-++ kk′~ kk′~?∷ˡk″k‴~~              = ~~ˣ⁻⊞-++ kk′~~ k″k‴~~ ⊢ subst-~ᴹ[/-] (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~)) M (?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₀ ~M) `$ subst-~ᴹ[/-] (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~)) N (?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₁ ~N)
+?∷ˡ[/⁰]~ᴹ[/]ˡ {_} {k′} {J = BP.`#⁰ BPy} {`# y}            kk′~ (`#⁰ ~y)
   with BPy ℕ.≥? k′
 ...  | no  BPy≱k
     with BPy<k ← ℕ.≰⇒> BPy≱k
-      rewrite dec-no (_ ℕ.≥? _) (ℕ.<⇒≱ (∈ˡ∧<⇒< kk′~ ~y BPy<k)) = `#⁰ ~ᵛ∈ˡ?∷ˡ∧<⇒~ᵛ∈ˡ kk′~ ~y BPy<k
+      rewrite dec-no (_ ℕ.≥? _) (ℕ.<⇒≱ (∈ˡ∧<⇒< kk′~ ~y BPy<k))                                                         = `#⁰ ~ᵛ∈ˡ?∷ˡ∧<⇒~ᵛ∈ˡ kk′~ ~y BPy<k
 ...  | yes BPy≥k
     with BPy≢k ← ∈ˡ?∷ˡ⇒≢ kk′~ ~y
       with BPy>k ← ℕ.≤∧≢⇒< BPy≥k (≢-sym BPy≢k)
         with y>k ← ∈ˡ∧>⇒> kk′~ ~y BPy>k
           rewrite dec-no (_ ℕ.≟ _) BPy≢k
                 | proj₂ (dec-yes (_ ℕ.≥? _) (ℕ.<⇒≤ y>k))
-                | dec-no (_ ℕ.≟ _) (≢-sym (ℕ.<⇒≢ y>k)) = `#⁰ ~ᵛ∈ˡ?∷ˡ∧>⇒pred~ᵛpred∈ˡ kk′~ ~y BPy>k
-?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~ (`unlift-`lift kk′~?∷ˡk″k‴~Dis ~M)
-  with ?∷ˡ k″k‴~Dis ← is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~?∷ˡk″k‴~Dis = `unlift-`lift (is-all-dis⁰~ˣ⁻-++⁺ (is-all-dis⁰~ˣ⁻-++⁻ˡ kk′~ kk′~?∷ˡk″k‴~Dis) k″k‴~Dis) (?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~ ~M)
+                | dec-no (_ ℕ.≟ _) (≢-sym (ℕ.<⇒≢ y>k))                                                                 = `#⁰ ~ᵛ∈ˡ?∷ˡ∧>⇒pred~ᵛpred∈ˡ kk′~ ~y BPy>k
+?∷ˡ[/⁰]~ᴹ[/]ˡ                                             kk′~ (`unlift-`lift kk′~?∷ˡk″k‴~Dis ~M)
+  with ?∷ˡ k″k‴~Dis ← is-all-dis⁰~ˣ⁻-++⁻ʳ kk′~ kk′~?∷ˡk″k‴~Dis                                                         = `unlift-`lift (is-all-dis⁰~ˣ⁻-++⁺ (is-all-dis⁰~ˣ⁻-++⁻ˡ kk′~ kk′~?∷ˡk″k‴~Dis) k″k‴~Dis) (?∷ˡ[/⁰]~ᴹ[/]ˡ kk′~ ~M)
 
 !∷ˡ[/⁰]~ᴹ[/]ˡ : {kk′~ k₀k′₀~ k₁k′₁~ : k ⍮ k′ ~ˣ⁻} {k″k‴~ k″₀k‴₀~ k″₁k‴₁~ : k″ ⍮ k‴ ~ˣ⁻} →
                 kk′~ ~~ˣ⁻ k₀k′₀~ ⊞ k₁k′₁~ →
@@ -2012,9 +2022,9 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
                 k₁k′₁~ ++ˣ⁻ !∷ˡ k″₁k‴₁~ ⊢ J ~ᴹ M →
                 ----------------------------------------------------------------------------
                 kk′~ ++ˣ⁻ k″k‴~ ⊢ BP.[ I /⁰ k′ ] J ~ᴹ [ L /[ lMode ] lengthˣ⁻ kk′~ ] M
-!∷ˡ[/⁰]~ᴹ[/]ˡ {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (`unit k₁k′₁~!∷ˡk″₁k‴₁~Dis) with () ← is-all-dis⁰~ˣ⁻-++⁻ʳ k₁k′₁~ k₁k′₁~!∷ˡk″₁k‴₁~Dis
-!∷ˡ[/⁰]~ᴹ[/]ˡ {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (`bang k₁k′₁~!∷ˡk″₁k‴₁~Dis ~M) with () ← is-all-dis⁰~ˣ⁻-++⁻ʳ k₁k′₁~ k₁k′₁~!∷ˡk″₁k‴₁~Dis
-!∷ˡ[/⁰]~ᴹ[/]ˡ {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (_⊢`let-bang_`in_ {L = M} {M = N} k₁k′₁~!∷ˡk″₁k‴₁~~ ~M ~N)
+!∷ˡ[/⁰]~ᴹ[/]ˡ                                  {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (`unit k₁k′₁~!∷ˡk″₁k‴₁~Dis)                                with () ← is-all-dis⁰~ˣ⁻-++⁻ʳ k₁k′₁~ k₁k′₁~!∷ˡk″₁k‴₁~Dis
+!∷ˡ[/⁰]~ᴹ[/]ˡ                                  {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (`bang k₁k′₁~!∷ˡk″₁k‴₁~Dis ~M)                             with () ← is-all-dis⁰~ˣ⁻-++⁻ʳ k₁k′₁~ k₁k′₁~!∷ˡk″₁k‴₁~Dis
+!∷ˡ[/⁰]~ᴹ[/]ˡ                                  {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (_⊢`let-bang_`in_ {L = M} {M = N} k₁k′₁~!∷ˡk″₁k‴₁~~ ~M ~N)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~
      | refl , refl , refl , refl ← ~~ˣ⁻⊞-index k″k‴~~
      | refl , refl , refl , refl ← ~~ˣ⁻⊞-index k₁k′₁~!∷ˡk″₁k‴₁~~
@@ -2022,13 +2032,13 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
       with ∷ˡk″₂k‴₂~   | ∷ˡk″₃k‴₃~   | !∷ˡk″₁k‴₁~~
 ...      | !∷ˡ k″₂k‴₂~ | ?∷ˡ k″₃k‴₃~ | to-left!∷ˡ k″₁k‴₁~~
         with _ , kk′~₀′~ , kk′~~₀ ← ~~ˣ⁻⊞-assocʳ kk′~~ k₁k′₁~~
-           | _ , k″k‴~₀′~ , k″k‴~~₀ ← ~~ˣ⁻⊞-assocʳ k″k‴~~ k″₁k‴₁~~ = ~~ˣ⁻⊞-++ kk′~~₀ k″k‴~~₀ ⊢`let-bang subst-~ᴹ[/-] (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) M (!∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₀′~ k″k‴~₀′~ ~L ~M) `in subst-~ᴹ[/-] (cong suc (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀))) N (?∷ˡ[/⁰]~ᴹ[/]ˡ (!∷ᵘ k₃k′₃~) ~N) 
+           | _ , k″k‴~₀′~ , k″k‴~~₀ ← ~~ˣ⁻⊞-assocʳ k″k‴~~ k″₁k‴₁~~                                                                          = ~~ˣ⁻⊞-++ kk′~~₀ k″k‴~~₀ ⊢`let-bang subst-~ᴹ[/-] (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) M (!∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₀′~ k″k‴~₀′~ ~L ~M) `in subst-~ᴹ[/-] (cong suc (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀))) N (?∷ˡ[/⁰]~ᴹ[/]ˡ (!∷ᵘ k₃k′₃~) ~N) 
 ...      | ?∷ˡ k″₂k‴₂~ | !∷ˡ k″₃k‴₃~ | to-right!∷ˡ k″₁k‴₁~~
         with _ , kk′~₀′~ , kk′~~₀ ← ~~ˣ⁻⊞-assocʳ kk′~~ (~~ˣ⁻⊞-commute k₁k′₁~~)
-           | _ , k″k‴~₀′~ , k″k‴~~₀ ← ~~ˣ⁻⊞-assocʳ k″k‴~~ (~~ˣ⁻⊞-commute k″₁k‴₁~~) = ~~ˣ⁻⊞-commute (~~ˣ⁻⊞-++ kk′~~₀ k″k‴~~₀) ⊢`let-bang subst-~ᴹ[/-] (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) M (?∷ˡ[/⁰]~ᴹ[/]ˡ k₂k′₂~ ~M) `in subst-~ᴹ[/-] (cong suc (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀))) N (!∷ˡ[/⁰]~ᴹ[/]ˡ (!∷ᵘ kk′~₀′~) k″k‴~₀′~ (wk[↑¹]~ᴹwk[↑] [] (!∷ᵘ []) ~L) ~N)
-!∷ˡ[/⁰]~ᴹ[/]ˡ {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (`#¹ ~v) with () ← ¬~ᵛ∈ᵘ!∷ˡ k₁k′₁~ ~v
-!∷ˡ[/⁰]~ᴹ[/]ˡ kk′~~ k″k‴~~ ~L (`λ⦂ ~S ∘ ~M) = `λ⦂ ~S ∘ (!∷ˡ[/⁰]~ᴹ[/]ˡ (to-right!∷ˡ kk′~~) k″k‴~~ (wk[↑⁰]~ᴹwk[↑] [] (?∷ˡ []) ~L) ~M)
-!∷ˡ[/⁰]~ᴹ[/]ˡ {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (_⊢_`$_ {L = M} {M = N} k₁k′₁~!∷ˡk″₁k‴₁~~ ~M ~N)
+           | _ , k″k‴~₀′~ , k″k‴~~₀ ← ~~ˣ⁻⊞-assocʳ k″k‴~~ (~~ˣ⁻⊞-commute k″₁k‴₁~~)                                                          = ~~ˣ⁻⊞-commute (~~ˣ⁻⊞-++ kk′~~₀ k″k‴~~₀) ⊢`let-bang subst-~ᴹ[/-] (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) M (?∷ˡ[/⁰]~ᴹ[/]ˡ k₂k′₂~ ~M) `in subst-~ᴹ[/-] (cong suc (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀))) N (!∷ˡ[/⁰]~ᴹ[/]ˡ (!∷ᵘ kk′~₀′~) k″k‴~₀′~ (wk[↑¹]~ᴹwk[↑] [] (!∷ᵘ []) ~L) ~N)
+!∷ˡ[/⁰]~ᴹ[/]ˡ                                  {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (`#¹ ~v)                                                   with () ← ¬~ᵛ∈ᵘ!∷ˡ k₁k′₁~ ~v
+!∷ˡ[/⁰]~ᴹ[/]ˡ                                                    kk′~~ k″k‴~~ ~L (`λ⦂ ~S ∘ ~M)                                              = `λ⦂ ~S ∘ (!∷ˡ[/⁰]~ᴹ[/]ˡ (to-right!∷ˡ kk′~~) k″k‴~~ (wk[↑⁰]~ᴹwk[↑] [] (?∷ˡ []) ~L) ~M)
+!∷ˡ[/⁰]~ᴹ[/]ˡ                                  {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (_⊢_`$_ {L = M} {M = N} k₁k′₁~!∷ˡk″₁k‴₁~~ ~M ~N)
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~~
      | refl , refl , refl , refl ← ~~ˣ⁻⊞-index k″k‴~~
      | refl , refl , refl , refl ← ~~ˣ⁻⊞-index k₁k′₁~!∷ˡk″₁k‴₁~~
@@ -2036,18 +2046,18 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
       with ∷ˡk″₂k‴₂~   | ∷ˡk″₃k‴₃~   | !∷ˡk″₁k‴₁~~
 ...      | !∷ˡ k″₂k‴₂~ | ?∷ˡ k″₃k‴₃~ | to-left!∷ˡ k″₁k‴₁~~
         with _ , kk′~₀′~ , kk′~~₀ ← ~~ˣ⁻⊞-assocʳ kk′~~ k₁k′₁~~
-           | _ , k″k‴~₀′~ , k″k‴~~₀ ← ~~ˣ⁻⊞-assocʳ k″k‴~~ k″₁k‴₁~~ = ~~ˣ⁻⊞-++ kk′~~₀ k″k‴~~₀ ⊢ subst-~ᴹ[/-] (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) M (!∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₀′~ k″k‴~₀′~ ~L ~M) `$ subst-~ᴹ[/-] (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) N (?∷ˡ[/⁰]~ᴹ[/]ˡ k₃k′₃~ ~N) 
+           | _ , k″k‴~₀′~ , k″k‴~~₀ ← ~~ˣ⁻⊞-assocʳ k″k‴~~ k″₁k‴₁~~                                                                          = ~~ˣ⁻⊞-++ kk′~~₀ k″k‴~~₀ ⊢ subst-~ᴹ[/-] (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) M (!∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₀′~ k″k‴~₀′~ ~L ~M) `$ subst-~ᴹ[/-] (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) N (?∷ˡ[/⁰]~ᴹ[/]ˡ k₃k′₃~ ~N) 
 ...      | ?∷ˡ k″₂k‴₂~ | !∷ˡ k″₃k‴₃~ | to-right!∷ˡ k″₁k‴₁~~
         with _ , kk′~₀′~ , kk′~~₀ ← ~~ˣ⁻⊞-assocʳ kk′~~ (~~ˣ⁻⊞-commute k₁k′₁~~)
-           | _ , k″k‴~₀′~ , k″k‴~~₀ ← ~~ˣ⁻⊞-assocʳ k″k‴~~ (~~ˣ⁻⊞-commute k″₁k‴₁~~) = ~~ˣ⁻⊞-commute (~~ˣ⁻⊞-++ kk′~~₀ k″k‴~~₀) ⊢ subst-~ᴹ[/-] (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) M (?∷ˡ[/⁰]~ᴹ[/]ˡ k₂k′₂~ ~M) `$ subst-~ᴹ[/-] (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) N (!∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₀′~ k″k‴~₀′~ ~L ~N)
-!∷ˡ[/⁰]~ᴹ[/]ˡ {_} {k′} {J = BP.`#⁰ BPy} {M = `# y} {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (`#⁰ ~y)
+           | _ , k″k‴~₀′~ , k″k‴~~₀ ← ~~ˣ⁻⊞-assocʳ k″k‴~~ (~~ˣ⁻⊞-commute k″₁k‴₁~~)                                                          = ~~ˣ⁻⊞-commute (~~ˣ⁻⊞-++ kk′~~₀ k″k‴~~₀) ⊢ subst-~ᴹ[/-] (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) M (?∷ˡ[/⁰]~ᴹ[/]ˡ k₂k′₂~ ~M) `$ subst-~ᴹ[/-] (proj₁ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~₀)) N (!∷ˡ[/⁰]~ᴹ[/]ˡ kk′~₀′~ k″k‴~₀′~ ~L ~N)
+!∷ˡ[/⁰]~ᴹ[/]ˡ {_} {k′} {J = BP.`#⁰ BPy} {`# y} {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (`#⁰ ~y)
   with BPy≡k′ , y≡k₁k′₁~ , k₁k′₁Dis , k″₁k‴₁Dis ← ~ᵛ∈ˡ!∷ˡ⇒≡∧is-all-dis⁰~ˣ⁻ k₁k′₁~ ~y
     with y≡kk′~ ← trans y≡k₁k′₁~ (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~))
       rewrite proj₂ (dec-yes (_ ℕ.≥? _) (ℕ.≤-reflexive (sym BPy≡k′)))
             | proj₂ (dec-yes (_ ℕ.≥? _) (ℕ.≤-reflexive (sym y≡kk′~)))
             | proj₂ (dec-yes (_ ℕ.≟ _) BPy≡k′)
-            | proj₂ (dec-yes (_ ℕ.≟ _) y≡kk′~) = ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ (~~ˣ⁻⊞-commute (~~ˣ⁻⊞-++ kk′~~ k″k‴~~)) (is-all-dis⁰~ˣ⁻-++⁺ k₁k′₁Dis k″₁k‴₁Dis) ~L
-!∷ˡ[/⁰]~ᴹ[/]ˡ {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (`unlift-`lift k₁k′₁~!∷ˡk″₁k‴₁~Dis ~M) with () ← is-all-dis⁰~ˣ⁻-++⁻ʳ k₁k′₁~ k₁k′₁~!∷ˡk″₁k‴₁~Dis
+            | proj₂ (dec-yes (_ ℕ.≟ _) y≡kk′~)                                                                                              = ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒~ᴹ (~~ˣ⁻⊞-commute (~~ˣ⁻⊞-++ kk′~~ k″k‴~~)) (is-all-dis⁰~ˣ⁻-++⁺ k₁k′₁Dis k″₁k‴₁Dis) ~L
+!∷ˡ[/⁰]~ᴹ[/]ˡ                                  {k₁k′₁~ = k₁k′₁~} kk′~~ k″k‴~~ ~L (`unlift-`lift k₁k′₁~!∷ˡk″₁k‴₁~Dis ~M)                     with () ← is-all-dis⁰~ˣ⁻-++⁻ʳ k₁k′₁~ k₁k′₁~!∷ˡk″₁k‴₁~Dis
 
 -- Bisimulation Properties of _~ᴹ_ Regarding OpSems
 --
@@ -2056,7 +2066,7 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
                        Acc ℕ._<_ (depth~ᴹ ~L) →
                        -----------------------------------
                        ∃ (λ L′ → L ⟶* L′ × [] ⊢ I′ ~ᴹ L′)
-~ᴹ-simulation-helper I⟶                     (`unlift-`lift [] ~L)   (acc r)
+~ᴹ-simulation-helper I⟶                     (`unlift-`lift [] ~L)     (acc r)
   with _ , ⟶*L′[≤] , VL′ , ~L′ , L′≤ ← ~ᴹ-normalize[≤] ~L
     with _ , ⟶*L″ , ~L″ ← ~ᴹ-simulation-helper I⟶ ~L′ (r _ (s≤s L′≤))         = -, ξ-of-↝*-⟶* _⟶[ uMode ≤]_ `unlift`lift ξ-`unlift`lift ⟶*L′[≤]
                                                                                   ◅◅ β-`↑ VL′ ◅ ⟶*L″
@@ -2064,7 +2074,7 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
 ~ᴹ-simulation-helper BP.ξ-`let-bang I⟶ `in- ([] ⊢`let-bang ~L `in ~M) (acc r)
   with _ , ⟶*L′ , ~L′ ← ~ᴹ-simulation-helper I⟶ ~L (r _ (s≤s (ℕ.m≤m⊔n _ _)))  = -, ξ-of-⟶* (`let-return_`in _) ξ-`let-return_`in- ⟶*L′
                                                                               , [] ⊢`let-bang ~L′ `in ~M
-~ᴹ-simulation-helper BP.β-`!                ([] ⊢`let-bang ~L `in ~M) (acc r)
+~ᴹ-simulation-helper BP.β-`!                ([] ⊢`let-bang ~L `in ~M) rec
   with _ , ⟶*`bangL′ , WL′ , ~L ← `bang-~ᴹ-inv ~L                             = -, ξ-of-⟶* (`let-return_`in _) ξ-`let-return_`in- ⟶*`bangL′
                                                                                   ◅◅ β-`↓ (`lift WL′) ◅ ε
                                                                               , !∷ᵘ[/¹]~ᴹ[/]ᵘ [] [] [] [] ~L ~M
@@ -2076,7 +2086,7 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
      | _ , ⟶*M′ , ~M′ ← ~ᴹ-simulation-helper J⟶ ~M (r _ (s≤s (ℕ.m≤n⊔m _ _)))  = -, ξ-of-⟶* (_`$ _) ξ-_`$? ⟶*L′
                                                                                   ◅◅ ξ-of-⟶* (_ `$_) (ξ-! VL′ `$_) ⟶*M′
                                                                               , [] ⊢ ~L′ `$ ~M′
-~ᴹ-simulation-helper (BP.β-`⊸ VJ)           ([] ⊢ ~L `$ ~M)           (acc r)
+~ᴹ-simulation-helper (BP.β-`⊸ VJ)           ([] ⊢ ~L `$ ~M)           rec
   with _ , _ , ⟶*`λ⦂ˡS′∘L′ , ~L′ , ~S′ ← `λ⦂-∙-~ᴹ-inv ~L
      | _ , ⟶*M′ , VM′ , ~M′ ← Value~ᴹ-normalize ~M VJ                         = -, ξ-of-⟶* (_`$ _) ξ-_`$? ⟶*`λ⦂ˡS′∘L′
                                                                                   ◅◅ ξ-of-⟶* (_ `$_) ξ-! `λ⦂ˡ _ ∘ _ `$_ ⟶*M′

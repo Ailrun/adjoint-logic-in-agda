@@ -1310,7 +1310,7 @@ wk[↑⁰]~ᴹwk[↑]ᵖ {k} {k′} {k₀}           kk′~ 0k₀~ {k″k‴~} (
 ~ᴹ-simulation-helper DP.ξ-`let-box E⟶ `in- (`let-box ~L `in ~M) (acc r)
   with _ , ⟶*L′ , ~L′ ← ~ᴹ-simulation-helper E⟶ ~L (r _ (s≤s (ℕ.m≤m⊔n _ _))) = -, ξ-of-⟶* (`let-return_`in _) ξ-`let-return_`in- ⟶*L′
                                                                                , `let-box ~L′ `in ~M
-~ᴹ-simulation-helper DP.β-`□               (`let-box ~L `in ~M) (acc r)
+~ᴹ-simulation-helper DP.β-`□               (`let-box ~L `in ~M) rec
   with _ , ⟶*`boxL′ , WL′ , ~L ← `box-~ᴹ-inv ~L                              = -, ξ-of-⟶* (`let-return_`in _) ξ-`let-return_`in- ⟶*`boxL′
                                                                                  ◅◅ β-`↓ (`lift WL′) ◅ ε
                                                                              , [/¹]~ᴹ[/]ᶜ [] ~L ~M
@@ -1322,7 +1322,7 @@ wk[↑⁰]~ᴹwk[↑]ᵖ {k} {k′} {k₀}           kk′~ 0k₀~ {k″k‴~} (
      | _ , ⟶*M′ , ~M′ ← ~ᴹ-simulation-helper F⟶ ~M (r _ (s≤s (ℕ.m≤n⊔m _ _))) = -, ξ-of-⟶* (_`$ _) ξ-_`$? ⟶*L′
                                                                                  ◅◅ ξ-of-⟶* (_ `$_) (ξ-! VL′ `$_) ⟶*M′
                                                                              , ~L′ `$ ~M′
-~ᴹ-simulation-helper (DP.β-`→ VF)          (~L `$ ~M)           (acc r)
+~ᴹ-simulation-helper (DP.β-`→ VF)          (~L `$ ~M)           rec
   with _ , _ , ⟶*`λ⦂ᵖS′∘L′ , ~L′ , ~S′ ← `λ⦂-∙-~ᴹ-inv ~L
      | _ , ⟶*M′ , VM′ , ~M′ ← Value~ᴹ-normalize ~M VF                        = -, ξ-of-⟶* (_`$ _) ξ-_`$? ⟶*`λ⦂ᵖS′∘L′
                                                                                  ◅◅ ξ-of-⟶* (_ `$_) ξ-! `λ⦂ᵖ _ ∘ _ `$_ ⟶*M′
