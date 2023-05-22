@@ -32,7 +32,7 @@ import Calculus.LambdaBox.OpSem
 -- Embedding, its soundness and completeness, and bisimulation from λ□ into λ↓↑₂
 import Calculus.Elevator.Embedding.LambdaBox
 
--- ModeSpec for
+-- ModeSpec for LNL
 import Calculus.Elevator.Embedding.LinearLambda.ModeSpec
 
 -- Definition of DILL
@@ -40,5 +40,5 @@ import Calculus.LinearLambda.Syntax
 import Calculus.LinearLambda.Typing
 import Calculus.LinearLambda.OpSem
 
--- Embedding, its soundness and completeness, and bisimulation from DILL into
+-- Embedding, its soundness and completeness, and bisimulation from DILL into LNL
 import Calculus.Elevator.Embedding.LinearLambda
