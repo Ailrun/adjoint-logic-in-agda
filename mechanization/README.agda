@@ -1,3 +1,7 @@
+-- This mechanization uses
+-- * Agda v2.6.3
+-- * agda-stdlib of commit 2839cec94
+
 {-# OPTIONS --safe #-}
 module README where
 
