@@ -15,12 +15,6 @@ import Calculus.Elevator.OpSem
 -- Main properties of Elevator
 import Calculus.Elevator.Properties
 
--- Algorithmic typing of Elevator
-import Calculus.Elevator.Algorithmic
-
--- Soundness/completeness of algorithmic typing of Elevator
-import Calculus.Elevator.Algorithmic.Properties
-
 -- ModeSpec for Adjoint λ□
 import Calculus.Elevator.Embedding.LambdaBox.ModeSpec
 
@@ -42,3 +36,9 @@ import Calculus.LinearLambda.OpSem
 
 -- Translation, its soundness and completeness, and bisimulation from Original DILL into Adjoint DILL
 import Calculus.Elevator.Embedding.LinearLambda
+
+-- Algorithmic typing of Elevator
+import Calculus.Elevator.Algorithmic
+
+-- Soundness/completeness of algorithmic typing of Elevator
+import Calculus.Elevator.Algorithmic.Properties
