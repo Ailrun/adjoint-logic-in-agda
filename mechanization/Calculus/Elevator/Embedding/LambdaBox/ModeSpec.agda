@@ -1,5 +1,5 @@
 ------------------------------------------------------------
--- An Instance of Mode Specification for λ↓↑₂
+-- An Instance of Mode Specification for Adjoint λ□
 ------------------------------------------------------------
 
 {-# OPTIONS --safe #-}
@@ -63,8 +63,8 @@ stₘ² : Mode² → ModeSpecSt → Bool
 stₘ² m st = true
 
 opₘ² : Mode² → ModeSpecOp → Bool
-opₘ² cMode ``⊤ = true
-opₘ² cMode ``⊸ = true
+opₘ² cMode ``⊤ = false
+opₘ² cMode ``⊸ = false
 opₘ² cMode ``↑ = true
 opₘ² cMode ``↓ = false
 opₘ² pMode ``⊤ = true

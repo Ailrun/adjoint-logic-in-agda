@@ -1,11 +1,11 @@
 ------------------------------------------------------------
--- Embedding of DILL [Barber & Plotkin 1996] into LNL
+-- Translation of Original DILL [Barber & Plotkin 1996] into Adjoint DILL
 ------------------------------------------------------------
 --
--- This module provides an embedding relation between DILL and LNL,
--- the proofs of completeness and soundness of the relation regarding
--- their typings, and bisimulation of the relation regarding their
--- operational semantics.
+-- This module provides an translation relation between Original DILL
+-- and Adjoint DILL, the proofs of completeness and soundness of the
+-- relation regarding their typings, and bisimulation of the relation
+-- regarding their operational semantics.
 --
 
 {-# OPTIONS --safe #-}

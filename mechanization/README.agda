@@ -21,24 +21,24 @@ import Calculus.Elevator.Algorithmic
 -- Soundness/completeness of algorithmic typing of Elevator
 import Calculus.Elevator.Algorithmic.Properties
 
--- ModeSpec for λ↓↑₂
+-- ModeSpec for Adjoint λ□
 import Calculus.Elevator.Embedding.LambdaBox.ModeSpec
 
--- Definition of λ□
+-- Definition of Original λ□
 import Calculus.LambdaBox.Syntax
 import Calculus.LambdaBox.Typing
 import Calculus.LambdaBox.OpSem
 
--- Embedding, its soundness and completeness, and bisimulation from λ□ into λ↓↑₂
+-- Translation, its soundness and completeness, and bisimulation from Original λ□ into Adjoint λ□
 import Calculus.Elevator.Embedding.LambdaBox
 
--- ModeSpec for LNL
+-- ModeSpec for Adjoint DILL
 import Calculus.Elevator.Embedding.LinearLambda.ModeSpec
 
--- Definition of DILL
+-- Definition of Original DILL
 import Calculus.LinearLambda.Syntax
 import Calculus.LinearLambda.Typing
 import Calculus.LinearLambda.OpSem
 
--- Embedding, its soundness and completeness, and bisimulation from DILL into LNL
+-- Translation, its soundness and completeness, and bisimulation from Original DILL into Adjoint DILL
 import Calculus.Elevator.Embedding.LinearLambda

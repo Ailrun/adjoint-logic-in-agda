@@ -1,5 +1,5 @@
 ------------------------------------------------------------
--- An Instance of Mode Specification for LNL
+-- An Instance of Mode Specification for Adjoint DILL
 ------------------------------------------------------------
 
 {-# OPTIONS --safe #-}
@@ -64,8 +64,8 @@ stₘᴸ uMode st = true
 stₘᴸ lMode st = false
 
 opₘᴸ : Modeᴸ → ModeSpecOp → Bool
-opₘᴸ uMode ``⊤ = true
-opₘᴸ uMode ``⊸ = true
+opₘᴸ uMode ``⊤ = false
+opₘᴸ uMode ``⊸ = false
 opₘᴸ uMode ``↑ = true
 opₘᴸ uMode ``↓ = false
 opₘᴸ lMode ``⊤ = true

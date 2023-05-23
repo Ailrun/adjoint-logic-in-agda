@@ -1,11 +1,11 @@
 ------------------------------------------------------------
--- Embedding of λ□ [Davies & Pfenning 2001] into λ↓↑₂
+-- Translation of Original λ□ [Davies & Pfenning 2001] into Adjoint λ□
 ------------------------------------------------------------
 --
--- This module provides an embedding relation between λ□ and λ↑↓₂,
--- the proofs of completeness and soundness of the relation regarding
--- their typings, and bisimulation of the relation regarding their
--- operational semantics.
+-- This module provides an translation relation between original λ□
+-- and adjoint λ□, the proofs of completeness and soundness of the
+-- relation regarding their typings, and bisimulation of the relation
+-- regarding their operational semantics.
 --
 
 {-# OPTIONS --safe #-}
