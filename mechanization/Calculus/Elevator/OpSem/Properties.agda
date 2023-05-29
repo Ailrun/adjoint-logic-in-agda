@@ -1,5 +1,5 @@
 ------------------------------------------------------------
--- Properties of Dynamic Semantics for Elevator
+-- Non-interference of Elevator
 ------------------------------------------------------------
 
 {-# OPTIONS --safe #-}

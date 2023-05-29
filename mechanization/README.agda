@@ -12,8 +12,11 @@ import Calculus.Elevator.Typing.Properties
 -- Operational semantics of Elevator
 import Calculus.Elevator.OpSem
 
--- Main properties of Elevator
+-- Type safety of Elevator
 import Calculus.Elevator.Properties
+
+-- Non-interference of Elevator
+import Calculus.Elevator.OpSem.Properties
 
 -- ModeSpec for Adjoint λ□
 import Calculus.Elevator.Embedding.LambdaBox.ModeSpec

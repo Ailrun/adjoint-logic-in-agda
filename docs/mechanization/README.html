@@ -13,34 +13,37 @@
 <a id="236" class="Comment">-- Operational semantics of Elevator</a>
 <a id="273" class="Keyword">import</a> <a id="280" href="Calculus.Elevator.OpSem.html" class="Module">Calculus.Elevator.OpSem</a>
 
-<a id="305" class="Comment">-- Main properties of Elevator</a>
-<a id="336" class="Keyword">import</a> <a id="343" href="Calculus.Elevator.Properties.html" class="Module">Calculus.Elevator.Properties</a>
+<a id="305" class="Comment">-- Type safety of Elevator</a>
+<a id="332" class="Keyword">import</a> <a id="339" href="Calculus.Elevator.Properties.html" class="Module">Calculus.Elevator.Properties</a>
 
-<a id="373" class="Comment">-- ModeSpec for Adjoint λ□</a>
-<a id="400" class="Keyword">import</a> <a id="407" href="Calculus.Elevator.Embedding.LambdaBox.ModeSpec.html" class="Module">Calculus.Elevator.Embedding.LambdaBox.ModeSpec</a>
+<a id="369" class="Comment">-- Non-interference of Elevator</a>
+<a id="401" class="Keyword">import</a> <a id="408" href="Calculus.Elevator.OpSem.Properties.html" class="Module">Calculus.Elevator.OpSem.Properties</a>
 
-<a id="455" class="Comment">-- Definition of Original λ□</a>
-<a id="484" class="Keyword">import</a> <a id="491" href="Calculus.LambdaBox.Syntax.html" class="Module">Calculus.LambdaBox.Syntax</a>
-<a id="517" class="Keyword">import</a> <a id="524" href="Calculus.LambdaBox.Typing.html" class="Module">Calculus.LambdaBox.Typing</a>
-<a id="550" class="Keyword">import</a> <a id="557" href="Calculus.LambdaBox.OpSem.html" class="Module">Calculus.LambdaBox.OpSem</a>
+<a id="444" class="Comment">-- ModeSpec for Adjoint λ□</a>
+<a id="471" class="Keyword">import</a> <a id="478" href="Calculus.Elevator.Embedding.LambdaBox.ModeSpec.html" class="Module">Calculus.Elevator.Embedding.LambdaBox.ModeSpec</a>
 
-<a id="583" class="Comment">-- Translation, its soundness and completeness, and bisimulation from Original λ□ into Adjoint λ□</a>
-<a id="681" class="Keyword">import</a> <a id="688" href="Calculus.Elevator.Embedding.LambdaBox.html" class="Module">Calculus.Elevator.Embedding.LambdaBox</a>
+<a id="526" class="Comment">-- Definition of Original λ□</a>
+<a id="555" class="Keyword">import</a> <a id="562" href="Calculus.LambdaBox.Syntax.html" class="Module">Calculus.LambdaBox.Syntax</a>
+<a id="588" class="Keyword">import</a> <a id="595" href="Calculus.LambdaBox.Typing.html" class="Module">Calculus.LambdaBox.Typing</a>
+<a id="621" class="Keyword">import</a> <a id="628" href="Calculus.LambdaBox.OpSem.html" class="Module">Calculus.LambdaBox.OpSem</a>
 
-<a id="727" class="Comment">-- ModeSpec for Adjoint DILL</a>
-<a id="756" class="Keyword">import</a> <a id="763" href="Calculus.Elevator.Embedding.LinearLambda.ModeSpec.html" class="Module">Calculus.Elevator.Embedding.LinearLambda.ModeSpec</a>
+<a id="654" class="Comment">-- Translation, its soundness and completeness, and bisimulation from Original λ□ into Adjoint λ□</a>
+<a id="752" class="Keyword">import</a> <a id="759" href="Calculus.Elevator.Embedding.LambdaBox.html" class="Module">Calculus.Elevator.Embedding.LambdaBox</a>
 
-<a id="814" class="Comment">-- Definition of Original DILL</a>
-<a id="845" class="Keyword">import</a> <a id="852" href="Calculus.LinearLambda.Syntax.html" class="Module">Calculus.LinearLambda.Syntax</a>
-<a id="881" class="Keyword">import</a> <a id="888" href="Calculus.LinearLambda.Typing.html" class="Module">Calculus.LinearLambda.Typing</a>
-<a id="917" class="Keyword">import</a> <a id="924" href="Calculus.LinearLambda.OpSem.html" class="Module">Calculus.LinearLambda.OpSem</a>
+<a id="798" class="Comment">-- ModeSpec for Adjoint DILL</a>
+<a id="827" class="Keyword">import</a> <a id="834" href="Calculus.Elevator.Embedding.LinearLambda.ModeSpec.html" class="Module">Calculus.Elevator.Embedding.LinearLambda.ModeSpec</a>
 
-<a id="953" class="Comment">-- Translation, its soundness and completeness, and bisimulation from Original DILL into Adjoint DILL</a>
-<a id="1055" class="Keyword">import</a> <a id="1062" href="Calculus.Elevator.Embedding.LinearLambda.html" class="Module">Calculus.Elevator.Embedding.LinearLambda</a>
+<a id="885" class="Comment">-- Definition of Original DILL</a>
+<a id="916" class="Keyword">import</a> <a id="923" href="Calculus.LinearLambda.Syntax.html" class="Module">Calculus.LinearLambda.Syntax</a>
+<a id="952" class="Keyword">import</a> <a id="959" href="Calculus.LinearLambda.Typing.html" class="Module">Calculus.LinearLambda.Typing</a>
+<a id="988" class="Keyword">import</a> <a id="995" href="Calculus.LinearLambda.OpSem.html" class="Module">Calculus.LinearLambda.OpSem</a>
 
-<a id="1104" class="Comment">-- Algorithmic typing of Elevator</a>
-<a id="1138" class="Keyword">import</a> <a id="1145" href="Calculus.Elevator.Algorithmic.html" class="Module">Calculus.Elevator.Algorithmic</a>
+<a id="1024" class="Comment">-- Translation, its soundness and completeness, and bisimulation from Original DILL into Adjoint DILL</a>
+<a id="1126" class="Keyword">import</a> <a id="1133" href="Calculus.Elevator.Embedding.LinearLambda.html" class="Module">Calculus.Elevator.Embedding.LinearLambda</a>
 
-<a id="1176" class="Comment">-- Soundness/completeness of algorithmic typing of Elevator</a>
-<a id="1236" class="Keyword">import</a> <a id="1243" href="Calculus.Elevator.Algorithmic.Properties.html" class="Module">Calculus.Elevator.Algorithmic.Properties</a>
+<a id="1175" class="Comment">-- Algorithmic typing of Elevator</a>
+<a id="1209" class="Keyword">import</a> <a id="1216" href="Calculus.Elevator.Algorithmic.html" class="Module">Calculus.Elevator.Algorithmic</a>
+
+<a id="1247" class="Comment">-- Soundness/completeness of algorithmic typing of Elevator</a>
+<a id="1307" class="Keyword">import</a> <a id="1314" href="Calculus.Elevator.Algorithmic.Properties.html" class="Module">Calculus.Elevator.Algorithmic.Properties</a>
 </pre></body></html>
