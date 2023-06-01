@@ -13,7 +13,7 @@ open import Data.Bool as Bool using (true; false)
 open import Data.Empty as ⊥ using (⊥)
 open import Data.List as List using ([]; _∷_)
 open import Data.Nat as ℕ using (ℕ; suc; _+_)
-open import Data.Product as × using (_,_; ∃; ∃₂; -,_)
+open import Data.Product as × using (_,_; _×_; ∃; ∃₂; -,_)
 open import Data.Unit as ⊤ using (⊤; tt)
 open import Relation.Nullary using (Dec; yes; no; ¬_)
 open import Relation.Binary using (Rel)
@@ -239,3 +239,13 @@ L ⟶[ m ≤]* L′ = ⟶*._⟶*_ _⟶[ m ≤]_ L L′
                  (∀ {L L′} → L ↝ L′ → f L ⟶[ m ≤] f L′) →
                  ∀ {L L′} → ⟶*.Star _↝_ L L′ → f L ⟶[ m ≤]* f L′
 ξ-of-↝*-⟶[ m ≤]* _↝_ = ⟶*.ξ-of-↝*-⟶* _⟶[ m ≤]_ _↝_
+
+halt : Term → Set (ℓ₁ ⊔ ℓ₂)
+halt L = ∃ (λ L′ → L ⟶* L′ × WeakNorm L′)
+
+halt[_≤] : Mode → Term → Set (ℓ₁ ⊔ ℓ₂)
+halt[ m′ ≤] L = ∃ (λ L′ → L ⟶[ m′ ≤]* L′ × DeferredTerm[ m′ ≤] L′)
+
+⟶*length : L ⟶* L′ → ℕ
+⟶*length ε         = 0
+⟶*length (_ ◅ L⟶*) = suc (⟶*length L⟶*)

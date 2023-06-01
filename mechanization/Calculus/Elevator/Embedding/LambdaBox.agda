@@ -16,8 +16,8 @@ open import Data.Bool using (true; false)
 open import Data.List using ([]; _∷_; _++_; length)
 open import Data.List.Relation.Unary.All using ([]; _∷_)
 open import Data.Nat as ℕ using (ℕ; zero; suc; z≤n; s≤s; _+_; _∸_)
-import Data.Nat.Properties as ℕ
 import Data.Nat.Induction as ℕ
+import Data.Nat.Properties as ℕ
 open import Data.Product using (_×_; _,_; proj₁; proj₂; Σ; ∃; ∃₂; -,_)
 open import Induction.WellFounded using (Acc; acc)
 open import Relation.Binary using (Rel; Antisymmetric; IsPartialOrder; IsDecPartialOrder)
