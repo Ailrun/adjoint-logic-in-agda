@@ -5,15 +5,18 @@
 {-# OPTIONS --safe #-}
 module README where
 
--- Declartive typing of Elevator
+-- Definition of Mode Specification in Elevator
+import Calculus.Elevator.ModeSpec
+
+-- Declartive Typing and Equivalence of Elevator
 import Calculus.Elevator.Typing
 import Calculus.Elevator.Typing.Properties
 
--- Operational semantics of Elevator
+-- Operational Semantics of Elevator
 import Calculus.Elevator.OpSem
 import Calculus.Elevator.OpSem.Properties
 
--- Type safety and mode safety of Elevator
+-- Type Safety and Mode Safety of Elevator
 import Calculus.Elevator.Properties
 
 -- ModeSpec for Adjoint λ□
@@ -24,7 +27,7 @@ import Calculus.LambdaBox.Syntax
 import Calculus.LambdaBox.Typing
 import Calculus.LambdaBox.OpSem
 
--- Translation, its soundness and completeness, and bisimulation from Original λ□ into Adjoint λ□
+-- Translation, its Soundness and Completeness, and Bisimulation from Original λ□ into Adjoint λ□
 import Calculus.Elevator.Embedding.LambdaBox
 
 -- ModeSpec for Adjoint DILL
@@ -35,11 +38,11 @@ import Calculus.LinearLambda.Syntax
 import Calculus.LinearLambda.Typing
 import Calculus.LinearLambda.OpSem
 
--- Translation, its soundness and completeness, and bisimulation from Original DILL into Adjoint DILL
+-- Translation, its Soundness and Completeness, and Bisimulation from Original DILL into Adjoint DILL
 import Calculus.Elevator.Embedding.LinearLambda
 
--- Algorithmic typing of Elevator
+-- Algorithmic Typing of Elevator
 import Calculus.Elevator.Algorithmic
 
--- Soundness/completeness of algorithmic typing of Elevator
+-- Soundness/Completeness of Algorithmic Typing of Elevator
 import Calculus.Elevator.Algorithmic.Properties
