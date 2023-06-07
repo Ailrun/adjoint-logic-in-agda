@@ -37,8 +37,6 @@ open TP ℳ
 open O ℳ
 open OP ℳ
 
-open ⟶* using (_◅◅_)
-
 -- Weakening property
 --
 subst-wk[-↑-] : x ≡ x′ →
@@ -159,24 +157,26 @@ false⊢[/]                                    Δ₀ (`lift[-⇒-] ⊢M)        
 false⊢[/] {M = `unlift[ _ ⇒ _ ] M}           Δ₀ (Δ₀dΔ′∤ ⊢`unlift[-⇒-] ⊢M ⦂ ⊢↑)
   with _ , _ ∷ _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
     with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
+       | eqΔ₀ ← length-respects-∤ Δ₀∤
       with d∤
 ...      | keep m₁≤
         rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
-          with ⊢M′ ← subst-[/-] (length-respects-∤ Δ₀∤) M (false⊢[/] _ ⊢M)                = Δ₀Δ′∤ ⊢`unlift[-⇒-] ⊢M′ ⦂ ⊢↑
+          with ⊢M′ ← subst-[/-] eqΔ₀ M (false⊢[/] _ ⊢M)                                   = Δ₀Δ′∤ ⊢`unlift[-⇒-] ⊢M′ ⦂ ⊢↑
 ...      | delete m₁≰ dDel
         rewrite dec-no (_ ≤?ₘ _) m₁≰
-          with ⊢M′ ← subst-[/-] (length-respects-∤ Δ₀∤) M (false⊢[/] _ ⊢M)                = Δ₀Δ′∤ ⊢`unlift[-⇒-] ⊢M′ ⦂ ⊢↑
+          with ⊢M′ ← subst-[/-] eqΔ₀ M (false⊢[/] _ ⊢M)                                   = Δ₀Δ′∤ ⊢`unlift[-⇒-] ⊢M′ ⦂ ⊢↑
 
 false⊢[/] {M = `return[ _ ⇒ _ ] M}           Δ₀ (Δ₀dΔ′∤ ⊢`return[-⇒-] ⊢M)
   with _ , _ ∷ _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
     with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
+       | eqΔ₀ ← length-respects-∤ Δ₀∤
       with d∤
 ...      | keep m₁≤
         rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
-          with ⊢M′ ← subst-[/-] (length-respects-∤ Δ₀∤) M (false⊢[/] _ ⊢M)                = Δ₀Δ′∤ ⊢`return[-⇒-] ⊢M′
+          with ⊢M′ ← subst-[/-] eqΔ₀ M (false⊢[/] _ ⊢M)                                   = Δ₀Δ′∤ ⊢`return[-⇒-] ⊢M′
 ...      | delete m₁≰ dDel
         rewrite dec-no (_ ≤?ₘ _) m₁≰
-          with ⊢M′ ← subst-[/-] (length-respects-∤ Δ₀∤) M (false⊢[/] _ ⊢M)                = Δ₀Δ′∤ ⊢`return[-⇒-] ⊢M′
+          with ⊢M′ ← subst-[/-] eqΔ₀ M (false⊢[/] _ ⊢M)                                   = Δ₀Δ′∤ ⊢`return[-⇒-] ⊢M′
 
 false⊢[/] {M = `let-return[ _ ⇒ _ ] M `in N} Δ₀ (Δ₀dΔ′~ ⊢`let-return[-⇒-] ⊢M ⦂ ⊢↓ `in ⊢N)
   with Δ₀₀ , Δ₀₁ , _ ∷ Δ′₀ , _ ∷ Δ′₁ , refl , refl , Δ₀~ , unusable ∷ Δ′~ ← ~⊞-preserves-++ Δ₀ Δ₀dΔ′~
@@ -220,9 +220,9 @@ true⊢[/]ʳ                                    Δ₀ Γ~ ⊢Γ₁ ⊢L ⊢T    
   where
     ΓDel = ~⊞⁻¹-preserves-is-all-del (All.++⁺ Δ₀Del Δ′Del) (⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀) Γ~
 
-true⊢[/]ʳ                                    Δ₀ Γ~ ⊢Γ₁ ⊢L (⊢T₀ `⊸[ _ ] ⊢T₁)   (`λ⦂-∘ ⊢M)                                = `λ⦂-∘ ⊢L′
+true⊢[/]ʳ                                    Δ₀ Γ~ ⊢Γ₁ ⊢L (⊢T₀ `⊸[ _ ] ⊢T₁)   (`λ⦂-∘ ⊢M)                                = `λ⦂-∘ ⊢M′
   where
-    ⊢L′ = true⊢[/]ʳ (_ ∷ Δ₀) (to-left ∷ Γ~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (⊢wk[-↑-] [] (unusable ∷ []) ⊢L) ⊢T₁ ⊢M
+    ⊢M′ = true⊢[/]ʳ (_ ∷ Δ₀) (to-left ∷ Γ~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (⊢wk[-↑-] [] (unusable ∷ []) ⊢L) ⊢T₁ ⊢M
 
 true⊢[/]ʳ {M = M `$ N}                       Δ₀ Γ~ ⊢Γ₁ ⊢L ⊢T (Δ₀dΔ′~ ⊢ ⊢M ⦂ ⊢⊸ `$ ⊢N)
   with ⊢T₀ `⊸[ _ ] _ ← ⊢⊸
@@ -576,11 +576,12 @@ subst-wk[-↑-]≈wk[-↑-] : x ≡ x′ →
                         Γ ⊢[ m ] wk[ x′ ↑ k′ ] L ≈[≥ m′ ] wk[ x′ ↑ k′ ] L′ ⦂ S
 subst-wk[-↑-]≈wk[-↑-] {Γ = Γ} {m} {m′} {S} eq₀ eq₁ L L′ = subst₂ (λ x k → Γ ⊢[ m ] wk[ x ↑ k ] L ≈[≥ m′ ] wk[ x ↑ k ] L′ ⦂ S) eq₀ eq₁
 
+-- Weakening preserves equivalence
 wk[-↑-]≈wk[-↑-] : ∀ Δ →
-                      Γ′ is-all-del →
-                      Δ ++ Γ ⊢[ m ] L ≈[≥ m′ ] L′ ⦂ S →
-                      --------------------------------------------------------------------------------------------
-                      Δ ++ Γ′ ++ Γ ⊢[ m ] wk[ length Γ′ ↑ length Δ ] L ≈[≥ m′ ] wk[ length Γ′ ↑ length Δ ] L′ ⦂ S
+                  Γ′ is-all-del →
+                  Δ ++ Γ ⊢[ m ] L ≈[≥ m′ ] L′ ⦂ S →
+                  --------------------------------------------------------------------------------------------
+                  Δ ++ Γ′ ++ Γ ⊢[ m ] wk[ length Γ′ ↑ length Δ ] L ≈[≥ m′ ] wk[ length Γ′ ↑ length Δ ] L′ ⦂ S
 wk[-↑-]≈wk[-↑-]                                                                               Δ Γ′Del (`unit ΔΓDel)                              = `unit ΔΓ′ΓDel
   where
     ΔΓ′ΓDel = All.++⁺ (All.++⁻ˡ Δ ΔΓDel) (All.++⁺ Γ′Del (All.++⁻ʳ Δ ΔΓDel))
@@ -591,17 +592,13 @@ wk[-↑-]≈wk[-↑-]      {L = `unlift[ m₀ ⇒ _ ] L}          {L′ = `unlif
        | _ , Γ′∤ , _ ← is-all-del⇒∤ m₀ Γ′Del                                                                                                     = ΔΓ′Γ∤ ⊢`unlift[-⇒-] L≈L′′ ⦂ ⊢↑
   where
     ΔΓ′Γ∤ = ∤-++⁺ Δ∤ (∤-++⁺ Γ′∤ Γ∤)
-    L≈L′′ =
-      subst-wk[-↑-]≈wk[-↑-] (length-respects-∤ Γ′∤) (length-respects-∤ Δ∤) L L′
-        (wk[-↑-]≈wk[-↑-] Δ′ (∤-preserves-is-all-del Γ′Del Γ′∤) L≈L′)
+    L≈L′′ = subst-wk[-↑-]≈wk[-↑-] (length-respects-∤ Γ′∤) (length-respects-∤ Δ∤) L L′ (wk[-↑-]≈wk[-↑-] Δ′ (∤-preserves-is-all-del Γ′Del Γ′∤) L≈L′)
 wk[-↑-]≈wk[-↑-]      {L = `return[ m₀ ⇒ _ ] L}          {L′ = `return[ _ ⇒ _ ] L′}            Δ Γ′Del (ΔΓ∤ ⊢`return[-⇒-] L≈L′)
   with Δ′ , _ , refl , Δ∤ , Γ∤ ← ∤-preserves-++ Δ ΔΓ∤
      | _ , Γ′∤ , _ ← is-all-del⇒∤ m₀ Γ′Del                                                                                                       = ΔΓ′Γ∤ ⊢`return[-⇒-] L≈L′′
   where
     ΔΓ′Γ∤ = ∤-++⁺ Δ∤ (∤-++⁺ Γ′∤ Γ∤)
-    L≈L′′ =
-      subst-wk[-↑-]≈wk[-↑-] (length-respects-∤ Γ′∤) (length-respects-∤ Δ∤) L L′
-        (wk[-↑-]≈wk[-↑-] Δ′ (∤-preserves-is-all-del Γ′Del Γ′∤) L≈L′)
+    L≈L′′ = subst-wk[-↑-]≈wk[-↑-] (length-respects-∤ Γ′∤) (length-respects-∤ Δ∤) L L′ (wk[-↑-]≈wk[-↑-] Δ′ (∤-preserves-is-all-del Γ′Del Γ′∤) L≈L′)
 wk[-↑-]≈wk[-↑-] {Γ′} {L = `let-return[ _ ⇒ _ ] L `in M} {L′ = `let-return[ _ ⇒ _ ] L′ `in M′} Δ Γ′Del (ΔΓ~ ⊢`let-return[-⇒-] L≈L′ ⦂ ⊢↓ `in M≈M′)
     with Δ₀ , Δ₁ , Γ₀ , Γ₁ , refl , refl , Δ~ , Γ~ ← ~⊞-preserves-++ Δ ΔΓ~
        | Γ′₁ , Γ′~ ← left-bias-~⊞ Γ′
@@ -609,12 +606,8 @@ wk[-↑-]≈wk[-↑-] {Γ′} {L = `let-return[ _ ⇒ _ ] L `in M} {L′ = `let-
          | eqΔ₀ , eqΔ₁ ← length-respects-~⊞ Δ~                                                                                                   = ΔΓ′Γ~ ⊢`let-return[-⇒-] L≈L′′ ⦂ ⊢↓ `in M≈M′′
   where
     ΔΓ′Γ~ = ~⊞-++⁺ Δ~ (~⊞-++⁺ Γ′~ Γ~)
-    L≈L′′ =
-      subst-wk[-↑-]≈wk[-↑-] refl eqΔ₀ L L′
-        (wk[-↑-]≈wk[-↑-] Δ₀ Γ′Del L≈L′)
-    M≈M′′ =
-      subst-wk[-↑-]≈wk[-↑-] (proj₂ (length-respects-~⊞ Γ′~)) (cong suc eqΔ₁) M M′
-        (wk[-↑-]≈wk[-↑-] (_ ∷ Δ₁) Γ′₁Del M≈M′)
+    L≈L′′ = subst-wk[-↑-]≈wk[-↑-] refl eqΔ₀ L L′ (wk[-↑-]≈wk[-↑-] Δ₀ Γ′Del L≈L′)
+    M≈M′′ = subst-wk[-↑-]≈wk[-↑-] (proj₂ (length-respects-~⊞ Γ′~)) (cong suc eqΔ₁) M M′ (wk[-↑-]≈wk[-↑-] (_ ∷ Δ₁) Γ′₁Del M≈M′)
 wk[-↑-]≈wk[-↑-]                                                                              Δ Γ′Del (`λ⦂-∘ L≈L′)                                = `λ⦂-∘ L≈L′′
   where
     L≈L′′ = wk[-↑-]≈wk[-↑-] (_ ∷ Δ) Γ′Del L≈L′
@@ -625,12 +618,8 @@ wk[-↑-]≈wk[-↑-] {Γ′} {L = L `$ M}                       {L′ = L′ `$
        | eqΔ₀ , eqΔ₁ ← length-respects-~⊞ Δ~                                                                                                     = ΔΓ′Γ~ ⊢ L≈L′′ ⦂ ⊢⊸ `$ M≈M′′
   where
     ΔΓ′Γ~ = ~⊞-++⁺ Δ~ (~⊞-++⁺ Γ′~ Γ~)
-    L≈L′′ =
-      subst-wk[-↑-]≈wk[-↑-] refl eqΔ₀ L L′
-        (wk[-↑-]≈wk[-↑-] Δ₀ Γ′Del L≈L′)
-    M≈M′′ =
-      subst-wk[-↑-]≈wk[-↑-] (proj₂ (length-respects-~⊞ Γ′~)) eqΔ₁ M M′
-        (wk[-↑-]≈wk[-↑-] Δ₁ Γ′₁Del M≈M′)
+    L≈L′′ = subst-wk[-↑-]≈wk[-↑-] refl eqΔ₀ L L′ (wk[-↑-]≈wk[-↑-] Δ₀ Γ′Del L≈L′)
+    M≈M′′ = subst-wk[-↑-]≈wk[-↑-] (proj₂ (length-respects-~⊞ Γ′~)) eqΔ₁ M M′ (wk[-↑-]≈wk[-↑-] Δ₁ Γ′₁Del M≈M′)
 wk[-↑-]≈wk[-↑-]                                                                              Δ Γ′Del (`#_ {x = x} x∈)
   with x ℕ.≥? length Δ
 ...  | yes x≥                                                                                                                                    = `# ≥∧∈-++⇒+-∈-++-++ Δ Γ′Del x∈ x≥
@@ -645,6 +634,7 @@ subst-[/-]≈[/-] : x ≡ x′ →
                   Γ ⊢[ m ] [ L /[ m₀ ] x′ ] M ≈[≥ m′ ] [ L′ /[ m₀ ] x′ ] M′ ⦂ T
 subst-[/-]≈[/-] {Γ = Γ} {m} {L} {m₀} {m′} {L′} {T} eq M M′ = subst (λ x → Γ ⊢[ m ] [ L /[ m₀ ] x ] M ≈[≥ m′ ] [ L′ /[ m₀ ] x ] M′ ⦂ T) eq
 
+-- Strengthening preserves equivalence
 false⊢[/]≈[/] : ∀ Δ₀ →
                 Δ₀ ++ (S , m₀ , false) ∷ Δ′ ⊢[ m ] M ≈[≥ m′ ] M′ ⦂ T →
                 -----------------------------------------------------------------------------------
@@ -662,24 +652,26 @@ false⊢[/]≈[/]                                                               
 false⊢[/]≈[/] {M = `unlift[ _ ⇒ _ ] M}           {M′ = `unlift[ _ ⇒ _ ] M′}            Δ₀ (Δ₀dΔ′∤ ⊢`unlift[-⇒-] M≈M′ ⦂ ⊢↑)
   with _ , _ ∷ _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
     with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
+       | eqΔ₀ ← length-respects-∤ Δ₀∤
       with d∤
 ...      | keep m₁≤
         rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
-          with M≈M′′ ← subst-[/-]≈[/-] (length-respects-∤ Δ₀∤) M M′ (false⊢[/]≈[/] _ M≈M′)                                              = Δ₀Δ′∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑
+          with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑
 ...      | delete m₁≰ dDel
         rewrite dec-no (_ ≤?ₘ _) m₁≰
-          with M≈M′′ ← subst-[/-]≈[/-] (length-respects-∤ Δ₀∤) M M′ (false⊢[/]≈[/] _ M≈M′)                                              = Δ₀Δ′∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑
+          with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑
 
 false⊢[/]≈[/] {M = `return[ _ ⇒ _ ] M}           {M′ = `return[ _ ⇒ _ ] M′}            Δ₀ (Δ₀dΔ′∤ ⊢`return[-⇒-] M≈M′)
   with _ , _ ∷ _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
     with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
+       | eqΔ₀ ← length-respects-∤ Δ₀∤
       with d∤
 ...      | keep m₁≤
         rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
-          with M≈M′′ ← subst-[/-]≈[/-] (length-respects-∤ Δ₀∤) M M′ (false⊢[/]≈[/] _ M≈M′)                                              = Δ₀Δ′∤ ⊢`return[-⇒-] M≈M′′
+          with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`return[-⇒-] M≈M′′
 ...      | delete m₁≰ dDel
         rewrite dec-no (_ ≤?ₘ _) m₁≰
-          with M≈M′′ ← subst-[/-]≈[/-] (length-respects-∤ Δ₀∤) M M′ (false⊢[/]≈[/] _ M≈M′)                                              = Δ₀Δ′∤ ⊢`return[-⇒-] M≈M′′
+          with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`return[-⇒-] M≈M′′
 
 false⊢[/]≈[/] {M = `let-return[ _ ⇒ _ ] M `in N} {M′ = `let-return[ _ ⇒ _ ] M′ `in N′} Δ₀ (Δ₀dΔ′~ ⊢`let-return[-⇒-] M≈M′ ⦂ ⊢↓ `in N≈N′)
   with Δ₀₀ , Δ₀₁ , _ ∷ Δ′₀ , _ ∷ Δ′₁ , refl , refl , Δ₀~ , unusable ∷ Δ′~ ← ~⊞-preserves-++ Δ₀ Δ₀dΔ′~
@@ -713,6 +705,7 @@ false⊢[/]≈[/]                                                               
     with y> ← subst (y ℕ.≥_) (ℕ.+-comm 1 _) (ℕ.≤∧≢⇒< y≥ (≢-sym y≢))
       with y∈′ ← ≥∧∈-++-++⇒∈-++ Δ₀ (_ ∷ []) y∈ y>                                                                                       = `# y∈′
 
+-- Substitution on a used variable preserves equivalence
 true⊢[/]≈[/]ʳ : ∀ Δ₀ →
                 Γ ~ Δ₀ ++ Δ′ ⊞ Γ₁ →
                 ⊢[ m₀ ] Γ₁ →
@@ -834,6 +827,10 @@ true⊢[/]≈[/]ʳ                                                              
 
 true⊢[/]≈[/]ˡ Δ₁ Γ~ ⊢Γ₀ L≈L′ ⊢T M≈M′ = true⊢[/]≈[/]ʳ Δ₁ (~⊞-commute Γ~) ⊢Γ₀ L≈L′ ⊢T M≈M′
 
+
+-- Properties of stepping relations about equivalence
+--
+
 WeakNorm≈⟶ : ⊢[ m ] Γ →
              ⊢[ m ] S ⦂⋆ →
              Γ ⊢[ m ] L ≈[≥ m′ ] M ⦂ S →
@@ -861,29 +858,30 @@ WeakNorm≈⟶ ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$
 WeakNorm≈⟶ ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸@(⊢T `⊸[ _ ] _) `$ L₁≈M₁)                     (`neut (NL₀ `$ VL₁))                      (ξ-! VM₀ `$ M₁⟶)            = Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ WeakNorm≈⟶ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ VL₁ M₁⟶
 WeakNorm≈⟶ ⊢Γ ⊢S                     (Γ~ ⊢ `λ⦂-∘ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                              (`neut (() `$ VL₁))                       (β-`⊸ VM₁)
 
-DeferredTerm≈⟶[≤] ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≤ m′≤m₀ ⇒-] L≈M)                                            (`lift[ _ ⇒ _ ] WL)                (ξ-`lift[-⇒-] M⟶[≤])                 = `lift[≤ m′≤m₀ ⇒-] (DeferredTerm≈⟶[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S L≈M WL M⟶[≤])
-DeferredTerm≈⟶[≤] ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≰ m′≰m₀ ⇒-] ⊢L ⊢M)                                          WL                                 (ξ-`lift[-⇒-] M⟶[≤])                 = `lift[≰ m′≰m₀ ⇒-] ⊢L (preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S ⊢M M⟶[≤])
-DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑)                                        WL                                 (ξ-`unlift[≰ m₀≰m₁ ⇒-] M⟶[≤])
+DeferredTerm≈⟶[≤] ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≤ m′≤m₀ ⇒-] L≈M)                     (`lift[ _ ⇒ _ ] WL)                (ξ-`lift[-⇒-] M⟶[≤])                 = `lift[≤ m′≤m₀ ⇒-] (DeferredTerm≈⟶[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S L≈M WL M⟶[≤])
+DeferredTerm≈⟶[≤] ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≰ m′≰m₀ ⇒-] ⊢L ⊢M)                   WL                                 (ξ-`lift[-⇒-] M⟶[≤])                 = `lift[≰ m′≰m₀ ⇒-] ⊢L (preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S ⊢M M⟶[≤])
+DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑)                 WL                                 (ξ-`unlift[≰ m₀≰m₁ ⇒-] M⟶[≤])
   -- For some reason direct pattern match in the head gives an incomplete pattern error.
   with WL
-...  | `unlift[≰ _ ⇒ _ ] WL                                                                                                                                                            = Γ∤ ⊢`unlift[-⇒-] DeferredTerm≈⟶[≤] (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ L≈M WL M⟶[≤] ⦂ ⊢↑
-...  | `unlift[≤ m₀≤m₁ ⇒ _ ] VL                                                                                                                                                        with () ← m₀≰m₁ m₀≤m₁
-DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑)                                        WL                                 (ξ-`unlift[≤ m₀≤m₁ ⇒-] M⟶)
+...  | `unlift[≰ _ ⇒ _ ] WL                                                                                                                                     = Γ∤ ⊢`unlift[-⇒-] DeferredTerm≈⟶[≤] (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ L≈M WL M⟶[≤] ⦂ ⊢↑
+...  | `unlift[≤ m₀≤m₁ ⇒ _ ] VL                                                                                                                                 with () ← m₀≰m₁ m₀≤m₁
+DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑)                 WL                                 (ξ-`unlift[≤ m₀≤m₁ ⇒-] M⟶)
   -- For some reason direct pattern match in the head gives an incomplete pattern error.
   with WL
-...  | `unlift[≰ m₀≰m₁ ⇒ _ ] WL                                                                                                                                                        with () ← m₀≰m₁ m₀≤m₁
-...  | `unlift[≤ _ ⇒ _ ] VL                                                                                                                                                            = Γ∤ ⊢`unlift[-⇒-] WeakNorm≈⟶ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ L≈M VL M⟶ ⦂ ⊢↑
-DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑)                          (`unlift[≰ m₀≰m₁ ⇒ _ ] WL)         (β-`↑ m₀≤m₁ WM)                      with () ← m₀≰m₁ m₀≤m₁
-DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≰ _ ⇒-] ⊢L ⊢M ⦂ ⊢↑)                        (`unlift[≰ m₀≰m₁ ⇒ _ ] WL)         (β-`↑ m₀≤m₁ WM)                      with () ← m₀≰m₁ m₀≤m₁
-DeferredTerm≈⟶[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)    (Γ∤ ⊢`return[-⇒-] L≈M)                                             (`return[≰ m₀≰m₁ ⇒ _ ] WL)         (ξ-`return[≰ _ ⇒-] M⟶[≤])            = Γ∤ ⊢`return[-⇒-] (DeferredTerm≈⟶[≤] (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S L≈M WL M⟶[≤])
-DeferredTerm≈⟶[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)    (Γ∤ ⊢`return[-⇒-] L≈M)                                             (`return[≤ m₀≤m₁ ⇒ _ ] VL)         (ξ-`return[≰ m₀≰m₁ ⇒-] M⟶[≤])        with () ← m₀≰m₁ m₀≤m₁
-DeferredTerm≈⟶[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)    (Γ∤ ⊢`return[-⇒-] L≈M)                                             (`return[≰ m₀≰m₁ ⇒ _ ] WL)         (ξ-`return[≤ m₀≤m₁ ⇒-] M⟶)           with () ← m₀≰m₁ m₀≤m₁
-DeferredTerm≈⟶[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)    (Γ∤ ⊢`return[-⇒-] L≈M)                                             (`return[≤ m₀≤m₁ ⇒ _ ] VL)         (ξ-`return[≤ _ ⇒-] M⟶)               = Γ∤ ⊢`return[-⇒-] WeakNorm≈⟶ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S L≈M VL M⟶
-DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁)                        (`let-return[ _ ⇒ _ ] WL₀ `in WL₁) ξ-`let-return[-⇒-] M₀⟶[≤] `in?       = Γ~ ⊢`let-return[-⇒-] (DeferredTerm≈⟶[≤] (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢↓ L₀≈M₀ WL₀ M₀⟶[≤]) ⦂ ⊢↓ `in L₁≈M₁
-DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓@(`↓[-⇒ m<m₁ ][ _ ] ⊢T) `in L₁≈M₁) (`let-return[ _ ⇒ _ ] WL₀ `in WL₁) (ξ-`let-return[-⇒-]! WM₀ `in M₁⟶[≤]) = Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in DeferredTerm≈⟶[≤] ((⊢T , valid (<ₘ⇒≤ₘ m<m₁)) ∷ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~)) ⊢S L₁≈M₁ WL₁ M₁⟶[≤]
-DeferredTerm≈⟶[≤] ⊢Γ (⊢T `⊸[ _ ] ⊢S)        (`λ⦂-∘ L≈M)                                                        (`λ⦂[ _ ] _ ∘ WL)                   (ξ-`λ⦂[-]-∘ M⟶[≤])                  = `λ⦂-∘ DeferredTerm≈⟶[≤] ((⊢T , valid ≤ₘ-refl) ∷ ⊢Γ) ⊢S L≈M WL M⟶[≤]
-DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                                         (WL₀ `$ WL₁)                        ξ- M₀⟶[≤] `$?                       = Γ~ ⊢ DeferredTerm≈⟶[≤] (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ L₀≈M₀ WL₀ M₀⟶[≤] ⦂ ⊢⊸ `$ L₁≈M₁
-DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸@(⊢T `⊸[ _ ] _) `$ L₁≈M₁)                          (WL₀ `$ WL₁)                        (ξ-! WM₀ `$ M₁⟶[≤])                 = Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ DeferredTerm≈⟶[≤] (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ WL₁ M₁⟶[≤]
+...  | `unlift[≰ m₀≰m₁ ⇒ _ ] WL                                                                                                                                 with () ← m₀≰m₁ m₀≤m₁
+...  | `unlift[≤ _ ⇒ _ ] VL                                                                                                                                     = Γ∤ ⊢`unlift[-⇒-] WeakNorm≈⟶ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ L≈M VL M⟶ ⦂ ⊢↑
+DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑)   (`unlift[≰ m₀≰m₁ ⇒ _ ] WL)         (β-`↑ m₀≤m₁ WM)                      with () ← m₀≰m₁ m₀≤m₁
+DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≰ _ ⇒-] ⊢L ⊢M ⦂ ⊢↑) (`unlift[≰ m₀≰m₁ ⇒ _ ] WL)         (β-`↑ m₀≤m₁ WM)                      with () ← m₀≰m₁ m₀≤m₁
+DeferredTerm≈⟶[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)    (Γ∤ ⊢`return[-⇒-] L≈M)                      (`return[≰ m₀≰m₁ ⇒ _ ] WL)         (ξ-`return[≰ _ ⇒-] M⟶[≤])            = Γ∤ ⊢`return[-⇒-] (DeferredTerm≈⟶[≤] (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S L≈M WL M⟶[≤])
+DeferredTerm≈⟶[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)    (Γ∤ ⊢`return[-⇒-] L≈M)                      (`return[≤ m₀≤m₁ ⇒ _ ] VL)         (ξ-`return[≰ m₀≰m₁ ⇒-] M⟶[≤])        with () ← m₀≰m₁ m₀≤m₁
+DeferredTerm≈⟶[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)    (Γ∤ ⊢`return[-⇒-] L≈M)                      (`return[≰ m₀≰m₁ ⇒ _ ] WL)         (ξ-`return[≤ m₀≤m₁ ⇒-] M⟶)           with () ← m₀≰m₁ m₀≤m₁
+DeferredTerm≈⟶[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)    (Γ∤ ⊢`return[-⇒-] L≈M)                      (`return[≤ m₀≤m₁ ⇒ _ ] VL)         (ξ-`return[≤ _ ⇒-] M⟶)               = Γ∤ ⊢`return[-⇒-] WeakNorm≈⟶ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S L≈M VL M⟶
+DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁) (`let-return[ _ ⇒ _ ] WL₀ `in WL₁) ξ-`let-return[-⇒-] M₀⟶[≤] `in?       = Γ~ ⊢`let-return[-⇒-] (DeferredTerm≈⟶[≤] (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢↓ L₀≈M₀ WL₀ M₀⟶[≤]) ⦂ ⊢↓ `in L₁≈M₁
+DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁) (`let-return[ _ ⇒ _ ] WL₀ `in WL₁) (ξ-`let-return[-⇒-]! WM₀ `in M₁⟶[≤])
+  with `↓[-⇒ m<m₁ ][ _ ] ⊢T ← ⊢↓                                                                                                                                = Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in DeferredTerm≈⟶[≤] ((⊢T , valid (<ₘ⇒≤ₘ m<m₁)) ∷ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~)) ⊢S L₁≈M₁ WL₁ M₁⟶[≤]
+DeferredTerm≈⟶[≤] ⊢Γ (⊢T `⊸[ _ ] ⊢S)        (`λ⦂-∘ L≈M)                                 (`λ⦂[ _ ] _ ∘ WL)                   (ξ-`λ⦂[-]-∘ M⟶[≤])                  = `λ⦂-∘ DeferredTerm≈⟶[≤] ((⊢T , valid ≤ₘ-refl) ∷ ⊢Γ) ⊢S L≈M WL M⟶[≤]
+DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                  (WL₀ `$ WL₁)                        ξ- M₀⟶[≤] `$?                       = Γ~ ⊢ DeferredTerm≈⟶[≤] (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ L₀≈M₀ WL₀ M₀⟶[≤] ⦂ ⊢⊸ `$ L₁≈M₁
+DeferredTerm≈⟶[≤] ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸@(⊢T `⊸[ _ ] _) `$ L₁≈M₁)   (WL₀ `$ WL₁)                        (ξ-! WM₀ `$ M₁⟶[≤])                 = Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ DeferredTerm≈⟶[≤] (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ WL₁ M₁⟶[≤]
 
 WeakNorm≈⟶* : ⊢[ m ] Γ →
               ⊢[ m ] S ⦂⋆ →
@@ -905,195 +903,363 @@ DeferredTerm≈⟶[≤]* : ⊢[ m ] Γ →
 DeferredTerm≈⟶[≤]* ⊢Γ ⊢S L≈M WL ε = L≈M
 DeferredTerm≈⟶[≤]* ⊢Γ ⊢S L≈M WL (M⟶[≤] ◅ M′⟶[≤]*) = DeferredTerm≈⟶[≤]* ⊢Γ ⊢S (DeferredTerm≈⟶[≤] ⊢Γ ⊢S L≈M WL M⟶[≤]) WL M′⟶[≤]*
 
-hexagon : m′ ≤ₘ m →
-          ⊢[ m ] Γ →
-          ⊢[ m ] S ⦂⋆ →
-          Γ ⊢[ m ] L ≈[≥ m′ ] M ⦂ S →
-          L ⟶ L′ →
-          M ⟶ M′ →
-          halt L′ →
-          halt M′ →
-          -------------------------------------------
-          ∃₂ (λ L″ M″ → L′ ⟶* L″
-                      × M′ ⟶* M″
-                      × Γ ⊢[ m ] L″ ≈[≥ m′ ] M″ ⦂ S)
-hexagon[≤] : m′ ≤ₘ m →
-             ⊢[ m ] Γ →
-             ⊢[ m ] S ⦂⋆ →
-             Γ ⊢[ m ] L ≈[≥ m′ ] M ⦂ S →
-             L ⟶[ m″ ≤] L′ →
-             M ⟶[ m″ ≤] M′ →
-             halt[ m″ ≤] L′ →
-             halt[ m″ ≤] M′ →
-             -------------------------------------------
-             ∃₂ (λ L″ M″ → L′ ⟶[ m″ ≤]* L″
-                         × M′ ⟶[ m″ ≤]* M″
-                         × Γ ⊢[ m ] L″ ≈[≥ m′ ] M″ ⦂ S)
-
-hexagon m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑@(`↑[-⇒ m<m₀ ][ _ ] _))               (ξ-`unlift[-⇒-] L⟶) (ξ-`unlift[-⇒-] M⟶) huL′ huM′
-  with m′≤m₀ ← ≤ₘ-trans m′≤m (<ₘ⇒≤ₘ m<m₀)
-     | hL′ ← halt-`unlift-inversion huL′
-     | hM′ ← halt-`unlift-inversion huM′
-    with _ , _ , L′⟶* , M′⟶* , L″≈M″ ← hexagon m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ L≈M L⟶ M⟶ hL′ hM′ = -, -, ξ-of-⟶* `unlift[ _ ⇒ _ ] ξ-`unlift[-⇒-] L′⟶* , ξ-of-⟶* `unlift[ _ ⇒ _ ] ξ-`unlift[-⇒-] M′⟶* , Γ∤ ⊢`unlift[-⇒-] L″≈M″ ⦂ ⊢↑
-hexagon m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑@(`↑[-⇒ m<m₀ ][ _ ] _)) (ξ-`unlift[-⇒-] (ξ-`lift[-⇒-] L⟶[≤])) (β-`↑ WM) hulL′ hM′
-  with _ , L′⟶[≤]* , WL″ ← halt-`lift-inversion (halt-`unlift-inversion hulL′) = -, -, ξ-of-⟶* `unlift[ _ ⇒ _ ] ξ-`unlift[-⇒-] (ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] L′⟶[≤]*) ◅◅ β-`↑ WL″ ◅ ε , ε , ∤⁻¹-preserves-≈ [] (≈-sym (DeferredTerm≈⟶[≤]* (⊢∧<ₘ⇒⊢ (⊢∧∤⇒⊢ ⊢Γ Γ∤) m<m₀) ⊢S (≈-sym L≈M) WM (L⟶[≤] ◅ L′⟶[≤]*))) Γ∤
-hexagon m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑@(`↑[-⇒ m<m₀ ][ _ ] _)) (β-`↑ WL) (ξ-`unlift[-⇒-] (ξ-`lift[-⇒-] M⟶[≤])) hL′ hulM′
-  with _ , M′⟶[≤]* , WM″ ← halt-`lift-inversion (halt-`unlift-inversion hulM′) = -, -, ε , ξ-of-⟶* `unlift[ _ ⇒ _ ] ξ-`unlift[-⇒-] (ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] M′⟶[≤]*) ◅◅ β-`↑ WM″ ◅ ε , ∤⁻¹-preserves-≈ [] (DeferredTerm≈⟶[≤]* (⊢∧<ₘ⇒⊢ (⊢∧∤⇒⊢ ⊢Γ Γ∤) m<m₀) ⊢S L≈M WL (M⟶[≤] ◅ M′⟶[≤]*)) Γ∤
-hexagon m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑) (β-`↑ _) (β-`↑ _) hL′ hM′ = -, -, ε , ε , ∤⁻¹-preserves-≈ [] L≈M Γ∤
-hexagon m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≰ m′≰m ⇒-] _ _ ⦂ ⊢↑) L⟶ M⟶ hL′ hM′ with () ← m′≰m m′≤m
-hexagon m′≤m ⊢Γ (`↓[-⇒ m<m₀ ][ _ ] ⊢S) (Γ∤ ⊢`return[-⇒-] L≈M) (ξ-`return[-⇒-] L⟶) (ξ-`return[-⇒-] M⟶) hrL′ hrM′
+-- Diamond property modulo _⊢[_]_≈[≥_]_
+--
+≈-diamond : m′ ≤ₘ m →
+            ⊢[ m ] Γ →
+            ⊢[ m ] S ⦂⋆ →
+            Γ ⊢[ m ] L ≈[≥ m′ ] M ⦂ S →
+            L ⟶ L′ →
+            M ⟶ M′ →
+            halt L′ →
+            halt M′ →
+            -------------------------------------------
+            ∃₂ (λ L″ M″ → L′ ⟶* L″
+                        × M′ ⟶* M″
+                        × Γ ⊢[ m ] L″ ≈[≥ m′ ] M″ ⦂ S)
+≈-diamond[≤] : m′ ≤ₘ m →
+               ⊢[ m ] Γ →
+               ⊢[ m ] S ⦂⋆ →
+               Γ ⊢[ m ] L ≈[≥ m′ ] M ⦂ S →
+               L ⟶[ m″ ≤] L′ →
+               M ⟶[ m″ ≤] M′ →
+               halt[ m″ ≤] L′ →
+               halt[ m″ ≤] M′ →
+               -------------------------------------------
+               ∃₂ (λ L″ M″ → L′ ⟶[ m″ ≤]* L″
+                           × M′ ⟶[ m″ ≤]* M″
+                           × Γ ⊢[ m ] L″ ≈[≥ m′ ] M″ ⦂ S)
+  
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑)                                   (ξ-`unlift[-⇒-] L⟶)                          (ξ-`unlift[-⇒-] M⟶)                          huL′  huM′
+  with `↑[-⇒ m<m₀ ][ _ ] _ ← ⊢↑
+    with m′≤m₀ ← ≤ₘ-trans m′≤m (<ₘ⇒≤ₘ m<m₀)
+       | hL′ ← halt-`unlift-inversion huL′
+       | hM′ ← halt-`unlift-inversion huM′
+      with _ , _ , L′⟶* , M′⟶* , L″≈M″ ← ≈-diamond m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ L≈M L⟶ M⟶ hL′ hM′                                                                                                                  = -, -, ξ-of-⟶* `unlift[ _ ⇒ _ ] ξ-`unlift[-⇒-] L′⟶*
+                                                                                                                                                                                                             , ξ-of-⟶* `unlift[ _ ⇒ _ ] ξ-`unlift[-⇒-] M′⟶*
+                                                                                                                                                                                                             , Γ∤ ⊢`unlift[-⇒-] L″≈M″ ⦂ ⊢↑
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑)                     (ξ-`unlift[-⇒-] (ξ-`lift[-⇒-] L⟶[≤]))        (β-`↑ WM)                                    hulL′ hM′
+  with `↑[-⇒ m<m₀ ][ _ ] _ ← ⊢↑
+     | _ , L′⟶[≤]* , WL″ ← halt-`lift-inversion (halt-`unlift-inversion hulL′)                                                                                                                               = -, -, ξ-of-⟶* `unlift[ _ ⇒ _ ] ξ-`unlift[-⇒-]
+                                                                                                                                                                                                                 (ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] L′⟶[≤]*)
+                                                                                                                                                                                                                 ◅◅ β-`↑ WL″ ◅ ε
+                                                                                                                                                                                                             , ε
+                                                                                                                                                                                                             , ∤⁻¹-preserves-≈ [] (≈-sym (DeferredTerm≈⟶[≤]* (⊢∧<ₘ⇒⊢ (⊢∧∤⇒⊢ ⊢Γ Γ∤) m<m₀) ⊢S (≈-sym L≈M) WM (L⟶[≤] ◅ L′⟶[≤]*))) Γ∤
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑)                     (β-`↑ WL)                                    (ξ-`unlift[-⇒-] (ξ-`lift[-⇒-] M⟶[≤]))        hL′   hulM′
+  with `↑[-⇒ m<m₀ ][ _ ] _ ← ⊢↑
+     | _ , M′⟶[≤]* , WM″ ← halt-`lift-inversion (halt-`unlift-inversion hulM′)                                                                                                                               = -, -, ε
+                                                                                                                                                                                                             , ξ-of-⟶* `unlift[ _ ⇒ _ ] ξ-`unlift[-⇒-]
+                                                                                                                                                                                                                 (ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] M′⟶[≤]*)
+                                                                                                                                                                                                                 ◅◅ β-`↑ WM″ ◅ ε
+                                                                                                                                                                                                             , ∤⁻¹-preserves-≈ [] (DeferredTerm≈⟶[≤]* (⊢∧<ₘ⇒⊢ (⊢∧∤⇒⊢ ⊢Γ Γ∤) m<m₀) ⊢S L≈M WL (M⟶[≤] ◅ M′⟶[≤]*)) Γ∤
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑)                     (β-`↑ _)                                     (β-`↑ _)                                     hL′   hM′   = -, -, ε
+                                                                                                                                                                                                             , ε
+                                                                                                                                                                                                             , ∤⁻¹-preserves-≈ [] L≈M Γ∤
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≰ m′≰m ⇒-] _ _ ⦂ ⊢↑)                  L⟶                                           M⟶                                           hL′   hM′   with () ← m′≰m m′≤m
+≈-diamond m′≤m ⊢Γ (`↓[-⇒ m<m₀ ][ _ ] ⊢S) (Γ∤ ⊢`return[-⇒-] L≈M)                                        (ξ-`return[-⇒-] L⟶)                          (ξ-`return[-⇒-] M⟶)                          hrL′  hrM′
   with m′≤m₀ ← ≤ₘ-trans m′≤m (<ₘ⇒≤ₘ m<m₀)
      | hL′ ← halt-`return-inversion hrL′
      | hM′ ← halt-`return-inversion hrM′
-    with _ , _ , L′⟶* , M′⟶* , L″≈M″ ← hexagon m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S L≈M L⟶ M⟶ hL′ hM′ = -, -, ξ-of-⟶* `return[ _ ⇒ _ ] ξ-`return[-⇒-] L′⟶* , ξ-of-⟶* `return[ _ ⇒ _ ] ξ-`return[-⇒-] M′⟶* , Γ∤ ⊢`return[-⇒-] L″≈M″
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁) ξ-`let-return[-⇒-] L₀⟶ `in- ξ-`let-return[-⇒-] M₀⟶ `in- hL′ hM′
+    with _ , _ , L′⟶* , M′⟶* , L″≈M″ ← ≈-diamond m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S L≈M L⟶ M⟶ hL′ hM′                                                                                                                    = -, -, ξ-of-⟶* `return[ _ ⇒ _ ] ξ-`return[-⇒-] L′⟶*
+                                                                                                                                                                                                             , ξ-of-⟶* `return[ _ ⇒ _ ] ξ-`return[-⇒-] M′⟶*
+                                                                                                                                                                                                             , Γ∤ ⊢`return[-⇒-] L″≈M″
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁)                   ξ-`let-return[-⇒-] L₀⟶ `in-                  ξ-`let-return[-⇒-] M₀⟶ `in-                  hL′   hM′
   with hL₀′ ← halt-`let-return-`in-inversion hL′
      | hM₀′ ← halt-`let-return-`in-inversion hM′
-    with _ , _ , L₀′⟶* , M₀′⟶* , L₀″≈M₀″ ← hexagon m′≤m (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢↓ L₀≈M₀ L₀⟶ M₀⟶ hL₀′ hM₀′ = -, -, ξ-of-⟶* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in- L₀′⟶* , ξ-of-⟶* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in- M₀′⟶* , (Γ~ ⊢`let-return[-⇒-] L₀″≈M₀″ ⦂ ⊢↓ `in L₁≈M₁)
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢`let-return[-⇒-] Γ₀∤ ⊢`return[-⇒-] L₀≈M₀ ⦂ ⊢↓@(`↓[-⇒ m<m₀ ][ _ ] ⊢T) `in L₁≈M₁) ξ-`let-return[-⇒-] (ξ-`return[-⇒-] L₀⟶) `in- (β-`↓ VM₀) hL′ hM′
-  with _ , L₀′⟶* , VL₀″ ← halt-`return-inversion (halt-`let-return-`in-inversion hL′)
-    with Γ₀₁ , Γ₀~ , Γ₀₁Del ← ∤⇒~⊞-is-all-delʳ Γ₀∤
-      with Γ″ , Γ″~ , Γ~′ ← ~⊞-assocˡ Γ~ Γ₀~ = -, -, ξ-of-⟶* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in- (ξ-of-⟶* `return[ _ ⇒ _ ] ξ-`return[-⇒-] L₀′⟶*) ◅◅ β-`↓ VL₀″ ◅ ε , ε , true⊢[/]≈[/]ˡ [] Γ~′ (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤) (≈-sym (WeakNorm≈⟶* (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤) ⊢T (≈-sym L₀≈M₀) VM₀ (L₀⟶ ◅ L₀′⟶*))) ⊢S (~⊞-is-all-del∧⊢⇒≈ʳ (to-right ∷ Γ″~) (unusable ∷ Γ₀₁Del) L₁≈M₁)
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢`let-return[-⇒-] Γ₀∤ ⊢`return[-⇒-] L₀≈M₀ ⦂ ⊢↓@(`↓[-⇒ m<m₀ ][ _ ] ⊢T) `in L₁≈M₁) (β-`↓ VL₀) ξ-`let-return[-⇒-] (ξ-`return[-⇒-] M₀⟶) `in- hL′ hM′
-  with _ , M₀′⟶* , VM₀″ ← halt-`return-inversion (halt-`let-return-`in-inversion hM′)
-    with Γ₀₁ , Γ₀~ , Γ₀₁Del ← ∤⇒~⊞-is-all-delʳ Γ₀∤
-      with Γ″ , Γ″~ , Γ~′ ← ~⊞-assocˡ Γ~ Γ₀~ = -, -, ε , ξ-of-⟶* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in- (ξ-of-⟶* `return[ _ ⇒ _ ] ξ-`return[-⇒-] M₀′⟶*) ◅◅ β-`↓ VM₀″ ◅ ε , true⊢[/]≈[/]ˡ [] Γ~′ (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤) (WeakNorm≈⟶* (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤) ⊢T L₀≈M₀ VL₀ (M₀⟶ ◅ M₀′⟶*)) ⊢S (~⊞-is-all-del∧⊢⇒≈ʳ (to-right ∷ Γ″~) (unusable ∷ Γ₀₁Del) L₁≈M₁)
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢`let-return[-⇒-] Γ₀∤ ⊢`return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁) (β-`↓ VL₀) (β-`↓ VM₀) hL′ hM′
+    with _ , _ , L₀′⟶* , M₀′⟶* , L₀″≈M₀″ ← ≈-diamond m′≤m (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢↓ L₀≈M₀ L₀⟶ M₀⟶ hL₀′ hM₀′                                                                                                       = -, -, ξ-of-⟶* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in- L₀′⟶*
+                                                                                                                                                                                                             , ξ-of-⟶* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in- M₀′⟶*
+                                                                                                                                                                                                             , (Γ~ ⊢`let-return[-⇒-] L₀″≈M₀″ ⦂ ⊢↓ `in L₁≈M₁)
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] Γ₀∤ ⊢`return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁) ξ-`let-return[-⇒-] (ξ-`return[-⇒-] L₀⟶) `in- (β-`↓ VM₀)                                   hL′   hM′
+  with `↓[-⇒ m<m₀ ][ _ ] ⊢T ← ⊢↓
+     | _ , L₀′⟶* , VL₀″ ← halt-`return-inversion (halt-`let-return-`in-inversion hL′)
+     | Γ₀₁ , Γ₀~ , Γ₀₁Del ← ∤⇒~⊞-is-all-delʳ Γ₀∤
+    with Γ″ , Γ″~ , Γ~′ ← ~⊞-assocˡ Γ~ Γ₀~                                                                                                                                                                   = -, -, ξ-of-⟶* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in-
+                                                                                                                                                                                                                 (ξ-of-⟶* `return[ _ ⇒ _ ] ξ-`return[-⇒-] L₀′⟶*)
+                                                                                                                                                                                                                 ◅◅ β-`↓ VL₀″ ◅ ε
+                                                                                                                                                                                                             , ε
+                                                                                                                                                                                                             , true⊢[/]≈[/]ˡ
+                                                                                                                                                                                                                 []
+                                                                                                                                                                                                                 Γ~′
+                                                                                                                                                                                                                 (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤)
+                                                                                                                                                                                                                 (≈-sym (WeakNorm≈⟶* (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤) ⊢T (≈-sym L₀≈M₀) VM₀ (L₀⟶ ◅ L₀′⟶*)))
+                                                                                                                                                                                                                 ⊢S
+                                                                                                                                                                                                                 (~⊞-is-all-del∧⊢⇒≈ʳ (to-right ∷ Γ″~) (unusable ∷ Γ₀₁Del) L₁≈M₁)
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] Γ₀∤ ⊢`return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁) (β-`↓ VL₀)                                   ξ-`let-return[-⇒-] (ξ-`return[-⇒-] M₀⟶) `in- hL′   hM′
+  with `↓[-⇒ m<m₀ ][ _ ] ⊢T ← ⊢↓
+     | _ , M₀′⟶* , VM₀″ ← halt-`return-inversion (halt-`let-return-`in-inversion hM′)
+     | Γ₀₁ , Γ₀~ , Γ₀₁Del ← ∤⇒~⊞-is-all-delʳ Γ₀∤
+    with Γ″ , Γ″~ , Γ~′ ← ~⊞-assocˡ Γ~ Γ₀~                                                                                                                                                                   = -, -, ε
+                                                                                                                                                                                                             , ξ-of-⟶* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in-
+                                                                                                                                                                                                                 (ξ-of-⟶* `return[ _ ⇒ _ ] ξ-`return[-⇒-] M₀′⟶*)
+                                                                                                                                                                                                                 ◅◅ β-`↓ VM₀″ ◅ ε
+                                                                                                                                                                                                             , true⊢[/]≈[/]ˡ
+                                                                                                                                                                                                                 []
+                                                                                                                                                                                                                 Γ~′
+                                                                                                                                                                                                                 (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤)
+                                                                                                                                                                                                                 (WeakNorm≈⟶* (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤) ⊢T L₀≈M₀ VL₀ (M₀⟶ ◅ M₀′⟶*))
+                                                                                                                                                                                                                 ⊢S
+                                                                                                                                                                                                                 (~⊞-is-all-del∧⊢⇒≈ʳ (to-right ∷ Γ″~) (unusable ∷ Γ₀₁Del) L₁≈M₁)
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] Γ₀∤ ⊢`return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁) (β-`↓ VL₀)                                   (β-`↓ VM₀)                                   hL′   hM′
   with Γ₀₁ , Γ₀~ , Γ₀₁Del ← ∤⇒~⊞-is-all-delʳ Γ₀∤
-    with Γ″ , Γ″~ , Γ~′ ← ~⊞-assocˡ Γ~ Γ₀~ = -, -, ε , ε , true⊢[/]≈[/]ˡ [] Γ~′ (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤) L₀≈M₀ ⊢S (~⊞-is-all-del∧⊢⇒≈ʳ (to-right ∷ Γ″~) (unusable ∷ Γ₀₁Del) L₁≈M₁)
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁) ξ- L₀⟶ `$? ξ- M₀⟶ `$? hL′ hM′
+    with Γ″ , Γ″~ , Γ~′ ← ~⊞-assocˡ Γ~ Γ₀~                                                                                                                                                                   = -, -, ε
+                                                                                                                                                                                                             , ε
+                                                                                                                                                                                                             , true⊢[/]≈[/]ˡ
+                                                                                                                                                                                                                 []
+                                                                                                                                                                                                                 Γ~′
+                                                                                                                                                                                                                 (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤)
+                                                                                                                                                                                                                 L₀≈M₀
+                                                                                                                                                                                                                 ⊢S
+                                                                                                                                                                                                                 (~⊞-is-all-del∧⊢⇒≈ʳ (to-right ∷ Γ″~) (unusable ∷ Γ₀₁Del) L₁≈M₁)
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                                    ξ- L₀⟶ `$?                                   ξ- M₀⟶ `$?                                   hL′   hM′
   with hL₀′ , _ ← halt-`$-inversion hL′
      | hM₀′ , _ ← halt-`$-inversion hM′
-    with _ , _ , L₀′⟶* , M₀′⟶* , L₀″≈M₀″ ← hexagon m′≤m (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ L₀≈M₀ L₀⟶ M₀⟶ hL₀′ hM₀′ = -, -, ξ-of-⟶* (_`$ _) ξ-_`$? L₀′⟶* , ξ-of-⟶* (_`$ _) ξ-_`$? M₀′⟶* , Γ~ ⊢ L₀″≈M₀″ ⦂ ⊢⊸ `$ L₁≈M₁
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸@(⊢T `⊸[ _ ] _) `$ L₁≈M₁) ξ- L₀⟶ `$? (ξ-! VM₀ `$ M₁⟶) hL′ hM′
-  with (_ , L₀′⟶* , VL₀″) , hL₁ ← halt-`$-inversion hL′
+    with _ , _ , L₀′⟶* , M₀′⟶* , L₀″≈M₀″ ← ≈-diamond m′≤m (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ L₀≈M₀ L₀⟶ M₀⟶ hL₀′ hM₀′                                                                                                       = -, -, ξ-of-⟶* (_`$ _) ξ-_`$? L₀′⟶*
+                                                                                                                                                                                                             , ξ-of-⟶* (_`$ _) ξ-_`$? M₀′⟶*
+                                                                                                                                                                                                             , Γ~ ⊢ L₀″≈M₀″ ⦂ ⊢⊸ `$ L₁≈M₁
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                                    ξ- L₀⟶ `$?                                   (ξ-! VM₀ `$ M₁⟶)                             hL′   hM′
+  with ⊢T `⊸[ _ ] _ ← ⊢⊸
+     | (_ , L₀′⟶* , VL₀″) , hL₁ ← halt-`$-inversion hL′
      | hM₀ , hM₁′ ← halt-`$-inversion hM′
     with L₀″≈M₀ ← ≈-sym (WeakNorm≈⟶* (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ (≈-sym L₀≈M₀) VM₀ (L₀⟶ ◅ L₀′⟶*))
       with hL₁
 ...      | _ , ε , VL₁
-        with L₁≈M₁′ ← WeakNorm≈⟶ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ VL₁ M₁⟶ = -, -, ξ-of-⟶* (_`$ _) ξ-_`$? L₀′⟶* , ε , Γ~ ⊢ L₀″≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁′
+        with L₁≈M₁′ ← WeakNorm≈⟶ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ VL₁ M₁⟶                                                                                                                                          = -, -, ξ-of-⟶* (_`$ _) ξ-_`$? L₀′⟶*
+                                                                                                                                                                                                             , ε
+                                                                                                                                                                                                             , Γ~ ⊢ L₀″≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁′
 ...      | _ , L₁⟶ ◅ L₁′⟶* , VL₁″
-        with _ , _ , L₁′⟶*′ , M₁′⟶* , L₁″≈M₁″ ← hexagon m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶ M₁⟶ (-, L₁′⟶* , VL₁″) hM₁′ = -, -, ξ-of-⟶* (_`$ _) ξ-_`$? L₀′⟶* ◅◅ ξ-of-⟶* (_ `$_) ξ-! VL₀″ `$_ (L₁⟶ ◅ L₁′⟶*′) , ξ-of-⟶* (_ `$_) ξ-! VM₀ `$_ M₁′⟶* , Γ~ ⊢ L₀″≈M₀ ⦂ ⊢⊸ `$ L₁″≈M₁″
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢ `λ⦂-∘ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁) ξ- () `$? (β-`⊸ VM₁) hL′ hM′
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸@(⊢T `⊸[ _ ] _) `$ L₁≈M₁) (ξ-! VL₀ `$ L₁⟶) ξ- M₀⟶ `$? hL′ hM′
-  with hL₀ , hL₁′ ← halt-`$-inversion hL′
+        with _ , _ , L₁′⟶*′ , M₁′⟶* , L₁″≈M₁″ ← ≈-diamond m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶ M₁⟶ (-, L₁′⟶* , VL₁″) hM₁′                                                                                     = -, -, ξ-of-⟶* (_`$ _) ξ-_`$? L₀′⟶*
+                                                                                                                                                                                                                 ◅◅ ξ-of-⟶* (_ `$_) ξ-! VL₀″ `$_ (L₁⟶ ◅ L₁′⟶*′)
+                                                                                                                                                                                                             , ξ-of-⟶* (_ `$_) ξ-! VM₀ `$_ M₁′⟶*
+                                                                                                                                                                                                             , Γ~ ⊢ L₀″≈M₀ ⦂ ⊢⊸ `$ L₁″≈M₁″
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ `λ⦂-∘ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                              ξ- () `$?                                    (β-`⊸ VM₁)                                   hL′   hM′
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                                    (ξ-! VL₀ `$ L₁⟶)                             ξ- M₀⟶ `$?                                   hL′   hM′
+  with ⊢T `⊸[ _ ] _ ← ⊢⊸
+     | hL₀ , hL₁′ ← halt-`$-inversion hL′
      | (_ , M₀′⟶* , VM₀″) , hM₁ ← halt-`$-inversion hM′
     with L₀≈M₀″ ← WeakNorm≈⟶* (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ L₀≈M₀ VL₀ (M₀⟶ ◅ M₀′⟶*)
       with hM₁
 ...      | _ , ε , VM₁
-        with L₁′≈M₁ ← ≈-sym (WeakNorm≈⟶ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T (≈-sym L₁≈M₁) VM₁ L₁⟶) = -, -, ε , ξ-of-⟶* (_`$ _) ξ-_`$? M₀′⟶* , Γ~ ⊢ L₀≈M₀″ ⦂ ⊢⊸ `$ L₁′≈M₁
+        with L₁′≈M₁ ← ≈-sym (WeakNorm≈⟶ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T (≈-sym L₁≈M₁) VM₁ L₁⟶)                                                                                                                          = -, -, ε
+                                                                                                                                                                                                             , ξ-of-⟶* (_`$ _) ξ-_`$? M₀′⟶*
+                                                                                                                                                                                                             , Γ~ ⊢ L₀≈M₀″ ⦂ ⊢⊸ `$ L₁′≈M₁
 ...      | _ , M₁⟶ ◅ M₁′⟶* , VM₁″
-        with _ , _ , L₁′⟶* , M₁′⟶*′ , L₁″≈M₁″ ← hexagon m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶ M₁⟶ hL₁′ (-, M₁′⟶* , VM₁″) = -, -, ξ-of-⟶* (_ `$_) ξ-! VL₀ `$_ L₁′⟶* , ξ-of-⟶* (_`$ _) ξ-_`$? M₀′⟶* ◅◅ ξ-of-⟶* (_ `$_) ξ-! VM₀″ `$_ (M₁⟶ ◅ M₁′⟶*′) , Γ~ ⊢ L₀≈M₀″ ⦂ ⊢⊸ `$ L₁″≈M₁″
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸@(⊢T `⊸[ _ ] _) `$ L₁≈M₁) (ξ-! VL₀ `$ L₁⟶) (ξ-! VM₀ `$ M₁⟶) hL′ hM′
-  with _ , hL₁′ ← halt-`$-inversion hL′
+        with _ , _ , L₁′⟶* , M₁′⟶*′ , L₁″≈M₁″ ← ≈-diamond m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶ M₁⟶ hL₁′ (-, M₁′⟶* , VM₁″)                                                                                     = -, -, ξ-of-⟶* (_ `$_) ξ-! VL₀ `$_ L₁′⟶*
+                                                                                                                                                                                                             , ξ-of-⟶* (_`$ _) ξ-_`$? M₀′⟶*
+                                                                                                                                                                                                                 ◅◅ ξ-of-⟶* (_ `$_) ξ-! VM₀″ `$_ (M₁⟶ ◅ M₁′⟶*′)
+                                                                                                                                                                                                             , Γ~ ⊢ L₀≈M₀″ ⦂ ⊢⊸ `$ L₁″≈M₁″
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                                    (ξ-! VL₀ `$ L₁⟶)                             (ξ-! VM₀ `$ M₁⟶)                             hL′   hM′
+  with ⊢T `⊸[ _ ] _ ← ⊢⊸
+     | _ , hL₁′ ← halt-`$-inversion hL′
      | _ , hM₁′ ← halt-`$-inversion hM′
-    with _ , _ , L₁′⟶* , M₁′⟶* , L₁″≈M₁″ ← hexagon m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶ M₁⟶ hL₁′ hM₁′ = -, -, ξ-of-⟶* (_ `$_) ξ-! VL₀ `$_ L₁′⟶* , ξ-of-⟶* (_ `$_) ξ-! VM₀ `$_ M₁′⟶* , Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁″≈M₁″
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢ `λ⦂-∘ L₀≈M₀ ⦂ ⊢⊸@(⊢T `⊸[ _ ] _) `$ L₁≈M₁) (ξ-! VL₀ `$ L₁⟶) (β-`⊸ VM₁) hL′ hM′
-  with hL₀ , (_ , L₁′⟶* , VL₁″) ← halt-`$-inversion hL′ = -, -, ξ-of-⟶* (_ `$_) ξ-! VL₀ `$_ L₁′⟶* ◅◅ β-`⊸ VL₁″ ◅ ε , ε , true⊢[/]≈[/]ʳ [] Γ~ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) (≈-sym (WeakNorm≈⟶* (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T (≈-sym L₁≈M₁) VM₁ (L₁⟶ ◅ L₁′⟶*))) ⊢S L₀≈M₀
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢ `λ⦂-∘ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁) (β-`⊸ VL₁) ξ- () `$? hL′ hM′
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢ `λ⦂-∘ L₀≈M₀ ⦂ ⊢⊸@(⊢T `⊸[ _ ] _) `$ L₁≈M₁) (β-`⊸ VL₁) (ξ-! VM₀ `$ M₁⟶) hL′ hM′
-  with hM₀ , (_ , M₁′⟶* , VM₁″) ← halt-`$-inversion hM′ = -, -, ε , ξ-of-⟶* (_ `$_) ξ-! VM₀ `$_ M₁′⟶* ◅◅ β-`⊸ VM₁″ ◅ ε , true⊢[/]≈[/]ʳ [] Γ~ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) (WeakNorm≈⟶* (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ VL₁ (M₁⟶ ◅ M₁′⟶*)) ⊢S L₀≈M₀
-hexagon m′≤m ⊢Γ ⊢S (Γ~ ⊢ `λ⦂-∘ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁) (β-`⊸ VL₁) (β-`⊸ VM₁) hL′ hM′ = -, -, ε , ε , true⊢[/]≈[/]ʳ [] Γ~ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) L₁≈M₁ ⊢S L₀≈M₀
-hexagon m′≤m ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≤ m′≤m₀ ⇒-] L≈M)                   (ξ-`lift[-⇒-] L⟶[≤]) (ξ-`lift[-⇒-] M⟶[≤]) hlL′ hlM′
+    with _ , _ , L₁′⟶* , M₁′⟶* , L₁″≈M₁″ ← ≈-diamond m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶ M₁⟶ hL₁′ hM₁′                                                                                                       = -, -, ξ-of-⟶* (_ `$_) ξ-! VL₀ `$_ L₁′⟶*
+                                                                                                                                                                                                             , ξ-of-⟶* (_ `$_) ξ-! VM₀ `$_ M₁′⟶*
+                                                                                                                                                                                                             , Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁″≈M₁″
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ `λ⦂-∘ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                              (ξ-! VL₀ `$ L₁⟶)                             (β-`⊸ VM₁)                                   hL′   hM′
+  with ⊢T `⊸[ _ ] _ ← ⊢⊸
+     | hL₀ , (_ , L₁′⟶* , VL₁″) ← halt-`$-inversion hL′                                                                                                                                                      = -, -, ξ-of-⟶* (_ `$_) ξ-! VL₀ `$_ L₁′⟶*
+                                                                                                                                                                                                                 ◅◅ β-`⊸ VL₁″ ◅ ε
+                                                                                                                                                                                                             , ε
+                                                                                                                                                                                                             , true⊢[/]≈[/]ʳ
+                                                                                                                                                                                                                 []
+                                                                                                                                                                                                                 Γ~
+                                                                                                                                                                                                                 (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~)
+                                                                                                                                                                                                                 (≈-sym (WeakNorm≈⟶* (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T (≈-sym L₁≈M₁) VM₁ (L₁⟶ ◅ L₁′⟶*)))
+                                                                                                                                                                                                                 ⊢S
+                                                                                                                                                                                                                 L₀≈M₀
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ `λ⦂-∘ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                              (β-`⊸ VL₁)                                   ξ- () `$?                                    hL′   hM′
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ `λ⦂-∘ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                              (β-`⊸ VL₁)                                   (ξ-! VM₀ `$ M₁⟶)                             hL′   hM′
+  with ⊢T `⊸[ _ ] _ ← ⊢⊸
+     | hM₀ , (_ , M₁′⟶* , VM₁″) ← halt-`$-inversion hM′                                                                                                                                                      = -, -, ε
+                                                                                                                                                                                                             , ξ-of-⟶* (_ `$_) ξ-! VM₀ `$_ M₁′⟶*
+                                                                                                                                                                                                                 ◅◅ β-`⊸ VM₁″ ◅ ε
+                                                                                                                                                                                                             , true⊢[/]≈[/]ʳ
+                                                                                                                                                                                                                 []
+                                                                                                                                                                                                                 Γ~
+                                                                                                                                                                                                                 (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~)
+                                                                                                                                                                                                                 (WeakNorm≈⟶* (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ VL₁ (M₁⟶ ◅ M₁′⟶*))
+                                                                                                                                                                                                                 ⊢S
+                                                                                                                                                                                                                 L₀≈M₀
+≈-diamond m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ `λ⦂-∘ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                              (β-`⊸ VL₁)                                   (β-`⊸ VM₁)                                   hL′   hM′   = -, -, ε
+                                                                                                                                                                                                             , ε
+                                                                                                                                                                                                             , true⊢[/]≈[/]ʳ
+                                                                                                                                                                                                                 []
+                                                                                                                                                                                                                 Γ~
+                                                                                                                                                                                                                 (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~)
+                                                                                                                                                                                                                 L₁≈M₁
+                                                                                                                                                                                                                 ⊢S
+                                                                                                                                                                                                                 L₀≈M₀
+≈-diamond m′≤m ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≤ m′≤m₀ ⇒-] L≈M)                                       (ξ-`lift[-⇒-] L⟶[≤])                         (ξ-`lift[-⇒-] M⟶[≤])                         hlL′  hlM′
   with h[≤]L′ ← halt-`lift-inversion hlL′
      | h[≤]M′ ← halt-`lift-inversion hlM′
-    with _ , _ , L′⟶[≤]* , M′⟶[≤]* , L″≈M″ ← hexagon[≤] m′≤m₀ (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S L≈M L⟶[≤] M⟶[≤] h[≤]L′ h[≤]M′ = -, -, ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] L′⟶[≤]* , ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] M′⟶[≤]* , `lift[≤ m′≤m₀ ⇒-] L″≈M″
-hexagon m′≤m ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≰ m′≰m₀ ⇒-] ⊢L ⊢M)                 (ξ-`lift[-⇒-] L⟶[≤]) (ξ-`lift[-⇒-] M⟶[≤]) hlL′ hlM′ = -, -, ε , ε , `lift[≰ m′≰m₀ ⇒-] (preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S ⊢L L⟶[≤]) (preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S ⊢M M⟶[≤])
+    with _ , _ , L′⟶[≤]* , M′⟶[≤]* , L″≈M″ ← ≈-diamond[≤] m′≤m₀ (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S L≈M L⟶[≤] M⟶[≤] h[≤]L′ h[≤]M′                                                                                            = -, -, ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] L′⟶[≤]*
+                                                                                                                                                                                                             , ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] M′⟶[≤]*
+                                                                                                                                                                                                             , `lift[≤ m′≤m₀ ⇒-] L″≈M″
+≈-diamond m′≤m ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≰ m′≰m₀ ⇒-] ⊢L ⊢M)                                     (ξ-`lift[-⇒-] L⟶[≤])                         (ξ-`lift[-⇒-] M⟶[≤])                         hlL′  hlM′  = -, -, ε
+                                                                                                                                                                                                             , ε
+                                                                                                                                                                                                             , `lift[≰ m′≰m₀ ⇒-]
+                                                                                                                                                                                                                 (preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S ⊢L L⟶[≤])
+                                                                                                                                                                                                                 (preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S ⊢M M⟶[≤])
 
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑@(`↑[-⇒ m<m₀ ][ _ ] _)) (ξ-`unlift[≰ m″≰m₀ ⇒-] L⟶[≤]) (ξ-`unlift[≰ _ ⇒-] M⟶[≤]) h[≤]uL′ h[≤]uM′
-  with m′≤m₀ ← ≤ₘ-trans m′≤m (<ₘ⇒≤ₘ m<m₀)
-     | h[≤]L′ ← halt[≤]-`unlift-inversion-≰ m″≰m₀ h[≤]uL′
-     | h[≤]M′ ← halt[≤]-`unlift-inversion-≰ m″≰m₀ h[≤]uM′
-    with _ , _ , L′⟶[≤]* , M′⟶[≤]* , L″≈M″ ← hexagon[≤] m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ L≈M L⟶[≤] M⟶[≤] h[≤]L′ h[≤]M′ = -, -, ξ-of-⟶[ _ ≤]* `unlift[ _ ⇒ _ ] ξ-`unlift[≰ m″≰m₀ ⇒-] L′⟶[≤]* , ξ-of-⟶[ _ ≤]* `unlift[ _ ⇒ _ ] ξ-`unlift[≰ m″≰m₀ ⇒-] M′⟶[≤]* , Γ∤ ⊢`unlift[-⇒-] L″≈M″ ⦂ ⊢↑
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑) (ξ-`unlift[≰ m″≰m₀ ⇒-] L⟶[≤]) (ξ-`unlift[≤ m″≤m₀ ⇒-] M⟶) h[≤]uL′ h[≤]uM′ with () ← m″≰m₀ m″≤m₀
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑) (ξ-`unlift[≰ m″≰m₀ ⇒-] L⟶[≤]) (β-`↑ m″≤m₀ WM) h[≤]ulL′ h[≤]M′ with () ← m″≰m₀ m″≤m₀
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑) (ξ-`unlift[≤ m″≤m₀ ⇒-] L⟶) (ξ-`unlift[≰ m″≰m₀ ⇒-] M⟶[≤]) h[≤]uL′ h[≤]uM′ with () ← m″≰m₀ m″≤m₀
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑@(`↑[-⇒ m<m₀ ][ _ ] _)) (ξ-`unlift[≤ m″≤m₀ ⇒-] L⟶) (ξ-`unlift[≤ _ ⇒-] M⟶) h[≤]uL′ h[≤]uM′
-  with m′≤m₀ ← ≤ₘ-trans m′≤m (<ₘ⇒≤ₘ m<m₀)
-     | hL′ ← halt[≤]-`unlift-inversion-≤ m″≤m₀ h[≤]uL′
-     | hM′ ← halt[≤]-`unlift-inversion-≤ m″≤m₀ h[≤]uM′
-    with _ , _ , L′⟶* , M′⟶* , L″≈M″ ← hexagon m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ L≈M L⟶ M⟶ hL′ hM′ = -, -, ξ-of-↝*-⟶[ _ ≤]* _⟶_ `unlift[ _ ⇒ _ ] ξ-`unlift[≤ m″≤m₀ ⇒-] L′⟶* , ξ-of-↝*-⟶[ _ ≤]* _⟶_ `unlift[ _ ⇒ _ ] ξ-`unlift[≤ m″≤m₀ ⇒-] M′⟶* , Γ∤ ⊢`unlift[-⇒-] L″≈M″ ⦂ ⊢↑
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑@(`↑[-⇒ m<m₀ ][ _ ] _)) (ξ-`unlift[≤ m″≤m₀ ⇒-] (ξ-`lift[-⇒-] L⟶[≤])) (β-`↑ _ WM) h[≤]ulL′ h[≤]M′
-  with _ , L′⟶[≤]* , WL″ ← halt-`lift-inversion (halt[≤]-`unlift-inversion-≤ m″≤m₀ h[≤]ulL′) = -, -, ξ-of-↝*-⟶[ _ ≤]* _⟶_ `unlift[ _ ⇒ _ ] ξ-`unlift[≤ m″≤m₀ ⇒-] (ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] L′⟶[≤]*) ◅◅ β-`↑ m″≤m₀ WL″ ◅ ε , ε , ∤⁻¹-preserves-≈ [] (≈-sym (DeferredTerm≈⟶[≤]* (⊢∧<ₘ⇒⊢ (⊢∧∤⇒⊢ ⊢Γ Γ∤) m<m₀) ⊢S (≈-sym L≈M) WM (L⟶[≤] ◅ L′⟶[≤]*))) Γ∤
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑) (β-`↑ m″≤m₀ WL) (ξ-`unlift[≰ m″≰m₀ ⇒-] M⟶[≤]) h[≤]L′ h[≤]ulM′ with () ← m″≰m₀ m″≤m₀
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑@(`↑[-⇒ m<m₀ ][ _ ] _)) (β-`↑ m″≤m₀ WL) (ξ-`unlift[≤ _ ⇒-] (ξ-`lift[-⇒-] M⟶[≤])) h[≤]L′ h[≤]ulM′
-  with _ , M′⟶[≤]* , WM″ ← halt-`lift-inversion (halt[≤]-`unlift-inversion-≤ m″≤m₀ h[≤]ulM′) = -, -, ε , ξ-of-↝*-⟶[ _ ≤]* _⟶_ `unlift[ _ ⇒ _ ] ξ-`unlift[≤ m″≤m₀ ⇒-] (ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] M′⟶[≤]*) ◅◅ β-`↑ m″≤m₀ WM″ ◅ ε , ∤⁻¹-preserves-≈ [] (DeferredTerm≈⟶[≤]* (⊢∧<ₘ⇒⊢ (⊢∧∤⇒⊢ ⊢Γ Γ∤) m<m₀) ⊢S L≈M WL (M⟶[≤] ◅ M′⟶[≤]*)) Γ∤
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑) (β-`↑ m″≤m₀ WL) (β-`↑ _ WM) h[≤]L′ h[≤]M′ = -, -, ε , ε , ∤⁻¹-preserves-≈ [] L≈M Γ∤
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`unlift[-⇒-] `lift[≰ m′≰m ⇒-] x₂ x₃ ⦂ ⊢↑) L⟶[≤] M⟶[≤] h[≤]L′ h[≤]M′ with () ← m′≰m m′≤m
-hexagon[≤] m′≤m ⊢Γ (`↓[-⇒ m<m₀ ][ _ ] ⊢S) (Γ∤ ⊢`return[-⇒-] L≈M) (ξ-`return[≰ m″≰m₀ ⇒-] L⟶[≤]) (ξ-`return[≰ _ ⇒-] M⟶[≤]) h[≤]rL′ h[≤]rM′
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑)                    (ξ-`unlift[≰ m″≰m₀ ⇒-] L⟶[≤])                (ξ-`unlift[≰ _ ⇒-] M⟶[≤])                h[≤]uL′  h[≤]uM′
+  with `↑[-⇒ m<m₀ ][ _ ] _ ← ⊢↑
+    with m′≤m₀ ← ≤ₘ-trans m′≤m (<ₘ⇒≤ₘ m<m₀)
+       | h[≤]L′ ← halt[≤]-`unlift-inversion-≰ m″≰m₀ h[≤]uL′
+       | h[≤]M′ ← halt[≤]-`unlift-inversion-≰ m″≰m₀ h[≤]uM′
+      with _ , _ , L′⟶[≤]* , M′⟶[≤]* , L″≈M″ ← ≈-diamond[≤] m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ L≈M L⟶[≤] M⟶[≤] h[≤]L′ h[≤]M′                                                                                   = -, -, ξ-of-⟶[ _ ≤]* `unlift[ _ ⇒ _ ] ξ-`unlift[≰ m″≰m₀ ⇒-] L′⟶[≤]*
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* `unlift[ _ ⇒ _ ] ξ-`unlift[≰ m″≰m₀ ⇒-] M′⟶[≤]*
+                                                                                                                                                                                                   , Γ∤ ⊢`unlift[-⇒-] L″≈M″ ⦂ ⊢↑
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑)                    (ξ-`unlift[≰ m″≰m₀ ⇒-] L⟶[≤])                (ξ-`unlift[≤ m″≤m₀ ⇒-] M⟶)               h[≤]uL′  h[≤]uM′  with () ← m″≰m₀ m″≤m₀
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑)                    (ξ-`unlift[≰ m″≰m₀ ⇒-] L⟶[≤])                (β-`↑ m″≤m₀ WM)                          h[≤]ulL′ h[≤]M′   with () ← m″≰m₀ m″≤m₀
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑)                    (ξ-`unlift[≤ m″≤m₀ ⇒-] L⟶)                   (ξ-`unlift[≰ m″≰m₀ ⇒-] M⟶[≤])            h[≤]uL′  h[≤]uM′  with () ← m″≰m₀ m″≤m₀
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑)                    (ξ-`unlift[≤ m″≤m₀ ⇒-] L⟶)                   (ξ-`unlift[≤ _ ⇒-] M⟶)                   h[≤]uL′  h[≤]uM′
+  with `↑[-⇒ m<m₀ ][ _ ] _ ← ⊢↑
+    with m′≤m₀ ← ≤ₘ-trans m′≤m (<ₘ⇒≤ₘ m<m₀)
+       | hL′ ← halt[≤]-`unlift-inversion-≤ m″≤m₀ h[≤]uL′
+       | hM′ ← halt[≤]-`unlift-inversion-≤ m″≤m₀ h[≤]uM′
+      with _ , _ , L′⟶* , M′⟶* , L″≈M″ ← ≈-diamond m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ L≈M L⟶ M⟶ hL′ hM′                                                                                                        = -, -, ξ-of-↝*-⟶[ _ ≤]* _⟶_ `unlift[ _ ⇒ _ ] ξ-`unlift[≤ m″≤m₀ ⇒-] L′⟶*
+                                                                                                                                                                                                   , ξ-of-↝*-⟶[ _ ≤]* _⟶_ `unlift[ _ ⇒ _ ] ξ-`unlift[≤ m″≤m₀ ⇒-] M′⟶*
+                                                                                                                                                                                                   , Γ∤ ⊢`unlift[-⇒-] L″≈M″ ⦂ ⊢↑
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑)      (ξ-`unlift[≤ m″≤m₀ ⇒-] (ξ-`lift[-⇒-] L⟶[≤])) (β-`↑ _ WM)                              h[≤]ulL′ h[≤]M′
+  with `↑[-⇒ m<m₀ ][ _ ] _ ← ⊢↑
+     | _ , L′⟶[≤]* , WL″ ← halt-`lift-inversion (halt[≤]-`unlift-inversion-≤ m″≤m₀ h[≤]ulL′)                                                                                                       = -, -, ξ-of-↝*-⟶[ _ ≤]* _⟶_ `unlift[ _ ⇒ _ ] ξ-`unlift[≤ m″≤m₀ ⇒-]
+                                                                                                                                                                                                       (ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] L′⟶[≤]*)
+                                                                                                                                                                                                       ◅◅ β-`↑ m″≤m₀ WL″ ◅ ε
+                                                                                                                                                                                                   , ε
+                                                                                                                                                                                                   , ∤⁻¹-preserves-≈ [] (≈-sym (DeferredTerm≈⟶[≤]* (⊢∧<ₘ⇒⊢ (⊢∧∤⇒⊢ ⊢Γ Γ∤) m<m₀) ⊢S (≈-sym L≈M) WM (L⟶[≤] ◅ L′⟶[≤]*))) Γ∤
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] L≈M ⦂ ⊢↑)                    (β-`↑ m″≤m₀ WL)                              (ξ-`unlift[≰ m″≰m₀ ⇒-] M⟶[≤])            h[≤]L′   h[≤]ulM′ with () ← m″≰m₀ m″≤m₀
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑)      (β-`↑ m″≤m₀ WL)                              (ξ-`unlift[≤ _ ⇒-] (ξ-`lift[-⇒-] M⟶[≤])) h[≤]L′   h[≤]ulM′
+  with `↑[-⇒ m<m₀ ][ _ ] _ ← ⊢↑
+     | _ , M′⟶[≤]* , WM″ ← halt-`lift-inversion (halt[≤]-`unlift-inversion-≤ m″≤m₀ h[≤]ulM′)                                                                                                       = -, -, ε
+                                                                                                                                                                                                   , ξ-of-↝*-⟶[ _ ≤]* _⟶_ `unlift[ _ ⇒ _ ] ξ-`unlift[≤ m″≤m₀ ⇒-]
+                                                                                                                                                                                                       (ξ-of-↝*-⟶* _⟶[ _ ≤]_ `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] M′⟶[≤]*)
+                                                                                                                                                                                                       ◅◅ β-`↑ m″≤m₀ WM″ ◅ ε
+                                                                                                                                                                                                   , ∤⁻¹-preserves-≈ [] (DeferredTerm≈⟶[≤]* (⊢∧<ₘ⇒⊢ (⊢∧∤⇒⊢ ⊢Γ Γ∤) m<m₀) ⊢S L≈M WL (M⟶[≤] ◅ M′⟶[≤]*)) Γ∤
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≤ _ ⇒-] L≈M ⦂ ⊢↑)      (β-`↑ m″≤m₀ WL)                              (β-`↑ _ WM)                              h[≤]L′   h[≤]M′   = -, -, ε , ε , ∤⁻¹-preserves-≈ [] L≈M Γ∤
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[≰ m′≰m ⇒-] ⊢L ⊢M ⦂ ⊢↑) L⟶[≤]                                        M⟶[≤]                                    h[≤]L′   h[≤]M′   with () ← m′≰m m′≤m
+≈-diamond[≤] m′≤m ⊢Γ (`↓[-⇒ m<m₀ ][ _ ] ⊢S) (Γ∤ ⊢`return[-⇒-] L≈M)                         (ξ-`return[≰ m″≰m₀ ⇒-] L⟶[≤])                (ξ-`return[≰ _ ⇒-] M⟶[≤])                h[≤]rL′  h[≤]rM′
   with m′≤m₀ ← ≤ₘ-trans m′≤m (<ₘ⇒≤ₘ m<m₀)
      | h[≤]L′ ← halt[≤]-`return-inversion-≰ m″≰m₀ h[≤]rL′
      | h[≤]M′ ← halt[≤]-`return-inversion-≰ m″≰m₀ h[≤]rM′
-    with _ , _ , L′⟶[≤]* , M′⟶[≤]* , L″≈M″ ← hexagon[≤] m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S L≈M L⟶[≤] M⟶[≤] h[≤]L′ h[≤]M′ = -, -, ξ-of-⟶[ _ ≤]* `return[ _ ⇒ _ ] ξ-`return[≰ m″≰m₀ ⇒-] L′⟶[≤]* , ξ-of-⟶[ _ ≤]* `return[ _ ⇒ _ ] ξ-`return[≰ m″≰m₀ ⇒-] M′⟶[≤]* , Γ∤ ⊢`return[-⇒-] L″≈M″
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`return[-⇒-] L≈M) (ξ-`return[≰ m″≰m₀ ⇒-] L⟶[≤]) (ξ-`return[≤ m″≤m₀ ⇒-] M⟶) h[≤]rL′ h[≤]rM′ with () ← m″≰m₀ m″≤m₀
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ∤ ⊢`return[-⇒-] L≈M) (ξ-`return[≤ m″≤m₀ ⇒-] L⟶) (ξ-`return[≰ m″≰m₀ ⇒-] M⟶[≤]) h[≤]rL′ h[≤]rM′ with () ← m″≰m₀ m″≤m₀
-hexagon[≤] m′≤m ⊢Γ (`↓[-⇒ m<m₀ ][ _ ] ⊢S) (Γ∤ ⊢`return[-⇒-] L≈M) (ξ-`return[≤ m″≤m₀ ⇒-] L⟶) (ξ-`return[≤ _ ⇒-] M⟶) h[≤]rL′ h[≤]rM′
+    with _ , _ , L′⟶[≤]* , M′⟶[≤]* , L″≈M″ ← ≈-diamond[≤] m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S L≈M L⟶[≤] M⟶[≤] h[≤]L′ h[≤]M′                                                                                     = -, -, ξ-of-⟶[ _ ≤]* `return[ _ ⇒ _ ] ξ-`return[≰ m″≰m₀ ⇒-] L′⟶[≤]*
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* `return[ _ ⇒ _ ] ξ-`return[≰ m″≰m₀ ⇒-] M′⟶[≤]*
+                                                                                                                                                                                                   , Γ∤ ⊢`return[-⇒-] L″≈M″
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`return[-⇒-] L≈M)                         (ξ-`return[≰ m″≰m₀ ⇒-] L⟶[≤])                (ξ-`return[≤ m″≤m₀ ⇒-] M⟶)               h[≤]rL′  h[≤]rM′  with () ← m″≰m₀ m″≤m₀
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ∤ ⊢`return[-⇒-] L≈M)                         (ξ-`return[≤ m″≤m₀ ⇒-] L⟶)                   (ξ-`return[≰ m″≰m₀ ⇒-] M⟶[≤])            h[≤]rL′  h[≤]rM′  with () ← m″≰m₀ m″≤m₀
+≈-diamond[≤] m′≤m ⊢Γ (`↓[-⇒ m<m₀ ][ _ ] ⊢S) (Γ∤ ⊢`return[-⇒-] L≈M)                         (ξ-`return[≤ m″≤m₀ ⇒-] L⟶)                   (ξ-`return[≤ _ ⇒-] M⟶)                   h[≤]rL′  h[≤]rM′
   with m′≤m₀ ← ≤ₘ-trans m′≤m (<ₘ⇒≤ₘ m<m₀)
      | hL′ ← halt[≤]-`return-inversion-≤ m″≤m₀ h[≤]rL′
      | hM′ ← halt[≤]-`return-inversion-≤ m″≤m₀ h[≤]rM′
-    with _ , _ , L′⟶* , M′⟶* , L″≈M″ ← hexagon m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S L≈M L⟶ M⟶ hL′ hM′ = -, -, ξ-of-↝*-⟶[ _ ≤]* _⟶_ `return[ _ ⇒ _ ] ξ-`return[≤ m″≤m₀ ⇒-] L′⟶* , ξ-of-↝*-⟶[ _ ≤]* _⟶_ `return[ _ ⇒ _ ] ξ-`return[≤ m″≤m₀ ⇒-] M′⟶* , Γ∤ ⊢`return[-⇒-] L″≈M″
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁) ξ-`let-return[-⇒-] L₀⟶[≤] `in? ξ-`let-return[-⇒-] M₀⟶[≤] `in? h[≤]L′ h[≤]M′
+    with _ , _ , L′⟶* , M′⟶* , L″≈M″ ← ≈-diamond m′≤m₀ (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S L≈M L⟶ M⟶ hL′ hM′                                                                                                          = -, -, ξ-of-↝*-⟶[ _ ≤]* _⟶_ `return[ _ ⇒ _ ] ξ-`return[≤ m″≤m₀ ⇒-] L′⟶*
+                                                                                                                                                                                                   , ξ-of-↝*-⟶[ _ ≤]* _⟶_ `return[ _ ⇒ _ ] ξ-`return[≤ m″≤m₀ ⇒-] M′⟶*
+                                                                                                                                                                                                   , Γ∤ ⊢`return[-⇒-] L″≈M″
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁)    ξ-`let-return[-⇒-] L₀⟶[≤] `in?               ξ-`let-return[-⇒-] M₀⟶[≤] `in?           h[≤]L′   h[≤]M′
   with h[≤]L₀′ , _ ← halt[≤]-`let-return-`in-inversion h[≤]L′
      | h[≤]M₀′ , _ ← halt[≤]-`let-return-`in-inversion h[≤]M′
-    with _ , _ , L₀′⟶[≤]* , M₀′⟶[≤]* , L₀″≈M₀″ ← hexagon[≤] m′≤m (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢↓ L₀≈M₀ L₀⟶[≤] M₀⟶[≤] h[≤]L₀′ h[≤]M₀′ = -, -, ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? L₀′⟶[≤]* , ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? M₀′⟶[≤]* , Γ~ ⊢`let-return[-⇒-] L₀″≈M₀″ ⦂ ⊢↓ `in L₁≈M₁
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓@(`↓[-⇒ m<m₀ ][ _ ] ⊢T) `in L₁≈M₁) ξ-`let-return[-⇒-] L₀⟶[≤] `in? (ξ-`let-return[-⇒-]! WM₀ `in M₁⟶[≤]) h[≤]L′ h[≤]M′
-  with (_ , L₀′⟶[≤]* , WL₀″) , h[≤]L₁ ← halt[≤]-`let-return-`in-inversion h[≤]L′
+    with _ , _ , L₀′⟶[≤]* , M₀′⟶[≤]* , L₀″≈M₀″ ← ≈-diamond[≤] m′≤m (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢↓ L₀≈M₀ L₀⟶[≤] M₀⟶[≤] h[≤]L₀′ h[≤]M₀′                                                                        = -, -, ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? L₀′⟶[≤]*
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? M₀′⟶[≤]*
+                                                                                                                                                                                                   , Γ~ ⊢`let-return[-⇒-] L₀″≈M₀″ ⦂ ⊢↓ `in L₁≈M₁
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁)    ξ-`let-return[-⇒-] L₀⟶[≤] `in?               (ξ-`let-return[-⇒-]! WM₀ `in M₁⟶[≤])     h[≤]L′   h[≤]M′
+  with `↓[-⇒ m<m₀ ][ _ ] ⊢T ← ⊢↓
+     | (_ , L₀′⟶[≤]* , WL₀″) , h[≤]L₁ ← halt[≤]-`let-return-`in-inversion h[≤]L′
      | h[≤]M₀ , h[≤]M₁′ ← halt[≤]-`let-return-`in-inversion h[≤]M′
     with L₀″≈M₀ ← ≈-sym (DeferredTerm≈⟶[≤]* (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢↓ (≈-sym L₀≈M₀) WM₀ (L₀⟶[≤] ◅ L₀′⟶[≤]*))
       with h[≤]L₁
 ...      | _ , ε , WL₁
-        with L₁≈M₁′ ← DeferredTerm≈⟶[≤] ((⊢T , valid (<ₘ⇒≤ₘ m<m₀)) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S L₁≈M₁ WL₁ M₁⟶[≤] = -, -, ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? L₀′⟶[≤]* , ε , Γ~ ⊢`let-return[-⇒-] L₀″≈M₀ ⦂ ⊢↓ `in L₁≈M₁′
+        with L₁≈M₁′ ← DeferredTerm≈⟶[≤] ((⊢T , valid (<ₘ⇒≤ₘ m<m₀)) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S L₁≈M₁ WL₁ M₁⟶[≤]                                                                                          = -, -, ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? L₀′⟶[≤]*
+                                                                                                                                                                                                   , ε
+                                                                                                                                                                                                   , Γ~ ⊢`let-return[-⇒-] L₀″≈M₀ ⦂ ⊢↓ `in L₁≈M₁′
 ...      | _ , L₁⟶[≤] ◅ L₁′⟶[≤]* , WL₁″
-        with _ , _ , L₁′⟶[≤]*′ , M₁′⟶[≤]* , L₁″≈M₁″ ← hexagon[≤] m′≤m ((⊢T , valid (<ₘ⇒≤ₘ m<m₀)) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S L₁≈M₁ L₁⟶[≤] M₁⟶[≤] (-, L₁′⟶[≤]* , WL₁″) h[≤]M₁′ = -, -, ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? L₀′⟶[≤]* ◅◅ ξ-of-⟶[ _ ≤]* `let-return[ _ ⇒ _ ] _ `in_ ξ-`let-return[-⇒-]! WL₀″ `in_ (L₁⟶[≤] ◅ L₁′⟶[≤]*′) , ξ-of-⟶[ _ ≤]* `let-return[ _ ⇒ _ ] _ `in_ ξ-`let-return[-⇒-]! WM₀ `in_ M₁′⟶[≤]* , Γ~ ⊢`let-return[-⇒-] L₀″≈M₀ ⦂ ⊢↓ `in L₁″≈M₁″
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓@(`↓[-⇒ m<m₀ ][ _ ] ⊢T) `in L₁≈M₁) (ξ-`let-return[-⇒-]! WL₀ `in L₁⟶[≤]) ξ-`let-return[-⇒-] M₀⟶[≤] `in? h[≤]L′ h[≤]M′
-  with h[≤]L₀ , h[≤]L₁′ ← halt[≤]-`let-return-`in-inversion h[≤]L′
+        with _ , _ , L₁′⟶[≤]*′ , M₁′⟶[≤]* , L₁″≈M₁″ ← ≈-diamond[≤] m′≤m ((⊢T , valid (<ₘ⇒≤ₘ m<m₀)) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S L₁≈M₁ L₁⟶[≤] M₁⟶[≤] (-, L₁′⟶[≤]* , WL₁″) h[≤]M₁′                          = -, -, ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? L₀′⟶[≤]*
+                                                                                                                                                                                                       ◅◅ ξ-of-⟶[ _ ≤]* `let-return[ _ ⇒ _ ] _ `in_ ξ-`let-return[-⇒-]! WL₀″ `in_ (L₁⟶[≤] ◅ L₁′⟶[≤]*′)
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* `let-return[ _ ⇒ _ ] _ `in_ ξ-`let-return[-⇒-]! WM₀ `in_ M₁′⟶[≤]*
+                                                                                                                                                                                                   , Γ~ ⊢`let-return[-⇒-] L₀″≈M₀ ⦂ ⊢↓ `in L₁″≈M₁″
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁)    (ξ-`let-return[-⇒-]! WL₀ `in L₁⟶[≤])         ξ-`let-return[-⇒-] M₀⟶[≤] `in?           h[≤]L′   h[≤]M′
+  with `↓[-⇒ m<m₀ ][ _ ] ⊢T ← ⊢↓
+     | h[≤]L₀ , h[≤]L₁′ ← halt[≤]-`let-return-`in-inversion h[≤]L′
      | (_ , M₀′⟶[≤]* , WM₀″) , h[≤]M₁ ← halt[≤]-`let-return-`in-inversion h[≤]M′
     with L₀≈M₀″ ← DeferredTerm≈⟶[≤]* (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢↓ L₀≈M₀ WL₀ (M₀⟶[≤] ◅ M₀′⟶[≤]*)
       with h[≤]M₁
 ...      | _ , ε , WM₁
-        with L₁′≈M₁ ← ≈-sym (DeferredTerm≈⟶[≤] ((⊢T , valid (<ₘ⇒≤ₘ m<m₀)) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S (≈-sym L₁≈M₁) WM₁ L₁⟶[≤]) = -, -, ε , ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? M₀′⟶[≤]* , Γ~ ⊢`let-return[-⇒-] L₀≈M₀″ ⦂ ⊢↓ `in L₁′≈M₁
+        with L₁′≈M₁ ← ≈-sym (DeferredTerm≈⟶[≤] ((⊢T , valid (<ₘ⇒≤ₘ m<m₀)) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S (≈-sym L₁≈M₁) WM₁ L₁⟶[≤])                                                                          = -, -, ε
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? M₀′⟶[≤]*
+                                                                                                                                                                                                   , Γ~ ⊢`let-return[-⇒-] L₀≈M₀″ ⦂ ⊢↓ `in L₁′≈M₁
 ...      | _ , M₁⟶[≤] ◅ M₁′⟶[≤]* , WM₁″
-        with _ , _ , L₁′⟶[≤]* , M₁′⟶[≤]*′ , L₁″≈M₁″ ← hexagon[≤] m′≤m ((⊢T , valid (<ₘ⇒≤ₘ m<m₀)) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S L₁≈M₁ L₁⟶[≤] M₁⟶[≤] h[≤]L₁′ (-, M₁′⟶[≤]* , WM₁″) = -, -, ξ-of-⟶[ _ ≤]* `let-return[ _ ⇒ _ ] _ `in_ ξ-`let-return[-⇒-]! WL₀ `in_ L₁′⟶[≤]* , ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? M₀′⟶[≤]* ◅◅ ξ-of-⟶[ _ ≤]* `let-return[ _ ⇒ _ ] _ `in_ ξ-`let-return[-⇒-]! WM₀″ `in_ (M₁⟶[≤] ◅ M₁′⟶[≤]*′) , Γ~ ⊢`let-return[-⇒-] L₀≈M₀″ ⦂ ⊢↓ `in L₁″≈M₁″
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓@(`↓[-⇒ m<m₀ ][ _ ] ⊢T) `in L₁≈M₁) (ξ-`let-return[-⇒-]! WL₀ `in L₁⟶[≤]) (ξ-`let-return[-⇒-]! WM₀ `in M₁⟶[≤]) h[≤]L′ h[≤]M′
-  with _ , h[≤]L₁′ ← halt[≤]-`let-return-`in-inversion h[≤]L′
+        with _ , _ , L₁′⟶[≤]* , M₁′⟶[≤]*′ , L₁″≈M₁″ ← ≈-diamond[≤] m′≤m ((⊢T , valid (<ₘ⇒≤ₘ m<m₀)) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S L₁≈M₁ L₁⟶[≤] M₁⟶[≤] h[≤]L₁′ (-, M₁′⟶[≤]* , WM₁″)                          = -, -, ξ-of-⟶[ _ ≤]* `let-return[ _ ⇒ _ ] _ `in_ ξ-`let-return[-⇒-]! WL₀ `in_ L₁′⟶[≤]*
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ]_`in _) ξ-`let-return[-⇒-]_`in? M₀′⟶[≤]*
+                                                                                                                                                                                                       ◅◅ ξ-of-⟶[ _ ≤]* `let-return[ _ ⇒ _ ] _ `in_ ξ-`let-return[-⇒-]! WM₀″ `in_ (M₁⟶[≤] ◅ M₁′⟶[≤]*′)
+                                                                                                                                                                                                   , Γ~ ⊢`let-return[-⇒-] L₀≈M₀″ ⦂ ⊢↓ `in L₁″≈M₁″
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁≈M₁)    (ξ-`let-return[-⇒-]! WL₀ `in L₁⟶[≤])         (ξ-`let-return[-⇒-]! WM₀ `in M₁⟶[≤])     h[≤]L′   h[≤]M′
+  with `↓[-⇒ m<m₀ ][ _ ] ⊢T ← ⊢↓
+     | _ , h[≤]L₁′ ← halt[≤]-`let-return-`in-inversion h[≤]L′
      | _ , h[≤]M₁′ ← halt[≤]-`let-return-`in-inversion h[≤]M′
-    with _ , _ , L₁′⟶[≤]* , M₁′⟶[≤]* , L₁″≈M₁″ ← hexagon[≤] m′≤m ((⊢T , valid (<ₘ⇒≤ₘ m<m₀)) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S L₁≈M₁ L₁⟶[≤] M₁⟶[≤] h[≤]L₁′ h[≤]M₁′ = -, -, ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ] _ `in_) (ξ-`let-return[-⇒-]! WL₀ `in_) L₁′⟶[≤]* , ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ] _ `in_) (ξ-`let-return[-⇒-]! WM₀ `in_) M₁′⟶[≤]* , Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁″≈M₁″
-hexagon[≤] m′≤m ⊢Γ (⊢T `⊸[ _ ] ⊢S) (`λ⦂-∘ L≈M) (ξ-`λ⦂[-]-∘ L⟶[≤]) (ξ-`λ⦂[-]-∘ M⟶[≤]) h[≤]λL′ h[≤]λM′
+    with _ , _ , L₁′⟶[≤]* , M₁′⟶[≤]* , L₁″≈M₁″ ← ≈-diamond[≤] m′≤m ((⊢T , valid (<ₘ⇒≤ₘ m<m₀)) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S L₁≈M₁ L₁⟶[≤] M₁⟶[≤] h[≤]L₁′ h[≤]M₁′                                            = -, -, ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ] _ `in_) (ξ-`let-return[-⇒-]! WL₀ `in_) L₁′⟶[≤]*
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* (`let-return[ _ ⇒ _ ] _ `in_) (ξ-`let-return[-⇒-]! WM₀ `in_) M₁′⟶[≤]*
+                                                                                                                                                                                                   , Γ~ ⊢`let-return[-⇒-] L₀≈M₀ ⦂ ⊢↓ `in L₁″≈M₁″
+≈-diamond[≤] m′≤m ⊢Γ (⊢T `⊸[ _ ] ⊢S)        (`λ⦂-∘ L≈M)                                    (ξ-`λ⦂[-]-∘ L⟶[≤])                           (ξ-`λ⦂[-]-∘ M⟶[≤])                       h[≤]λL′  h[≤]λM′
   with h[≤]L′ ← halt[≤]-`λ⦂-∘-inversion h[≤]λL′
      | h[≤]M′ ← halt[≤]-`λ⦂-∘-inversion h[≤]λM′
-    with _ , _ , L′⟶[≤]* , M′⟶[≤]* , L″≈M″ ← hexagon[≤] m′≤m ((⊢T , valid ≤ₘ-refl) ∷ ⊢Γ) ⊢S L≈M L⟶[≤] M⟶[≤] h[≤]L′ h[≤]M′ = -, -, ξ-of-⟶[ _ ≤]* `λ⦂[ _ ] _ ∘_ ξ-`λ⦂[-]-∘_ L′⟶[≤]* , ξ-of-⟶[ _ ≤]* `λ⦂[ _ ] _ ∘_ ξ-`λ⦂[-]-∘_ M′⟶[≤]* , `λ⦂-∘ L″≈M″
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁) ξ- L₀⟶[≤] `$? ξ- M₀⟶[≤] `$? h[≤]L′ h[≤]M′
+    with _ , _ , L′⟶[≤]* , M′⟶[≤]* , L″≈M″ ← ≈-diamond[≤] m′≤m ((⊢T , valid ≤ₘ-refl) ∷ ⊢Γ) ⊢S L≈M L⟶[≤] M⟶[≤] h[≤]L′ h[≤]M′                                                                        = -, -, ξ-of-⟶[ _ ≤]* `λ⦂[ _ ] _ ∘_ ξ-`λ⦂[-]-∘_ L′⟶[≤]*
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* `λ⦂[ _ ] _ ∘_ ξ-`λ⦂[-]-∘_ M′⟶[≤]*
+                                                                                                                                                                                                   , `λ⦂-∘ L″≈M″
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                     ξ- L₀⟶[≤] `$?                                ξ- M₀⟶[≤] `$?                            h[≤]L′   h[≤]M′
   with h[≤]L₀′ , _ ← halt[≤]-`$-inversion h[≤]L′
      | h[≤]M₀′ , _ ← halt[≤]-`$-inversion h[≤]M′
-    with _ , _ , L₀′⟶[≤]* , M₀′⟶[≤]* , L₀″≈M₀″ ← hexagon[≤] m′≤m (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ L₀≈M₀ L₀⟶[≤] M₀⟶[≤] h[≤]L₀′ h[≤]M₀′ = -, -, ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? L₀′⟶[≤]* , ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? M₀′⟶[≤]* , Γ~ ⊢ L₀″≈M₀″ ⦂ ⊢⊸ `$ L₁≈M₁
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸@(⊢T `⊸[ _ ] _) `$ L₁≈M₁) ξ- L₀⟶[≤] `$? (ξ-! WM₀ `$ M₁⟶[≤]) h[≤]L′ h[≤]M′
-  with (_ , L₀′⟶[≤]* , WL₀″) , h[≤]L₁ ← halt[≤]-`$-inversion h[≤]L′
+    with _ , _ , L₀′⟶[≤]* , M₀′⟶[≤]* , L₀″≈M₀″ ← ≈-diamond[≤] m′≤m (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ L₀≈M₀ L₀⟶[≤] M₀⟶[≤] h[≤]L₀′ h[≤]M₀′                                                                        = -, -, ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? L₀′⟶[≤]*
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? M₀′⟶[≤]*
+                                                                                                                                                                                                   , Γ~ ⊢ L₀″≈M₀″ ⦂ ⊢⊸ `$ L₁≈M₁
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                     ξ- L₀⟶[≤] `$?                                (ξ-! WM₀ `$ M₁⟶[≤])                      h[≤]L′   h[≤]M′
+  with ⊢T `⊸[ _ ] _ ← ⊢⊸
+     | (_ , L₀′⟶[≤]* , WL₀″) , h[≤]L₁ ← halt[≤]-`$-inversion h[≤]L′
      | h[≤]M₀ , h[≤]M₁′ ← halt[≤]-`$-inversion h[≤]M′
     with L₀″≈M₀ ← ≈-sym (DeferredTerm≈⟶[≤]* (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ (≈-sym L₀≈M₀) WM₀ (L₀⟶[≤] ◅ L₀′⟶[≤]*))
       with h[≤]L₁
 ...      | _ , ε , WL₁
-        with L₁≈M₁′ ← DeferredTerm≈⟶[≤] (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ WL₁ M₁⟶[≤] = -, -, ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? L₀′⟶[≤]* , ε , Γ~ ⊢ L₀″≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁′
+        with L₁≈M₁′ ← DeferredTerm≈⟶[≤] (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ WL₁ M₁⟶[≤]                                                                                                                      = -, -, ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? L₀′⟶[≤]*
+                                                                                                                                                                                                   , ε
+                                                                                                                                                                                                   , Γ~ ⊢ L₀″≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁′
 ...      | _ , L₁⟶[≤] ◅ L₁′⟶[≤]* , WL₁″
-        with _ , _ , L₁′⟶[≤]*′ , M₁′⟶[≤]* , L₁″≈M₁″ ← hexagon[≤] m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶[≤] M₁⟶[≤] (-, L₁′⟶[≤]* , WL₁″) h[≤]M₁′ = -, -, ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? L₀′⟶[≤]* ◅◅ ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WL₀″ `$_ (L₁⟶[≤] ◅ L₁′⟶[≤]*′) , ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WM₀ `$_ M₁′⟶[≤]* , Γ~ ⊢ L₀″≈M₀ ⦂ ⊢⊸ `$ L₁″≈M₁″
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸@(⊢T `⊸[ _ ] _) `$ L₁≈M₁) (ξ-! WL₀ `$ L₁⟶[≤]) ξ- M₀⟶[≤] `$? h[≤]L′ h[≤]M′
-  with h[≤]L₀ , h[≤]L₁′ ← halt[≤]-`$-inversion h[≤]L′
+        with _ , _ , L₁′⟶[≤]*′ , M₁′⟶[≤]* , L₁″≈M₁″ ← ≈-diamond[≤] m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶[≤] M₁⟶[≤] (-, L₁′⟶[≤]* , WL₁″) h[≤]M₁′                                                      = -, -, ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? L₀′⟶[≤]*
+                                                                                                                                                                                                       ◅◅ ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WL₀″ `$_ (L₁⟶[≤] ◅ L₁′⟶[≤]*′)
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WM₀ `$_ M₁′⟶[≤]*
+                                                                                                                                                                                                   , Γ~ ⊢ L₀″≈M₀ ⦂ ⊢⊸ `$ L₁″≈M₁″
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                     (ξ-! WL₀ `$ L₁⟶[≤])                          ξ- M₀⟶[≤] `$?                            h[≤]L′   h[≤]M′
+  with ⊢T `⊸[ _ ] _ ← ⊢⊸
+     | h[≤]L₀ , h[≤]L₁′ ← halt[≤]-`$-inversion h[≤]L′
      | (_ , M₀′⟶[≤]* , WM₀″) , h[≤]M₁ ← halt[≤]-`$-inversion h[≤]M′
     with L₀≈M₀″ ← DeferredTerm≈⟶[≤]* (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ L₀≈M₀ WL₀ (M₀⟶[≤] ◅ M₀′⟶[≤]*)
       with h[≤]M₁
 ...      | _ , ε , WM₁
-        with L₁′≈M₁ ← ≈-sym (DeferredTerm≈⟶[≤] (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T (≈-sym L₁≈M₁) WM₁ L₁⟶[≤]) = -, -, ε , ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? M₀′⟶[≤]* , Γ~ ⊢ L₀≈M₀″ ⦂ ⊢⊸ `$ L₁′≈M₁
+        with L₁′≈M₁ ← ≈-sym (DeferredTerm≈⟶[≤] (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T (≈-sym L₁≈M₁) WM₁ L₁⟶[≤])                                                                                                      = -, -, ε
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? M₀′⟶[≤]*
+                                                                                                                                                                                                   , Γ~ ⊢ L₀≈M₀″ ⦂ ⊢⊸ `$ L₁′≈M₁
 ...      | _ , M₁⟶[≤] ◅ M₁′⟶[≤]* , WM₁″
-        with _ , _ , L₁′⟶[≤]* , M₁′⟶[≤]*′ , L₁″≈M₁″ ← hexagon[≤] m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶[≤] M₁⟶[≤] h[≤]L₁′ (-, M₁′⟶[≤]* , WM₁″) = -, -, ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WL₀ `$_ L₁′⟶[≤]* , ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? M₀′⟶[≤]* ◅◅ ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WM₀″ `$_ (M₁⟶[≤] ◅ M₁′⟶[≤]*′) , Γ~ ⊢ L₀≈M₀″ ⦂ ⊢⊸ `$ L₁″≈M₁″
-hexagon[≤] m′≤m ⊢Γ ⊢S (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸@(⊢T `⊸[ _ ] _) `$ L₁≈M₁) (ξ-! WL₀ `$ L₁⟶[≤]) (ξ-! WM₀ `$ M₁⟶[≤]) h[≤]L′ h[≤]M′
-  with _ , h[≤]L₁′ ← halt[≤]-`$-inversion h[≤]L′
+        with _ , _ , L₁′⟶[≤]* , M₁′⟶[≤]*′ , L₁″≈M₁″ ← ≈-diamond[≤] m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶[≤] M₁⟶[≤] h[≤]L₁′ (-, M₁′⟶[≤]* , WM₁″)                                                      = -, -, ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WL₀ `$_ L₁′⟶[≤]*
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* (_`$ _) ξ-_`$? M₀′⟶[≤]*
+                                                                                                                                                                                                       ◅◅ ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WM₀″ `$_ (M₁⟶[≤] ◅ M₁′⟶[≤]*′)
+                                                                                                                                                                                                   , Γ~ ⊢ L₀≈M₀″ ⦂ ⊢⊸ `$ L₁″≈M₁″
+≈-diamond[≤] m′≤m ⊢Γ ⊢S                     (Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁≈M₁)                     (ξ-! WL₀ `$ L₁⟶[≤])                          (ξ-! WM₀ `$ M₁⟶[≤])                      h[≤]L′   h[≤]M′
+  with ⊢T `⊸[ _ ] _ ← ⊢⊸
+     | _ , h[≤]L₁′ ← halt[≤]-`$-inversion h[≤]L′
      | _ , h[≤]M₁′ ← halt[≤]-`$-inversion h[≤]M′
-    with _ , _ , L₁′⟶[≤]* , M₁′⟶[≤]* , L₁″≈M₁″ ← hexagon[≤] m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶[≤] M₁⟶[≤] h[≤]L₁′ h[≤]M₁′ = -, -, ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WL₀ `$_ L₁′⟶[≤]* , ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WM₀ `$_ M₁′⟶[≤]* , Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁″≈M₁″
-hexagon[≤] m′≤m ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≤ m′≤m₀ ⇒-] L≈M) (ξ-`lift[-⇒-] L⟶[≤]) (ξ-`lift[-⇒-] M⟶[≤]) h[≤]lL′ h[≤]lM′
+    with _ , _ , L₁′⟶[≤]* , M₁′⟶[≤]* , L₁″≈M₁″ ← ≈-diamond[≤] m′≤m (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T L₁≈M₁ L₁⟶[≤] M₁⟶[≤] h[≤]L₁′ h[≤]M₁′                                                                        = -, -, ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WL₀ `$_ L₁′⟶[≤]*
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* (_ `$_) ξ-! WM₀ `$_ M₁′⟶[≤]*
+                                                                                                                                                                                                   , Γ~ ⊢ L₀≈M₀ ⦂ ⊢⊸ `$ L₁″≈M₁″
+≈-diamond[≤] m′≤m ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≤ m′≤m₀ ⇒-] L≈M)                        (ξ-`lift[-⇒-] L⟶[≤])                         (ξ-`lift[-⇒-] M⟶[≤])                     h[≤]lL′  h[≤]lM′
   with h[≤]L′ ← halt[≤]-`lift-inversion h[≤]lL′
      | h[≤]M′ ← halt[≤]-`lift-inversion h[≤]lM′
-    with _ , _ , L′⟶[≤]* , M′⟶[≤]* , L″≈M″ ← hexagon[≤] m′≤m₀ (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S L≈M L⟶[≤] M⟶[≤] h[≤]L′ h[≤]M′ = -, -, ξ-of-⟶[ _ ≤]* `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] L′⟶[≤]* , ξ-of-⟶[ _ ≤]* `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] M′⟶[≤]* , `lift[≤ m′≤m₀ ⇒-] L″≈M″
-hexagon[≤] m′≤m ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≰ m′≰m₀ ⇒-] ⊢L ⊢M) (ξ-`lift[-⇒-] L⟶[≤]) (ξ-`lift[-⇒-] M⟶[≤]) h[≤]lL′ h[≤]lM′ = -, -, ε , ε , `lift[≰ m′≰m₀ ⇒-] (preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S ⊢L L⟶[≤]) (preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S ⊢M M⟶[≤])
+    with _ , _ , L′⟶[≤]* , M′⟶[≤]* , L″≈M″ ← ≈-diamond[≤] m′≤m₀ (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S L≈M L⟶[≤] M⟶[≤] h[≤]L′ h[≤]M′                                                                                  = -, -, ξ-of-⟶[ _ ≤]* `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] L′⟶[≤]*
+                                                                                                                                                                                                   , ξ-of-⟶[ _ ≤]* `lift[ _ ⇒ _ ] ξ-`lift[-⇒-] M′⟶[≤]*
+                                                                                                                                                                                                   , `lift[≤ m′≤m₀ ⇒-] L″≈M″
+≈-diamond[≤] m′≤m ⊢Γ (`↑[-⇒ m₀<m ][ _ ] ⊢S) (`lift[≰ m′≰m₀ ⇒-] ⊢L ⊢M)                      (ξ-`lift[-⇒-] L⟶[≤])                         (ξ-`lift[-⇒-] M⟶[≤])                     h[≤]lL′  h[≤]lM′  = -, -, ε
+                                                                                                                                                                                                   , ε
+                                                                                                                                                                                                   , `lift[≰ m′≰m₀ ⇒-]
+                                                                                                                                                                                                       (preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S ⊢L L⟶[≤])
+                                                                                                                                                                                                       (preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ m₀<m) ⊢S ⊢M M⟶[≤])
 
+-- Mode safety
+--
+-- Note that they are almost immediate corollary of the diamond lemmas
+--
 mode-safety-helper : m′ ≤ₘ m →
                      ⊢[ m ] Γ →
                      ⊢[ m ] S ⦂⋆ →
@@ -1105,12 +1271,30 @@ mode-safety-helper : m′ ≤ₘ m →
                      Acc ℕ._<_ (⟶*length L⟶*) →
                      ----------------------------
                      Γ ⊢[ m ] L′ ≈[≥ m′ ] M′ ⦂ S
-mode-safety-helper m′≤m ⊢Γ ⊢S L≈M ε           VL′ M⟶*         VM′ rec     = WeakNorm≈⟶* ⊢Γ ⊢S L≈M VL′ M⟶*
-mode-safety-helper m′≤m ⊢Γ ⊢S L≈M (L⟶ ◅ L′⟶*) VL″ ε           VM′ rec     = ≈-sym (WeakNorm≈⟶* ⊢Γ ⊢S (≈-sym L≈M) VM′ (L⟶ ◅ L′⟶*))
+mode-safety-helper m′≤m ⊢Γ ⊢S L≈M ε           VL′ M⟶*         VM′ rec            = WeakNorm≈⟶* ⊢Γ ⊢S L≈M VL′ M⟶*
+mode-safety-helper m′≤m ⊢Γ ⊢S L≈M (L⟶ ◅ L′⟶*) VL″ ε           VM′ rec            = ≈-sym (WeakNorm≈⟶* ⊢Γ ⊢S (≈-sym L≈M) VM′ (L⟶ ◅ L′⟶*))
 mode-safety-helper m′≤m ⊢Γ ⊢S L≈M (L⟶ ◅ L′⟶*) VL‴ (M⟶ ◅ M′⟶*) VM‴ (acc r)
-  with _ , _ , L′⟶*′ , M′⟶*′ , L″≈M″ ← hexagon m′≤m ⊢Γ ⊢S L≈M L⟶ M⟶ (-, L′⟶* , VL‴) (-, M′⟶* , VM‴)
+  with _ , _ , L′⟶*′ , M′⟶*′ , L″≈M″ ← ≈-diamond m′≤m ⊢Γ ⊢S L≈M L⟶ M⟶ (-, L′⟶* , VL‴) (-, M′⟶* , VM‴)
     with L″⟶* , L″⟶*≤L′⟶* ← ⟶*-factor L′⟶*′ L′⟶* (⟶*length≤⟶*length-halt L′⟶*′ L′⟶* VL‴)
        | M″⟶* , _ ← ⟶*-factor M′⟶*′ M′⟶* (⟶*length≤⟶*length-halt M′⟶*′ M′⟶* VM‴) = mode-safety-helper m′≤m ⊢Γ ⊢S L″≈M″ L″⟶* VL‴ M″⟶* VM‴ (r _ (s≤s L″⟶*≤L′⟶*))
+
+mode-safety[≤]-helper : m′ ≤ₘ m →
+                        ⊢[ m ] Γ →
+                        ⊢[ m ] S ⦂⋆ →
+                        Γ ⊢[ m ] L ≈[≥ m′ ] M ⦂ S →
+                        (L⟶[≤]* : L ⟶[ m″ ≤]* L′) →
+                        DeferredTerm[ m″ ≤] L′ →
+                        M ⟶[ m″ ≤]* M′ →
+                        DeferredTerm[ m″ ≤] M′ →
+                        Acc ℕ._<_ (⟶[≤]*length L⟶[≤]*) →
+                        ---------------------------------
+                        Γ ⊢[ m ] L′ ≈[≥ m′ ] M′ ⦂ S
+mode-safety[≤]-helper m′≤m ⊢Γ ⊢S L≈M ε                 WL′ M⟶[≤]*            WM′ rec                     = DeferredTerm≈⟶[≤]* ⊢Γ ⊢S L≈M WL′ M⟶[≤]*
+mode-safety[≤]-helper m′≤m ⊢Γ ⊢S L≈M (L⟶[≤] ◅ L′⟶[≤]*) WL″ ε                 WM′ rec                     = ≈-sym (DeferredTerm≈⟶[≤]* ⊢Γ ⊢S (≈-sym L≈M) WM′ (L⟶[≤] ◅ L′⟶[≤]*))
+mode-safety[≤]-helper m′≤m ⊢Γ ⊢S L≈M (L⟶[≤] ◅ L′⟶[≤]*) WL‴ (M⟶[≤] ◅ M′⟶[≤]*) WM‴ (acc r)
+  with _ , _ , L′⟶[≤]*′ , M′⟶[≤]*′ , L″≈M″ ← ≈-diamond[≤] m′≤m ⊢Γ ⊢S L≈M L⟶[≤] M⟶[≤] (-, L′⟶[≤]* , WL‴) (-, M′⟶[≤]* , WM‴)
+    with L″⟶[≤]* , L″⟶[≤]*≤L′⟶[≤]* ← ⟶[≤]*-factor L′⟶[≤]*′ L′⟶[≤]* (⟶[≤]*length≤⟶[≤]*length-halt L′⟶[≤]*′ L′⟶[≤]* WL‴)
+       | M″⟶[≤]* , _ ← ⟶[≤]*-factor M′⟶[≤]*′ M′⟶[≤]* (⟶[≤]*length≤⟶[≤]*length-halt M′⟶[≤]*′ M′⟶[≤]* WM‴) = mode-safety[≤]-helper m′≤m ⊢Γ ⊢S L″≈M″ L″⟶[≤]* WL‴ M″⟶[≤]* WM‴ (r _ (s≤s L″⟶[≤]*≤L′⟶[≤]*))
 
 mode-safety : m′ ≤ₘ m →
               ⊢[ m ] Γ →
@@ -1123,3 +1307,15 @@ mode-safety : m′ ≤ₘ m →
               ----------------------------
               Γ ⊢[ m ] L′ ≈[≥ m′ ] M′ ⦂ S
 mode-safety m′≤m ⊢Γ ⊢S L≈M L⟶* VL′ M⟶* VM′ = mode-safety-helper m′≤m ⊢Γ ⊢S L≈M L⟶* VL′ M⟶* VM′ (ℕ.<-wellFounded _)
+
+mode-safety[≤] : m′ ≤ₘ m →
+                 ⊢[ m ] Γ →
+                 ⊢[ m ] S ⦂⋆ →
+                 Γ ⊢[ m ] L ≈[≥ m′ ] M ⦂ S →
+                 (L⟶[≤]* : L ⟶[ m″ ≤]* L′) →
+                 DeferredTerm[ m″ ≤] L′ →
+                 M ⟶[ m″ ≤]* M′ →
+                 DeferredTerm[ m″ ≤] M′ →
+                 ---------------------------------
+                 Γ ⊢[ m ] L′ ≈[≥ m′ ] M′ ⦂ S
+mode-safety[≤] m′≤m ⊢Γ ⊢S L≈M L⟶[≤]* WL′ M⟶[≤]* WM′ = mode-safety[≤]-helper m′≤m ⊢Γ ⊢S L≈M L⟶[≤]* WL′ M⟶[≤]* WM′ (ℕ.<-wellFounded _)

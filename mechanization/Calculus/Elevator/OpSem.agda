@@ -20,7 +20,7 @@ open import Relation.Binary using (Rel)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Calculus.GeneralOpSem using (wkidx[_↑_]_; idx[_/_]_along_)
-open import Calculus.GeneralOpSem using (module ⟶*) public
+open import Calculus.GeneralOpSem using (module ⟶*)
 open import Calculus.Elevator.Syntax ℳ
 
 data WeakNorm : Term → Set (ℓ₁ ⊔ ℓ₂)
@@ -220,7 +220,7 @@ data _⟶[_≤]_ where
                              -----------------------------------------
                              `λ⦂[ m₀ ] S ∘ L ⟶[ m ≤] `λ⦂[ m₀ ] S ∘ L′
 
-open ⟶* _⟶_ using (_⟶*_; ε; _◅_; ξ-of-⟶*; ξ-of-↝*-⟶*) public
+open ⟶* _⟶_ using (_⟶*_; ε; _◅_; _◅◅_; ξ-of-⟶*; ξ-of-↝*-⟶*; ⟶*length) public
 
 infix   4 _⟶[_≤]*_
 
@@ -240,12 +240,11 @@ L ⟶[ m ≤]* L′ = ⟶*._⟶*_ _⟶[ m ≤]_ L L′
                  ∀ {L L′} → ⟶*.Star _↝_ L L′ → f L ⟶[ m ≤]* f L′
 ξ-of-↝*-⟶[ m ≤]* _↝_ = ⟶*.ξ-of-↝*-⟶* _⟶[ m ≤]_ _↝_
 
+⟶[≤]*length : L ⟶[ m ≤]* L′ → ℕ
+⟶[≤]*length {m = m} = ⟶*.⟶*length _⟶[ m ≤]_
+
 halt : Term → Set (ℓ₁ ⊔ ℓ₂)
 halt L = ∃ (λ L′ → L ⟶* L′ × WeakNorm L′)
 
 halt[_≤] : Mode → Term → Set (ℓ₁ ⊔ ℓ₂)
 halt[ m′ ≤] L = ∃ (λ L′ → L ⟶[ m′ ≤]* L′ × DeferredTerm[ m′ ≤] L′)
-
-⟶*length : L ⟶* L′ → ℕ
-⟶*length ε         = 0
-⟶*length (_ ◅ L⟶*) = suc (⟶*length L⟶*)

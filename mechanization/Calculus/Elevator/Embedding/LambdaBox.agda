@@ -42,8 +42,6 @@ import Calculus.LambdaBox.Typing as DP
 import Calculus.LambdaBox.Typing.Properties as DP
 open DP.Variables
 
-open ⟶* using (_◅◅_)
-
 infix   4 _~ᵀ_
 infix   4 _⍮_~ˣ_
 infix   4 _⍮_~ˣ⁻

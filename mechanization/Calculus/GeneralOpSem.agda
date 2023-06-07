@@ -2,8 +2,11 @@
 module Calculus.GeneralOpSem where
 
 open import Agda.Primitive
-open import Data.Nat as ℕ using (ℕ; suc; _+_)
+open import Data.Nat as ℕ using (ℕ; suc; _+_; s≤s)
+import Data.Nat.Properties as ℕ
+open import Data.Product using (Σ; _,_; ∃; ∃₂; _×_; -,_)
 open import Relation.Binary using (Rel)
+open import Relation.Binary.PropositionalEquality using (_≡_)
 open import Relation.Nullary using (yes; no)
 
 infixr 25 wkidx[_↑_]_
@@ -42,3 +45,18 @@ module ⟶* {ℓ ℓ′} {A : Set ℓ} (_⟶_ : Rel A ℓ′) where
             (∀ {L L′} → L ⟶ L′ → f L ⟶ f L′) →
             ∀ {L L′} → L ⟶* L′ → f L ⟶* f L′
   ξ-of-⟶* = ξ-of-↝*-⟶* _⟶_
+
+  ⟶*length : ∀ {L L′} → L ⟶* L′ → ℕ
+  ⟶*length ε         = 0
+  ⟶*length (_ ◅ L⟶*) = suc (⟶*length L⟶*)
+
+  ⟶*-factor : (⟶-det : ∀ {L L₀ L₁} → L ⟶ L₀ → L ⟶ L₁ → L₀ ≡ L₁) →
+              ∀ {L L₀ L₁} → 
+              (L⟶*₀ : L ⟶* L₀) →
+              (L⟶*₁ : L ⟶* L₁) →
+              ⟶*length L⟶*₀ ℕ.≤ ⟶*length L⟶*₁ →
+              Σ (L₀ ⟶* L₁) (λ L₀⟶* → ⟶*length L₀⟶* ℕ.≤ ⟶*length L⟶*₁)
+  ⟶*-factor ⟶-det ε            L⟶*₁          L⟶*₀≤L⟶*₁              = L⟶*₁ , ℕ.≤-refl
+  ⟶*-factor ⟶-det (L⟶ ◅ L′⟶*₀) (L⟶′ ◅ L″⟶*₁) (s≤s L⟶*₀≤L⟶*₁)
+    rewrite ⟶-det L⟶ L⟶′
+      with L₀⟶* , L₀⟶*≤L⟶*₁ ← ⟶*-factor ⟶-det L′⟶*₀ L″⟶*₁ L⟶*₀≤L⟶*₁ = L₀⟶* , ℕ.m≤n⇒m≤1+n L₀⟶*≤L⟶*₁

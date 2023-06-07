@@ -1,5 +1,5 @@
 ------------------------------------------------------------
--- Non-interference of Elevator
+-- Properties of Operational Semantics for Elevator
 ------------------------------------------------------------
 
 {-# OPTIONS --safe #-}
@@ -15,10 +15,14 @@ open import Data.Product using (Σ; _,_; ∃; ∃₂; _×_; -,_)
 open import Relation.Nullary using (¬_; yes; no)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
+open import Calculus.GeneralOpSem using (module ⟶*)
 import Calculus.Elevator.Syntax as S
 import Calculus.Elevator.OpSem as O
 open S ℳ
 open O ℳ
+
+-- Properties of single step relations
+--
 
 WeakNorm⇒¬⟶ : WeakNorm L →
               ¬ (L ⟶ L′)
@@ -101,14 +105,20 @@ DeferredTerm⇒¬⟶[≤] (WL `$ WM)                         (ξ-! _ `$ M⟶[≤
 ⟶[≤]-det (O.ξ-! WL₀ `$ M⟶[≤]₀) (O.ξ-! WL₁ `$ M⟶[≤]₁) = cong (_ `$_) (⟶[≤]-det M⟶[≤]₀ M⟶[≤]₁)
 ⟶[≤]-det (O.ξ-`λ⦂[-]-∘ L⟶[≤]₀) (O.ξ-`λ⦂[-]-∘ L⟶[≤]₁) = cong `λ⦂[ _ ] _ ∘_ (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
 
+-- Properties of multi-step relations
+--
+
 ⟶*-factor : (L⟶*₀ : L ⟶* L₀) →
             (L⟶*₁ : L ⟶* L₁) →
             ⟶*length L⟶*₀ ℕ.≤ ⟶*length L⟶*₁ →
             Σ (L₀ ⟶* L₁) (λ L₀⟶* → ⟶*length L₀⟶* ℕ.≤ ⟶*length L⟶*₁)
-⟶*-factor ε            L⟶*₁          L⟶*₀≤L⟶*₁              = L⟶*₁ , ℕ.≤-refl
-⟶*-factor (L⟶ ◅ L′⟶*₀) (L⟶′ ◅ L″⟶*₁) (s≤s L⟶*₀≤L⟶*₁)
-  rewrite ⟶-det L⟶ L⟶′
-    with L₀⟶* , L₀⟶*≤L⟶*₁ ← ⟶*-factor L′⟶*₀ L″⟶*₁ L⟶*₀≤L⟶*₁ = L₀⟶* , ℕ.m≤n⇒m≤1+n L₀⟶*≤L⟶*₁
+⟶*-factor = ⟶*.⟶*-factor _⟶_ ⟶-det
+
+⟶[≤]*-factor : (L⟶[≤]*₀ : L ⟶[ m ≤]* L₀) →
+               (L⟶[≤]*₁ : L ⟶[ m ≤]* L₁) →
+               ⟶[≤]*length L⟶[≤]*₀ ℕ.≤ ⟶[≤]*length L⟶[≤]*₁ →
+               Σ (L₀ ⟶[ m ≤]* L₁) (λ L₀⟶[≤]* → ⟶[≤]*length L₀⟶[≤]* ℕ.≤ ⟶[≤]*length L⟶[≤]*₁)
+⟶[≤]*-factor {m = m} = ⟶*.⟶*-factor _⟶[ m ≤]_ ⟶[≤]-det
 
 ⟶*length≤⟶*length-halt : (L⟶*₀ : L ⟶* L₀) →
                          (L⟶*₁ : L ⟶* L₁) →
@@ -118,6 +128,15 @@ DeferredTerm⇒¬⟶[≤] (WL `$ WM)                         (ξ-! _ `$ M⟶[≤
 ⟶*length≤⟶*length-halt (L⟶ ◅ L′⟶*₀) ε             VL  with () ← WeakNorm⇒¬⟶ VL L⟶
 ⟶*length≤⟶*length-halt (L⟶ ◅ L′⟶*₀) (L⟶′ ◅ L″⟶*₁) VL₁
   rewrite ⟶-det L⟶ L⟶′                                = s≤s (⟶*length≤⟶*length-halt L′⟶*₀ L″⟶*₁ VL₁)
+
+⟶[≤]*length≤⟶[≤]*length-halt : (L⟶[≤]*₀ : L ⟶[ m ≤]* L₀) →
+                               (L⟶[≤]*₁ : L ⟶[ m ≤]* L₁) →
+                               DeferredTerm[ m ≤] L₁ →
+                               ⟶[≤]*length L⟶[≤]*₀ ℕ.≤ ⟶[≤]*length L⟶[≤]*₁
+⟶[≤]*length≤⟶[≤]*length-halt ε                  L⟶[≤]*₁             WL₁ = z≤n
+⟶[≤]*length≤⟶[≤]*length-halt (L⟶[≤] ◅ L′⟶[≤]*₀) ε                   WL  with () ← DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
+⟶[≤]*length≤⟶[≤]*length-halt (L⟶[≤] ◅ L′⟶[≤]*₀) (L⟶[≤]′ ◅ L″⟶[≤]*₁) WL₁
+  rewrite ⟶[≤]-det L⟶[≤] L⟶[≤]′                                         = s≤s (⟶[≤]*length≤⟶[≤]*length-halt L′⟶[≤]*₀ L″⟶[≤]*₁ WL₁)
 
 halt-`lift-inversion-helper : `lift[ m₀ ⇒ m ] L ⟶* L′ →
                               WeakNorm L′ →

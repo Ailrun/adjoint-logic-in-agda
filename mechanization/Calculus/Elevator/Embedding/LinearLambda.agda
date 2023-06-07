@@ -44,8 +44,6 @@ import Calculus.LinearLambda.Typing as BP
 import Calculus.LinearLambda.Typing.Properties as BP
 open BP.Variables
 
-open ⟶* using (_◅◅_)
-
 infix   4 _~ᵀ_
 infix   4 _⍮_~ˣ_
 infix   4 _⍮_~ˣ⁻
