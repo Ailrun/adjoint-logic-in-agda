@@ -67,7 +67,7 @@ data [_]⊢[_]d_ : Mode → Mode → Useable → Set (ℓ₁ ⊔ ℓ₂) where
 ⊢[_]_ : Mode → Context → Set (ℓ₁ ⊔ ℓ₂)
 ⊢[ m ] Γ = All (λ (S , m₀ , d) → ⊢[ m₀ ] S ⦂⋆ × [ m₀ ]⊢[ m ]d d) Γ
 
--- Weakenable Opeartions
+-- Full Weakening Opeartions
 --
 data _[_]is-del : Useable → Mode → Set ℓ₁ where
   unusable  : -----------------------------
@@ -79,6 +79,27 @@ data _[_]is-del : Useable → Mode → Set ℓ₁ where
 
 _is-all-del : Context → Set ℓ₁
 _is-all-del = All (λ (_ , m , d) → d [ m ]is-del)
+
+-- Mode-based Weakening Opeartions
+--
+data _[_]∤[_]d_ : Useable → Mode → Mode → Useable → Set (ℓ₁ ⊔ ℓ₂) where
+  delete : ¬ (m ≤ₘ m₀) →
+           d [ m₀ ]is-del →
+           ------------------------
+           d [ m₀ ]∤[ m ]d false
+
+  keep   : m ≤ₘ m₀ →
+           --------------------
+           d [ m₀ ]∤[ m ]d d
+
+data _∤[_]_ : Context → Mode → Context → Set (ℓ₁ ⊔ ℓ₂) where
+  []  : -------------
+        [] ∤[ m ] []
+
+  _∷_ : d [ m₀ ]∤[ m ]d d′ →
+        Γ ∤[ m ] Γ′ →
+        ---------------------------------------------
+        (S , m₀ , d) ∷ Γ ∤[ m ] (S , m₀ , d′) ∷ Γ′
 
 -- Splitting Opeartions
 --
@@ -104,27 +125,6 @@ data _~_⊞_ : Context → Context → Context → Set ℓ₁ where
         Γ ~ Γ₀ ⊞ Γ₁ →
         -----------------------------------------------------------
         (S , m , d) ∷ Γ ~ (S , m , d₀) ∷ Γ₀ ⊞ (S , m , d₁) ∷ Γ₁
-
--- Cutting Opeartions
---
-data _[_]∤[_]d_ : Useable → Mode → Mode → Useable → Set (ℓ₁ ⊔ ℓ₂) where
-  delete : ¬ (m ≤ₘ m₀) →
-           d [ m₀ ]is-del →
-           ------------------------
-           d [ m₀ ]∤[ m ]d false
-
-  keep   : m ≤ₘ m₀ →
-           --------------------
-           d [ m₀ ]∤[ m ]d d
-
-data _∤[_]_ : Context → Mode → Context → Set (ℓ₁ ⊔ ℓ₂) where
-  []  : -------------
-        [] ∤[ m ] []
-
-  _∷_ : d [ m₀ ]∤[ m ]d d′ →
-        Γ ∤[ m ] Γ′ →
-        ---------------------------------------------
-        (S , m₀ , d) ∷ Γ ∤[ m ] (S , m₀ , d′) ∷ Γ′
 
 -- Variable-Context Membership
 --
