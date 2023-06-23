@@ -56,7 +56,7 @@ data _[_]is-used-by_ : Useable → Mode → Useable → Set where
               true [ m ]is-used-by false
 
 data _is-all-used-by_ : Context → ContextDelta → Set where
-  []  : ------------------
+  []  : ---------------------
         [] is-all-used-by []
 
   _∷_ : d [ m ]is-used-by d′ →
@@ -72,7 +72,7 @@ data _⦂[_]_∈_⇒_ : ℕ → Mode → Type → Context → ContextDelta → S
           ----------------------------------------------------------
           suc x ⦂[ m ] S ∈ (T , m₀ , dT) ∷ Γ ⇒ (T , m₀ , false) ∷ Δ
 
-data _⊢[_]_⦂_⇒_ : Context → Mode → Term → Type → Context → Set (ℓ₁ ⊔ ℓ₂) where
+data _⊢[_]_⦂_⇒_ : Context → Mode → Term → Type → ContextDelta → Set (ℓ₁ ⊔ ℓ₂) where
   `unit                     : -------------------------------
                               Γ ⊢[ m ] `unit ⦂ `⊤ ⇒ unused Γ
 

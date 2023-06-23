@@ -125,18 +125,14 @@ data _⍮_~ˣ_ : DP.Context → DP.Context → Context → Set where
           -----------------------------------------
           A ∷ Ψ₁ ⍮ Ψ₀ ~ˣ (`↑ S , cMode , true) ∷ Γ
 
-  ?∷ᶜ_  : Ψ₁ ⍮ Ψ₀ ~ˣ Γ →
-          --------------------------------------
-          Ψ₁ ⍮ Ψ₀ ~ˣ (`↑ S , cMode , false) ∷ Γ
+  ?∷ᵖ_  : Ψ₁ ⍮ Ψ₀ ~ˣ Γ →
+          -----------------------------------
+          Ψ₁ ⍮ Ψ₀ ~ˣ (S , pMode , false) ∷ Γ
 
   _!∷ᵖ_ : A ~ᵀ S →
           Ψ₁ ⍮ Ψ₀ ~ˣ Γ →
           --------------------------------------
           Ψ₁ ⍮ A ∷ Ψ₀ ~ˣ (S , pMode , true) ∷ Γ
-
-  ?∷ᵖ_  : Ψ₁ ⍮ Ψ₀ ~ˣ Γ →
-          -----------------------------------
-          Ψ₁ ⍮ Ψ₀ ~ˣ (S , pMode , false) ∷ Γ
 
 -- Embedding Relation for Context Skeleton
 --
@@ -145,10 +141,6 @@ data _⍮_~ˣ_ : DP.Context → DP.Context → Context → Set where
 data _⍮_~ˣ⁻ : ℕ → ℕ → Set where
   []   : ----------
          0 ⍮ 0 ~ˣ⁻
-
-  ?∷ᶜ_ : k ⍮ k′ ~ˣ⁻ →
-         -------------
-         k ⍮ k′ ~ˣ⁻
 
   !∷ᶜ_ : k ⍮ k′ ~ˣ⁻ →
          ---------------
@@ -168,21 +160,18 @@ variable
 
 eraseˣ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ → length Ψ₁ ⍮ length Ψ₀ ~ˣ⁻
 eraseˣ []         = []
-eraseˣ   (?∷ᶜ ~Γ) = ?∷ᶜ eraseˣ ~Γ
 eraseˣ (_ !∷ᶜ ~Γ) = !∷ᶜ eraseˣ ~Γ
 eraseˣ   (?∷ᵖ ~Γ) = ?∷ᵖ eraseˣ ~Γ
 eraseˣ (_ !∷ᵖ ~Γ) = !∷ᵖ eraseˣ ~Γ
 
 _++ˣ⁻_ : k ⍮ k′ ~ˣ⁻ → k″ ⍮ k‴ ~ˣ⁻ → k + k″ ⍮ k′ + k‴ ~ˣ⁻
 []         ++ˣ⁻ k″k‴~ = k″k‴~
-(?∷ᶜ kk′~) ++ˣ⁻ k″k‴~ = ?∷ᶜ (kk′~ ++ˣ⁻ k″k‴~)
 (!∷ᶜ kk′~) ++ˣ⁻ k″k‴~ = !∷ᶜ (kk′~ ++ˣ⁻ k″k‴~)
 (?∷ᵖ kk′~) ++ˣ⁻ k″k‴~ = ?∷ᵖ (kk′~ ++ˣ⁻ k″k‴~)
 (!∷ᵖ kk′~) ++ˣ⁻ k″k‴~ = !∷ᵖ (kk′~ ++ˣ⁻ k″k‴~)
 
 extractˣ⁻ᶜ : k ⍮ k′ ~ˣ⁻ → k ⍮ 0 ~ˣ⁻
 extractˣ⁻ᶜ []         = []
-extractˣ⁻ᶜ (?∷ᶜ kk′~) = ?∷ᶜ extractˣ⁻ᶜ kk′~
 extractˣ⁻ᶜ (!∷ᶜ kk′~) = !∷ᶜ extractˣ⁻ᶜ kk′~
 extractˣ⁻ᶜ (?∷ᵖ kk′~) = ?∷ᵖ extractˣ⁻ᶜ kk′~
 extractˣ⁻ᶜ (!∷ᵖ kk′~) = ?∷ᵖ extractˣ⁻ᶜ kk′~
@@ -191,14 +180,12 @@ extractˣᶜ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ →
             -------------------------
             ∃ (λ Γ′ → Ψ₁ ⍮ [] ~ˣ Γ′)
 extractˣᶜ []                        = _ , []
-extractˣᶜ (?∷ᶜ_ {_} {_} {_} {S} ~Γ) = (`↑ S , _ , _) ∷ _ , ?∷ᶜ proj₂ (extractˣᶜ ~Γ)
 extractˣᶜ (S~ !∷ᶜ ~Γ)               = _ , S~ !∷ᶜ proj₂ (extractˣᶜ ~Γ)
 extractˣᶜ (?∷ᵖ_ {_} {_} {_} {S} ~Γ) = (S , _ , _) ∷ _ , ?∷ᵖ proj₂ (extractˣᶜ ~Γ)
 extractˣᶜ (_!∷ᵖ_ {_} {S} S~ ~Γ)     = (S , _ , _) ∷ _ , ?∷ᵖ proj₂ (extractˣᶜ ~Γ)
 
 lengthˣ⁻ : k ⍮ k′ ~ˣ⁻ → ℕ
 lengthˣ⁻ []         = 0
-lengthˣ⁻ (?∷ᶜ kk′~) = suc (lengthˣ⁻ kk′~)
 lengthˣ⁻ (!∷ᶜ kk′~) = suc (lengthˣ⁻ kk′~)
 lengthˣ⁻ (?∷ᵖ kk′~) = suc (lengthˣ⁻ kk′~)
 lengthˣ⁻ (!∷ᵖ kk′~) = suc (lengthˣ⁻ kk′~)
@@ -206,12 +193,10 @@ lengthˣ⁻ (!∷ᵖ kk′~) = suc (lengthˣ⁻ kk′~)
 idxˣ⁻ᶜ : k ⍮ k′ ~ˣ⁻ → u ℕ.< k → ℕ
 idxˣ⁻ᶜ             (?∷ᵖ kk′~) u<         = suc (idxˣ⁻ᶜ kk′~ u<)
 idxˣ⁻ᶜ             (!∷ᵖ kk′~) u<         = suc (idxˣ⁻ᶜ kk′~ u<)
-idxˣ⁻ᶜ             (?∷ᶜ kk′~) u<         = suc (idxˣ⁻ᶜ kk′~ u<)
 idxˣ⁻ᶜ {u = 0}     (!∷ᶜ kk′~) (ℕ.s≤s u<) = 0
 idxˣ⁻ᶜ {u = suc u} (!∷ᶜ kk′~) (ℕ.s≤s u<) = suc (idxˣ⁻ᶜ kk′~ u<)
 
 idxˣ⁻ᵖ : k ⍮ k′ ~ˣ⁻ → x ℕ.< k′ → ℕ
-idxˣ⁻ᵖ             (?∷ᶜ kk′~) x<         = suc (idxˣ⁻ᵖ kk′~ x<)
 idxˣ⁻ᵖ             (!∷ᶜ kk′~) x<         = suc (idxˣ⁻ᵖ kk′~ x<)
 idxˣ⁻ᵖ             (?∷ᵖ kk′~) x<         = suc (idxˣ⁻ᵖ kk′~ x<)
 idxˣ⁻ᵖ {x = 0}     (!∷ᵖ kk′~) (ℕ.s≤s x<) = 0
@@ -253,6 +238,32 @@ data _⊢_~ᴹ_ : k ⍮ k′ ~ˣ⁻ → DP.Term → Term → Set where
   `unlift-`lift : extractˣ⁻ᶜ kk′~ ⊢ E ~ᴹ L →
                   ---------------------------
                   kk′~ ⊢ E ~ᴹ `unlift`lift L
+
+-- Properties of ℳ²
+--
+is-del² : ∀ m d →
+          --------------
+          d [ m ]is-del
+is-del² _ false = unusable
+is-del² _ true  = weakening _
+
+is-all-del² : ∀ Γ →
+              --------------
+              Γ is-all-del
+is-all-del² []      = []
+is-all-del² (_ ∷ Γ) = is-del² _ _ ∷ is-all-del² _
+
+~d⊞² : ∀ m d →
+       ----------------
+       d [ m ]~d d ⊞ d
+~d⊞² _ false = unusable
+~d⊞² _ true  = contraction _
+
+~⊞² : ∀ Γ →
+      ----------
+      Γ ~ Γ ⊞ Γ
+~⊞² []      = []
+~⊞² (_ ∷ Γ) = ~d⊞² _ _ ∷ ~⊞² _
 
 -- A termination measure for _⊢_~ᴹ_
 depth~ᴹ : kk′~ ⊢ E ~ᴹ L → ℕ
@@ -308,7 +319,6 @@ depth~ᴹ (`unlift-`lift ~L)   = suc (depth~ᴹ ~L)
         x ⦂[ pMode ] S ∈ Γ →
         ---------------------
         ∃ (λ A → A ~ᵀ S)
-∈ᵖ⇒~ᵀ    (?∷ᶜ ~Γ) (there _ x∈) = ∈ᵖ⇒~ᵀ ~Γ x∈
 ∈ᵖ⇒~ᵀ (_  !∷ᶜ ~Γ) (there _ x∈) = ∈ᵖ⇒~ᵀ ~Γ x∈
 ∈ᵖ⇒~ᵀ    (?∷ᵖ ~Γ) (there _ x∈) = ∈ᵖ⇒~ᵀ ~Γ x∈
 ∈ᵖ⇒~ᵀ (~S !∷ᵖ ~Γ) (here _)     = -, ~S
@@ -318,37 +328,10 @@ depth~ᴹ (`unlift-`lift ~L)   = suc (depth~ᴹ ~L)
         x ⦂[ cMode ] `↑ S ∈ Γ →
         ------------------------
         ∃ (λ A → A ~ᵀ S)
-∈ᶜ⇒~ᵀ    (?∷ᶜ ~Γ) (there _ x∈) = ∈ᶜ⇒~ᵀ ~Γ x∈
 ∈ᶜ⇒~ᵀ (~S !∷ᶜ ~Γ) (here _)     = -, ~S
 ∈ᶜ⇒~ᵀ (_  !∷ᶜ ~Γ) (there _ x∈) = ∈ᶜ⇒~ᵀ ~Γ x∈
 ∈ᶜ⇒~ᵀ    (?∷ᵖ ~Γ) (there _ x∈) = ∈ᶜ⇒~ᵀ ~Γ x∈
 ∈ᶜ⇒~ᵀ (_  !∷ᵖ ~Γ) (there _ x∈) = ∈ᶜ⇒~ᵀ ~Γ x∈
-
--- Properties of ℳ²
---
-is-del² : ∀ m d →
-          --------------
-          d [ m ]is-del
-is-del² _ false = unusable
-is-del² _ true  = weakening _
-
-is-all-del² : ∀ Γ →
-              --------------
-              Γ is-all-del
-is-all-del² []      = []
-is-all-del² (_ ∷ Γ) = is-del² _ _ ∷ is-all-del² _
-
-~d⊞² : ∀ m d →
-       ----------------
-       d [ m ]~d d ⊞ d
-~d⊞² _ false = unusable
-~d⊞² _ true  = contraction _
-
-~⊞² : ∀ Γ →
-      ----------
-      Γ ~ Γ ⊞ Γ
-~⊞² []      = []
-~⊞² (_ ∷ Γ) = ~d⊞² _ _ ∷ ~⊞² _
 
 -- Properties of the Operations for the Context Embeddings
 --
@@ -357,7 +340,6 @@ extractˣᶜ-∤ : (~Γ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ) →
               let (Γ′ , ~Γ′) = extractˣᶜ ~Γ in
               Γ ∤[ cMode ] Γ′
 extractˣᶜ-∤ []          = []
-extractˣᶜ-∤    (?∷ᶜ ~Γ) = keep refl ∷ extractˣᶜ-∤ ~Γ
 extractˣᶜ-∤ (~S !∷ᶜ ~Γ) = keep refl ∷ extractˣᶜ-∤ ~Γ
 extractˣᶜ-∤    (?∷ᵖ ~Γ) = delete (λ ()) unusable ∷ extractˣᶜ-∤ ~Γ
 extractˣᶜ-∤ (~S !∷ᵖ ~Γ) = delete (λ ()) (weakening _) ∷ extractˣᶜ-∤ ~Γ
@@ -367,7 +349,6 @@ extractˣᶜ-eraseˣ-extractˣ⁻ᶜ : (~Γ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ) →
                               let (Γ′ , ~Γ′) = extractˣᶜ ~Γ in
                               extractˣ⁻ᶜ (eraseˣ ~Γ) ≡ eraseˣ ~Γ′
 extractˣᶜ-eraseˣ-extractˣ⁻ᶜ []          = refl
-extractˣᶜ-eraseˣ-extractˣ⁻ᶜ    (?∷ᶜ ~Γ) = cong ?∷ᶜ_ (extractˣᶜ-eraseˣ-extractˣ⁻ᶜ ~Γ)
 extractˣᶜ-eraseˣ-extractˣ⁻ᶜ (~S !∷ᶜ ~Γ) = cong !∷ᶜ_ (extractˣᶜ-eraseˣ-extractˣ⁻ᶜ ~Γ)
 extractˣᶜ-eraseˣ-extractˣ⁻ᶜ    (?∷ᵖ ~Γ) = cong ?∷ᵖ_ (extractˣᶜ-eraseˣ-extractˣ⁻ᶜ ~Γ)
 extractˣᶜ-eraseˣ-extractˣ⁻ᶜ (~S !∷ᵖ ~Γ) = cong ?∷ᵖ_ (extractˣᶜ-eraseˣ-extractˣ⁻ᶜ ~Γ)
@@ -377,7 +358,6 @@ idxˣ⁻ᶜ-extractˣᶜ-eraseˣ : (~Γ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ) →
                           -----------------------------------------------
                           let (Γ′ , ~Γ′) = extractˣᶜ ~Γ in
                           idxˣ⁻ᶜ (eraseˣ ~Γ) u< ≡ idxˣ⁻ᶜ (eraseˣ ~Γ′) u<
-idxˣ⁻ᶜ-extractˣᶜ-eraseˣ                       (?∷ᶜ ~Γ) u<       = cong suc (idxˣ⁻ᶜ-extractˣᶜ-eraseˣ ~Γ u<)
 idxˣ⁻ᶜ-extractˣᶜ-eraseˣ                     (_ !∷ᵖ ~Γ) u<       = cong suc (idxˣ⁻ᶜ-extractˣᶜ-eraseˣ ~Γ u<)
 idxˣ⁻ᶜ-extractˣᶜ-eraseˣ                       (?∷ᵖ ~Γ) u<       = cong suc (idxˣ⁻ᶜ-extractˣᶜ-eraseˣ ~Γ u<)
 idxˣ⁻ᶜ-extractˣᶜ-eraseˣ {_ ∷ Δ} {u = 0}     (_ !∷ᶜ ~Γ) (s≤s u<) = refl
@@ -387,7 +367,6 @@ idxˣ⁻ᶜ-extractˣ⁻ᶜ : (kk′~ : k ⍮ k′ ~ˣ⁻) →
                     (u< : u ℕ.< k) →
                     ---------------------------------------------
                     idxˣ⁻ᶜ kk′~ u< ≡ idxˣ⁻ᶜ (extractˣ⁻ᶜ kk′~) u<
-idxˣ⁻ᶜ-extractˣ⁻ᶜ                         (?∷ᶜ kk′~) u<       = cong suc (idxˣ⁻ᶜ-extractˣ⁻ᶜ kk′~ u<)
 idxˣ⁻ᶜ-extractˣ⁻ᶜ                         (!∷ᵖ kk′~) u<       = cong suc (idxˣ⁻ᶜ-extractˣ⁻ᶜ kk′~ u<)
 idxˣ⁻ᶜ-extractˣ⁻ᶜ                         (?∷ᵖ kk′~) u<       = cong suc (idxˣ⁻ᶜ-extractˣ⁻ᶜ kk′~ u<)
 idxˣ⁻ᶜ-extractˣ⁻ᶜ {k = suc _} {u = 0}     (!∷ᶜ kk′~) (s≤s u<) = refl
@@ -397,7 +376,6 @@ lengthˣ⁻-extractˣ⁻ᶜ : (kk′~ : k ⍮ k′ ~ˣ⁻) →
                       -------------------------------------------
                       lengthˣ⁻ (extractˣ⁻ᶜ kk′~) ≡ lengthˣ⁻ kk′~
 lengthˣ⁻-extractˣ⁻ᶜ []         = refl
-lengthˣ⁻-extractˣ⁻ᶜ (?∷ᶜ kk′~) = cong suc (lengthˣ⁻-extractˣ⁻ᶜ kk′~)
 lengthˣ⁻-extractˣ⁻ᶜ (!∷ᶜ kk′~) = cong suc (lengthˣ⁻-extractˣ⁻ᶜ kk′~)
 lengthˣ⁻-extractˣ⁻ᶜ (?∷ᵖ kk′~) = cong suc (lengthˣ⁻-extractˣ⁻ᶜ kk′~)
 lengthˣ⁻-extractˣ⁻ᶜ (!∷ᵖ kk′~) = cong suc (lengthˣ⁻-extractˣ⁻ᶜ kk′~)
@@ -406,7 +384,6 @@ extractˣ⁻ᶜ-++ˣ⁻ : (kk′~ : k ⍮ k′ ~ˣ⁻) (k″k‴~ : k″ ⍮ k�
                   ---------------------------------------------------------------------
                   extractˣ⁻ᶜ (kk′~ ++ˣ⁻ k″k‴~) ≡ extractˣ⁻ᶜ kk′~ ++ˣ⁻ extractˣ⁻ᶜ k″k‴~
 extractˣ⁻ᶜ-++ˣ⁻ []         k″k‴~ = refl
-extractˣ⁻ᶜ-++ˣ⁻ (?∷ᶜ kk′~) k″k‴~ = cong ?∷ᶜ_ (extractˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~)
 extractˣ⁻ᶜ-++ˣ⁻ (!∷ᶜ kk′~) k″k‴~ = cong !∷ᶜ_ (extractˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~)
 extractˣ⁻ᶜ-++ˣ⁻ (?∷ᵖ kk′~) k″k‴~ = cong ?∷ᵖ_ (extractˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~)
 extractˣ⁻ᶜ-++ˣ⁻ (!∷ᵖ kk′~) k″k‴~ = cong ?∷ᵖ_ (extractˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~)
@@ -415,7 +392,6 @@ extractˣ⁻ᶜ-idempotent : (kk′~ : k ⍮ k′ ~ˣ⁻) →
                         -----------------------------------------------
                         extractˣ⁻ᶜ (extractˣ⁻ᶜ kk′~) ≡ extractˣ⁻ᶜ kk′~
 extractˣ⁻ᶜ-idempotent []         = refl
-extractˣ⁻ᶜ-idempotent (?∷ᶜ kk′~) = cong ?∷ᶜ_ (extractˣ⁻ᶜ-idempotent kk′~)
 extractˣ⁻ᶜ-idempotent (!∷ᶜ kk′~) = cong !∷ᶜ_ (extractˣ⁻ᶜ-idempotent kk′~)
 extractˣ⁻ᶜ-idempotent (?∷ᵖ kk′~) = cong ?∷ᵖ_ (extractˣ⁻ᶜ-idempotent kk′~)
 extractˣ⁻ᶜ-idempotent (!∷ᵖ kk′~) = cong ?∷ᵖ_ (extractˣ⁻ᶜ-idempotent kk′~)
@@ -428,7 +404,6 @@ extractˣ⁻ᶜ-idempotent (!∷ᵖ kk′~) = cong ?∷ᵖ_ (extractˣ⁻ᶜ-ide
                     idxˣ⁻ᶜ (eraseˣ ~Γ) u< ⦂[ cMode ] `↑ S ∈ Γ
 ∈ᶜ⇒idxˣ⁻ᶜ-eraseˣ∈                 (?∷ᵖ ~Γ) ~S u<       u∈            = there unusable (∈ᶜ⇒idxˣ⁻ᶜ-eraseˣ∈ ~Γ ~S u< u∈)
 ∈ᶜ⇒idxˣ⁻ᶜ-eraseˣ∈             (_   !∷ᵖ ~Γ) ~S u<       u∈            = there (weakening _) (∈ᶜ⇒idxˣ⁻ᶜ-eraseˣ∈ ~Γ ~S u< u∈)
-∈ᶜ⇒idxˣ⁻ᶜ-eraseˣ∈                 (?∷ᶜ ~Γ) ~S u<       u∈            = there unusable (∈ᶜ⇒idxˣ⁻ᶜ-eraseˣ∈ ~Γ ~S u< u∈)
 ∈ᶜ⇒idxˣ⁻ᶜ-eraseˣ∈ {u = zero}  (~S′ !∷ᶜ ~Γ) ~S (s≤s u<) DP.here
   rewrite ~ᵀ-det ~S′ ~S                                              = here (is-all-del² _)
 ∈ᶜ⇒idxˣ⁻ᶜ-eraseˣ∈ {u = suc _} (_   !∷ᶜ ~Γ) ~S (s≤s u<) (DP.there u∈) = there (weakening _) (∈ᶜ⇒idxˣ⁻ᶜ-eraseˣ∈ ~Γ ~S u< u∈)
@@ -439,7 +414,6 @@ idxˣ⁻ᶜ-eraseˣ∈⇒∈ᶜ : (~Γ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ) →
                     idxˣ⁻ᶜ (eraseˣ ~Γ) u< ⦂[ cMode ] `↑ S ∈ Γ →
                     --------------------------------------------
                     u DP.⦂ A ∈ Ψ₁
-idxˣ⁻ᶜ-eraseˣ∈⇒∈ᶜ                 (?∷ᶜ ~Γ) ~S u<       (there _ u∈) = idxˣ⁻ᶜ-eraseˣ∈⇒∈ᶜ ~Γ ~S u< u∈
 idxˣ⁻ᶜ-eraseˣ∈⇒∈ᶜ             (~S′ !∷ᵖ ~Γ) ~S u<       (there _ u∈) = idxˣ⁻ᶜ-eraseˣ∈⇒∈ᶜ ~Γ ~S u< u∈
 idxˣ⁻ᶜ-eraseˣ∈⇒∈ᶜ                 (?∷ᵖ ~Γ) ~S u<       (there _ u∈) = idxˣ⁻ᶜ-eraseˣ∈⇒∈ᶜ ~Γ ~S u< u∈
 idxˣ⁻ᶜ-eraseˣ∈⇒∈ᶜ {u = zero}  (~S′ !∷ᶜ ~Γ) ~S (s≤s u<) (here _)
@@ -452,7 +426,6 @@ idxˣ⁻ᶜ-eraseˣ∈⇒∈ᶜ {u = suc _} (~S′ !∷ᶜ ~Γ) ~S (s≤s u<) (t
                     x DP.⦂ A ∈ Ψ₀ →
                     ---------------------------------------
                     idxˣ⁻ᵖ (eraseˣ ~Γ) x< ⦂[ pMode ] S ∈ Γ
-∈ᵖ⇒idxˣ⁻ᵖ-eraseˣ∈                 (?∷ᶜ ~Γ) ~S x<       x∈            = there unusable (∈ᵖ⇒idxˣ⁻ᵖ-eraseˣ∈ ~Γ ~S x< x∈)
 ∈ᵖ⇒idxˣ⁻ᵖ-eraseˣ∈             (_   !∷ᶜ ~Γ) ~S x<       x∈            = there (weakening _) (∈ᵖ⇒idxˣ⁻ᵖ-eraseˣ∈ ~Γ ~S x< x∈)
 ∈ᵖ⇒idxˣ⁻ᵖ-eraseˣ∈                 (?∷ᵖ ~Γ) ~S x<       x∈            = there unusable (∈ᵖ⇒idxˣ⁻ᵖ-eraseˣ∈ ~Γ ~S x< x∈)
 ∈ᵖ⇒idxˣ⁻ᵖ-eraseˣ∈ {x = zero}  (~S′ !∷ᵖ ~Γ) ~S (s≤s x<) DP.here
@@ -465,7 +438,6 @@ idxˣ⁻ᵖ-eraseˣ∈⇒∈ᵖ : (~Γ : Ψ₁ ⍮ Ψ₀ ~ˣ Γ) →
                     idxˣ⁻ᵖ (eraseˣ ~Γ) x< ⦂[ pMode ] S ∈ Γ →
                     -----------------------------------------
                     x DP.⦂ A ∈ Ψ₀
-idxˣ⁻ᵖ-eraseˣ∈⇒∈ᵖ                 (?∷ᶜ ~Γ) ~S x<       (there _ x∈) = idxˣ⁻ᵖ-eraseˣ∈⇒∈ᵖ ~Γ ~S x< x∈
 idxˣ⁻ᵖ-eraseˣ∈⇒∈ᵖ             (_   !∷ᶜ ~Γ) ~S x<       (there _ x∈) = idxˣ⁻ᵖ-eraseˣ∈⇒∈ᵖ ~Γ ~S x< x∈
 idxˣ⁻ᵖ-eraseˣ∈⇒∈ᵖ                 (?∷ᵖ ~Γ) ~S x<       (there _ x∈) = idxˣ⁻ᵖ-eraseˣ∈⇒∈ᵖ ~Γ ~S x< x∈
 idxˣ⁻ᵖ-eraseˣ∈⇒∈ᵖ {x = zero}  (~S′ !∷ᵖ ~Γ) ~S (s≤s x<) (here _)
@@ -478,7 +450,6 @@ idxˣ⁻ᵖ-eraseˣ∈⇒∈ᵖ {x = suc _} (_   !∷ᵖ ~Γ) ~S (s≤s x<) (the
                        idxˣ⁻ᶜ kk′~ u< ≡ idxˣ⁻ᶜ (kk′~ ++ˣ⁻ k″k‴~) u<′
 <⇒idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻             (?∷ᵖ kk′~) k″k‴~ u<        u<′       = cong suc (<⇒idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~ u< u<′)
 <⇒idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻             (!∷ᵖ kk′~) k″k‴~ u<        u<′       = cong suc (<⇒idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~ u< u<′)
-<⇒idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻             (?∷ᶜ kk′~) k″k‴~ u<        u<′       = cong suc (<⇒idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~ u< u<′)
 <⇒idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ {u = zero}  (!∷ᶜ kk′~) k″k‴~ (s≤s u<)  (s≤s u<′) = refl
 <⇒idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ {u = suc _} (!∷ᶜ kk′~) k″k‴~ (s≤s u<)  (s≤s u<′) = cong suc (<⇒idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~ u< u<′)
 
@@ -488,7 +459,6 @@ idxˣ⁻ᶜ-<-irrelevant : (kk′~ : k ⍮ k′ ~ˣ⁻) →
                       idxˣ⁻ᶜ kk′~ u< ≡ idxˣ⁻ᶜ kk′~ u<′
 idxˣ⁻ᶜ-<-irrelevant             (?∷ᵖ kk′~) u<        u<′      = cong suc (idxˣ⁻ᶜ-<-irrelevant kk′~ u< u<′)
 idxˣ⁻ᶜ-<-irrelevant             (!∷ᵖ kk′~) u<        u<′      = cong suc (idxˣ⁻ᶜ-<-irrelevant kk′~ u< u<′)
-idxˣ⁻ᶜ-<-irrelevant             (?∷ᶜ kk′~) u<        u<′      = cong suc (idxˣ⁻ᶜ-<-irrelevant kk′~ u< u<′)
 idxˣ⁻ᶜ-<-irrelevant {u = zero}  (!∷ᶜ kk′~) (s≤s u<) (s≤s u<′) = refl
 idxˣ⁻ᶜ-<-irrelevant {u = suc u} (!∷ᶜ kk′~) (s≤s u<) (s≤s u<′) = cong suc (idxˣ⁻ᶜ-<-irrelevant kk′~ u< u<′)
 
@@ -505,7 +475,6 @@ idxˣ⁻ᶜ<lengthˣ⁻ : (kk′~ : k ⍮ k′ ~ˣ⁻) →
                   idxˣ⁻ᶜ kk′~ u< ℕ.< lengthˣ⁻ kk′~
 idxˣ⁻ᶜ<lengthˣ⁻             (?∷ᵖ kk′~) u<       = s≤s (idxˣ⁻ᶜ<lengthˣ⁻ kk′~ u<)
 idxˣ⁻ᶜ<lengthˣ⁻             (!∷ᵖ kk′~) u<       = s≤s (idxˣ⁻ᶜ<lengthˣ⁻ kk′~ u<)
-idxˣ⁻ᶜ<lengthˣ⁻             (?∷ᶜ kk′~) u<       = s≤s (idxˣ⁻ᶜ<lengthˣ⁻ kk′~ u<)
 idxˣ⁻ᶜ<lengthˣ⁻ {u = zero}  (!∷ᶜ kk′~) (s≤s u<) = s≤s z≤n
 idxˣ⁻ᶜ<lengthˣ⁻ {u = suc u} (!∷ᶜ kk′~) (s≤s u<) = s≤s (idxˣ⁻ᶜ<lengthˣ⁻ kk′~ u<)
 
@@ -517,14 +486,12 @@ idxˣ⁻ᶜ<lengthˣ⁻ {u = suc u} (!∷ᶜ kk′~) (s≤s u<) = s≤s (idxˣ�
 ≥⇒lengthˣ⁻+idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻             []         k″k‴~ u≥       u<′       u<″ = idxˣ⁻ᶜ-<-irrelevant k″k‴~ u<″ u<′
 ≥⇒lengthˣ⁻+idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻             (?∷ᵖ kk′~) k″k‴~ u≥       u<′       u<″ = cong suc (≥⇒lengthˣ⁻+idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~ u≥ u<′ u<″)
 ≥⇒lengthˣ⁻+idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻             (!∷ᵖ kk′~) k″k‴~ u≥       u<′       u<″ = cong suc (≥⇒lengthˣ⁻+idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~ u≥ u<′ u<″)
-≥⇒lengthˣ⁻+idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻             (?∷ᶜ kk′~) k″k‴~ u≥       u<′       u<″ = cong suc (≥⇒lengthˣ⁻+idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~ u≥ u<′ u<″)
 ≥⇒lengthˣ⁻+idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ {u = suc u} (!∷ᶜ kk′~) k″k‴~ (s≤s u≥) (s≤s u<′) u<″ = cong suc (≥⇒lengthˣ⁻+idxˣ⁻ᶜ≡idxˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~ u≥ u<′ u<″)
 
 idxˣ⁻ᵖ<lengthˣ⁻ : (kk′~ : k ⍮ k′ ~ˣ⁻) →
                   (x< : x ℕ.< k′) →
                   ---------------------------------
                   idxˣ⁻ᵖ kk′~ x< ℕ.< lengthˣ⁻ kk′~
-idxˣ⁻ᵖ<lengthˣ⁻             (?∷ᶜ kk′~) x<       = s≤s (idxˣ⁻ᵖ<lengthˣ⁻ kk′~ x<)
 idxˣ⁻ᵖ<lengthˣ⁻             (!∷ᶜ kk′~) x<       = s≤s (idxˣ⁻ᵖ<lengthˣ⁻ kk′~ x<)
 idxˣ⁻ᵖ<lengthˣ⁻             (?∷ᵖ kk′~) x<       = s≤s (idxˣ⁻ᵖ<lengthˣ⁻ kk′~ x<)
 idxˣ⁻ᵖ<lengthˣ⁻ {x = zero}  (!∷ᵖ kk′~) (s≤s x<) = s≤s z≤n
@@ -534,7 +501,6 @@ idxˣ⁻ᵖ<lengthˣ⁻ {x = suc u} (!∷ᵖ kk′~) (s≤s x<) = s≤s (idxˣ�
                        (x< : x ℕ.< k′) (x<′ : x ℕ.< k′ + k‴) →
                        ----------------------------------------------
                        idxˣ⁻ᵖ kk′~ x< ≡ idxˣ⁻ᵖ (kk′~ ++ˣ⁻ k″k‴~) x<′
-<⇒idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻             (?∷ᶜ kk′~) k″k‴~ x<        x<′       = cong suc (<⇒idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ kk′~ k″k‴~ x< x<′)
 <⇒idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻             (!∷ᶜ kk′~) k″k‴~ x<        x<′       = cong suc (<⇒idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ kk′~ k″k‴~ x< x<′)
 <⇒idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻             (?∷ᵖ kk′~) k″k‴~ x<        x<′       = cong suc (<⇒idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ kk′~ k″k‴~ x< x<′)
 <⇒idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ {x = zero}  (!∷ᵖ kk′~) k″k‴~ (s≤s x<)  (s≤s x<′) = refl
@@ -544,7 +510,6 @@ idxˣ⁻ᵖ-<-irrelevant : (kk′~ : k ⍮ k′ ~ˣ⁻) →
                       (x< : x ℕ.< k′) (x<′ : x ℕ.< k′) →
                       -----------------------------------
                       idxˣ⁻ᵖ kk′~ x< ≡ idxˣ⁻ᵖ kk′~ x<′
-idxˣ⁻ᵖ-<-irrelevant             (?∷ᶜ kk′~) x<        x<′      = cong suc (idxˣ⁻ᵖ-<-irrelevant kk′~ x< x<′)
 idxˣ⁻ᵖ-<-irrelevant             (!∷ᶜ kk′~) x<        x<′      = cong suc (idxˣ⁻ᵖ-<-irrelevant kk′~ x< x<′)
 idxˣ⁻ᵖ-<-irrelevant             (?∷ᵖ kk′~) x<        x<′      = cong suc (idxˣ⁻ᵖ-<-irrelevant kk′~ x< x<′)
 idxˣ⁻ᵖ-<-irrelevant {x = zero}  (!∷ᵖ kk′~) (s≤s x<) (s≤s x<′) = refl
@@ -563,7 +528,6 @@ idxˣ⁻ᵖ-<-irrelevant′ kk′~ x< x′< refl = idxˣ⁻ᵖ-<-irrelevant kk�
                                 ----------------------------------------------------------------
                                 lengthˣ⁻ kk′~ + idxˣ⁻ᵖ k″k‴~ x<″ ≡ idxˣ⁻ᵖ (kk′~ ++ˣ⁻ k″k‴~) x<′
 ≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻             []         k″k‴~ x≥       x<′       x<″ = idxˣ⁻ᵖ-<-irrelevant k″k‴~ x<″ x<′
-≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻             (?∷ᶜ kk′~) k″k‴~ x≥       x<′       x<″ = cong suc (≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ kk′~ k″k‴~ x≥ x<′ x<″)
 ≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻             (!∷ᶜ kk′~) k″k‴~ x≥       x<′       x<″ = cong suc (≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ kk′~ k″k‴~ x≥ x<′ x<″)
 ≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻             (?∷ᵖ kk′~) k″k‴~ x≥       x<′       x<″ = cong suc (≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ kk′~ k″k‴~ x≥ x<′ x<″)
 ≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ {x = suc u} (!∷ᵖ kk′~) k″k‴~ (s≤s x≥) (s≤s x<′) x<″ = cong suc (≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ kk′~ k″k‴~ x≥ x<′ x<″)
@@ -572,9 +536,7 @@ idxˣ⁻ᵖ-<-irrelevant′ kk′~ x< x′< refl = idxˣ⁻ᵖ-<-irrelevant kk�
               Γ ∤[ cMode ] Γ′ →
               --------------------------
               Γ′ ≡ proj₁ (extractˣᶜ ~Γ)
-∤-extractˣᶜ []         [] = refl
-∤-extractˣᶜ   (?∷ᶜ ~Γ) (delete ≰cMode _ ∷ Γ∤) with () ← ≰cMode refl
-∤-extractˣᶜ   (?∷ᶜ ~Γ) (keep _          ∷ Γ∤) = cong (_ ∷_) (∤-extractˣᶜ ~Γ Γ∤)
+∤-extractˣᶜ []         []                     = refl
 ∤-extractˣᶜ (_ !∷ᶜ ~Γ) (delete ≰cMode _ ∷ Γ∤) with () ← ≰cMode refl
 ∤-extractˣᶜ (_ !∷ᶜ ~Γ) (keep   _        ∷ Γ∤) = cong (_ ∷_) (∤-extractˣᶜ ~Γ Γ∤)
 ∤-extractˣᶜ   (?∷ᵖ ~Γ) (delete ≰cMode _ ∷ Γ∤) = cong (_ ∷_) (∤-extractˣᶜ ~Γ Γ∤)
@@ -931,8 +893,6 @@ wkidx[↑]-idxˣ⁻ᶜ             (?∷ᵖ kk′~) 0k₀~ k″k‴~ u<
   rewrite wkidx[↑suc]suc≡sucwkidx[↑] (lengthˣ⁻ 0k₀~) (lengthˣ⁻ kk′~) (idxˣ⁻ᶜ (kk′~ ++ˣ⁻ k″k‴~) u<) = cong suc (wkidx[↑]-idxˣ⁻ᶜ kk′~ 0k₀~ k″k‴~ u<)
 wkidx[↑]-idxˣ⁻ᶜ             (!∷ᵖ kk′~) 0k₀~ k″k‴~ u<
   rewrite wkidx[↑suc]suc≡sucwkidx[↑] (lengthˣ⁻ 0k₀~) (lengthˣ⁻ kk′~) (idxˣ⁻ᶜ (kk′~ ++ˣ⁻ k″k‴~) u<) = cong suc (wkidx[↑]-idxˣ⁻ᶜ kk′~ 0k₀~ k″k‴~ u<)
-wkidx[↑]-idxˣ⁻ᶜ             (?∷ᶜ kk′~) 0k₀~ k″k‴~ u<
-  rewrite wkidx[↑suc]suc≡sucwkidx[↑] (lengthˣ⁻ 0k₀~) (lengthˣ⁻ kk′~) (idxˣ⁻ᶜ (kk′~ ++ˣ⁻ k″k‴~) u<) = cong suc (wkidx[↑]-idxˣ⁻ᶜ kk′~ 0k₀~ k″k‴~ u<)
 wkidx[↑]-idxˣ⁻ᶜ {u = zero}  (!∷ᶜ kk′~) 0k₀~ k″k‴~ (s≤s u<)                                         = refl
 wkidx[↑]-idxˣ⁻ᶜ {u = suc u} (!∷ᶜ kk′~) 0k₀~ k″k‴~ (s≤s u<)
   rewrite wkidx[↑suc]suc≡sucwkidx[↑] (lengthˣ⁻ 0k₀~) (lengthˣ⁻ kk′~) (idxˣ⁻ᶜ (kk′~ ++ˣ⁻ k″k‴~) u<) = cong suc (wkidx[↑]-idxˣ⁻ᶜ kk′~ 0k₀~ k″k‴~ u<)
@@ -942,8 +902,6 @@ wkidx[↑]-idxˣ⁻ᵖ : (kk′~ : k ⍮ k′ ~ˣ⁻) (k₀0~ : k₀ ⍮ 0 ~ˣ�
                   -------------------------------------------------------------------------------------------------------------
                   wkidx[ lengthˣ⁻ k₀0~ ↑ lengthˣ⁻ kk′~ ] (idxˣ⁻ᵖ (kk′~ ++ˣ⁻ k″k‴~) x<) ≡ idxˣ⁻ᵖ (kk′~ ++ˣ⁻ k₀0~ ++ˣ⁻ k″k‴~) x<
 wkidx[↑]-idxˣ⁻ᵖ             []         k₀0~ k″k‴~ x<                                               = ≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ k₀0~ k″k‴~ z≤n x< x<
-wkidx[↑]-idxˣ⁻ᵖ             (?∷ᶜ kk′~) k₀0~ k″k‴~ x<
-  rewrite wkidx[↑suc]suc≡sucwkidx[↑] (lengthˣ⁻ k₀0~) (lengthˣ⁻ kk′~) (idxˣ⁻ᵖ (kk′~ ++ˣ⁻ k″k‴~) x<) = cong suc (wkidx[↑]-idxˣ⁻ᵖ kk′~ k₀0~ k″k‴~ x<)
 wkidx[↑]-idxˣ⁻ᵖ             (!∷ᶜ kk′~) k₀0~ k″k‴~ x<
   rewrite wkidx[↑suc]suc≡sucwkidx[↑] (lengthˣ⁻ k₀0~) (lengthˣ⁻ kk′~) (idxˣ⁻ᵖ (kk′~ ++ˣ⁻ k″k‴~) x<) = cong suc (wkidx[↑]-idxˣ⁻ᵖ kk′~ k₀0~ k″k‴~ x<)
 wkidx[↑]-idxˣ⁻ᵖ             (?∷ᵖ kk′~) k₀0~ k″k‴~ x<
