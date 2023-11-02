@@ -530,41 +530,43 @@ len∈-inversion (_ ∷ Δ) (there dDel lenΔ∈)
                      ------------------
                      Γ ⊢[ m ] L ⦂ S
 
-~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (`unit Γ₁Del)                          = `unit ΓDel
+~⊞-is-all-del∧⊢⇒⊢ʳ                                     Γ~ Γ₀Del (`unit Γ₁Del)                                      = `unit ΓDel
   where
     ΓDel = ~⊞⁻¹-preserves-is-all-del Γ₀Del Γ₁Del Γ~
 
-~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (`λ⦂-∘ ⊢L)                             = `λ⦂-∘ ⊢L′
+~⊞-is-all-del∧⊢⇒⊢ʳ                                     Γ~ Γ₀Del (`λ⦂-∘ ⊢L)                                         = `λ⦂-∘ ⊢L′
   where
     ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ (to-right ∷ Γ~) (unusable ∷ Γ₀Del) ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (Γ₁~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
-  with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ Γ~ Γ₁~                                                     = Γ~′ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M
+~⊞-is-all-del∧⊢⇒⊢ʳ                                     Γ~ Γ₀Del (Γ₁~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
+  with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ Γ~ Γ₁~                                                                           = Γ~′ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M
   where
     ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ Γ₁′~ Γ₀Del ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (`lift[-⇒-] ⊢L)                        = `lift[-⇒-] ⊢L′
+~⊞-is-all-del∧⊢⇒⊢ʳ                                     Γ~ Γ₀Del (`lift[-⇒-] ⊢L)                                    = `lift[-⇒-] ⊢L′
   where
     ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ Γ~ Γ₀Del ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢ʳ {L = `unlift[ m₀ ⇒ _ ] L} Γ~ Γ₀Del (Γ₁∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)
+~⊞-is-all-del∧⊢⇒⊢ʳ {L = `unlift[ m₀ ⇒ _ ] L}           Γ~ Γ₀Del (Γ₁∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)
   with _ , Γ₀∤ , Γ₀′Del ← is-all-del⇒∤ m₀ Γ₀Del
-    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                          = Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
+    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                                                = Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
   where
     ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ Γ′~ Γ₀′Del ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢ʳ {L = `return[ m₀ ⇒ _ ] L} Γ~ Γ₀Del (Γ₁∤ ⊢`return[-⇒-] ⊢L)
+~⊞-is-all-del∧⊢⇒⊢ʳ {L = `return[ m₀ ⇒ _ ] L}           Γ~ Γ₀Del (Γ₁∤ ⊢`return[-⇒-] ⊢L)
   with _ , Γ₀∤ , Γ₀′Del ← is-all-del⇒∤ m₀ Γ₀Del
-    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                          = Γ∤ ⊢`return[-⇒-] ⊢L′
+    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                                                = Γ∤ ⊢`return[-⇒-] ⊢L′
   where
     ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ Γ′~ Γ₀′Del ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (Γ₁~ ⊢`let-return[-⇒-] ⊢L ⦂ ⊢↓ `in ⊢M)
-  with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ Γ~ Γ₁~                                                     = Γ~′ ⊢`let-return[-⇒-] ⊢L′ ⦂ ⊢↓ `in ⊢M
+~⊞-is-all-del∧⊢⇒⊢ʳ {L = `let-return[ m₁ ⇒ _ ] _ `in _} Γ~ Γ₀Del (Γ₁~ & Γ₁₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L ⦂ ⊢↓ `in ⊢M)
+  with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ Γ~ Γ₁~
+     | _ , Γ₀∤ , Γ₀′Del ← is-all-del⇒∤ m₁ Γ₀Del
+    with _ , Γ₁′∤ , Γ₁″~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁₀∤ Γ₁′~                                                          = Γ~′ & Γ₁′∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L′ ⦂ ⊢↓ `in ⊢M
   where
-    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ Γ₁′~ Γ₀Del ⊢L
+    ⊢L′ = ~⊞-is-all-del∧⊢⇒⊢ʳ Γ₁″~ Γ₀′Del ⊢L
 
-~⊞-is-all-del∧⊢⇒⊢ʳ                           Γ~ Γ₀Del (`# x∈)                                = `# x∈′
+~⊞-is-all-del∧⊢⇒⊢ʳ                                     Γ~ Γ₀Del (`# x∈)                                            = `# x∈′
   where
     x∈′ = ~⊞-is-all-del∧∈⇒∈ʳ Γ~ Γ₀Del x∈
 
@@ -581,42 +583,44 @@ len∈-inversion (_ ∷ Δ) (there dDel lenΔ∈)
                      ------------------------------
                      Γ ⊢[ m ] L ≈[≥ m′ ] L′ ⦂ S
 
-~⊞-is-all-del∧⊢⇒≈ʳ                           Γ~ Γ₀Del (`unit Γ₁Del)                              = `unit ΓDel
+~⊞-is-all-del∧⊢⇒≈ʳ                                     Γ~ Γ₀Del (`unit Γ₁Del)                                          = `unit ΓDel
   where
     ΓDel = ~⊞⁻¹-preserves-is-all-del Γ₀Del Γ₁Del Γ~
 
-~⊞-is-all-del∧⊢⇒≈ʳ                           Γ~ Γ₀Del (`λ⦂-∘ L≈L′)                               = `λ⦂-∘ L≈L′′
+~⊞-is-all-del∧⊢⇒≈ʳ                                     Γ~ Γ₀Del (`λ⦂-∘ L≈L′)                                           = `λ⦂-∘ L≈L′′
   where
     L≈L′′ = ~⊞-is-all-del∧⊢⇒≈ʳ (to-right ∷ Γ~) (unusable ∷ Γ₀Del) L≈L′
 
-~⊞-is-all-del∧⊢⇒≈ʳ                           Γ~ Γ₀Del (Γ₁~ ⊢ L≈L′ ⦂ ⊢⊸ `$ M≈M′)
-  with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ Γ~ Γ₁~                                                         = Γ~′ ⊢ L≈L′′ ⦂ ⊢⊸ `$ M≈M′
+~⊞-is-all-del∧⊢⇒≈ʳ                                     Γ~ Γ₀Del (Γ₁~ ⊢ L≈L′ ⦂ ⊢⊸ `$ M≈M′)
+  with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ Γ~ Γ₁~                                                                               = Γ~′ ⊢ L≈L′′ ⦂ ⊢⊸ `$ M≈M′
   where
     L≈L′′ = ~⊞-is-all-del∧⊢⇒≈ʳ Γ₁′~ Γ₀Del L≈L′
 
-~⊞-is-all-del∧⊢⇒≈ʳ                           Γ~ Γ₀Del (`lift[≤ m′≤m ⇒-] L≈L′)                    = `lift[≤ m′≤m ⇒-] L≈L′′
+~⊞-is-all-del∧⊢⇒≈ʳ                                     Γ~ Γ₀Del (`lift[≤ m′≤m ⇒-] L≈L′)                                = `lift[≤ m′≤m ⇒-] L≈L′′
   where
     L≈L′′ = ~⊞-is-all-del∧⊢⇒≈ʳ Γ~ Γ₀Del L≈L′
 
-~⊞-is-all-del∧⊢⇒≈ʳ                           Γ~ Γ₀Del (`lift[≰ m′≰m ⇒-] ⊢L ⊢L′)                  = `lift[≰ m′≰m ⇒-] (~⊞-is-all-del∧⊢⇒⊢ʳ Γ~ Γ₀Del ⊢L) (~⊞-is-all-del∧⊢⇒⊢ʳ Γ~ Γ₀Del ⊢L′)
-~⊞-is-all-del∧⊢⇒≈ʳ {L = `unlift[ m₀ ⇒ _ ] L} Γ~ Γ₀Del (Γ₁∤ ⊢`unlift[-⇒-] L≈L′ ⦂ ⊢↑)
+~⊞-is-all-del∧⊢⇒≈ʳ                                     Γ~ Γ₀Del (`lift[≰ m′≰m ⇒-] ⊢L ⊢L′)                              = `lift[≰ m′≰m ⇒-] (~⊞-is-all-del∧⊢⇒⊢ʳ Γ~ Γ₀Del ⊢L) (~⊞-is-all-del∧⊢⇒⊢ʳ Γ~ Γ₀Del ⊢L′)
+~⊞-is-all-del∧⊢⇒≈ʳ {L = `unlift[ m₀ ⇒ _ ] L}           Γ~ Γ₀Del (Γ₁∤ ⊢`unlift[-⇒-] L≈L′ ⦂ ⊢↑)
   with _ , Γ₀∤ , Γ₀′Del ← is-all-del⇒∤ m₀ Γ₀Del
-    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                              = Γ∤ ⊢`unlift[-⇒-] L≈L′′ ⦂ ⊢↑
+    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                                                    = Γ∤ ⊢`unlift[-⇒-] L≈L′′ ⦂ ⊢↑
   where
     L≈L′′ = ~⊞-is-all-del∧⊢⇒≈ʳ Γ′~ Γ₀′Del L≈L′
 
-~⊞-is-all-del∧⊢⇒≈ʳ {L = `return[ m₀ ⇒ _ ] L} Γ~ Γ₀Del (Γ₁∤ ⊢`return[-⇒-] L≈L′)
+~⊞-is-all-del∧⊢⇒≈ʳ {L = `return[ m₀ ⇒ _ ] L}           Γ~ Γ₀Del (Γ₁∤ ⊢`return[-⇒-] L≈L′)
   with _ , Γ₀∤ , Γ₀′Del ← is-all-del⇒∤ m₀ Γ₀Del
-    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                              = Γ∤ ⊢`return[-⇒-] L≈L′′
+    with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁∤ Γ~                                                                    = Γ∤ ⊢`return[-⇒-] L≈L′′
   where
     L≈L′′ = ~⊞-is-all-del∧⊢⇒≈ʳ Γ′~ Γ₀′Del L≈L′
 
-~⊞-is-all-del∧⊢⇒≈ʳ                           Γ~ Γ₀Del (Γ₁~ ⊢`let-return[-⇒-] L≈L′ ⦂ ⊢↓ `in M≈M′)
-  with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ Γ~ Γ₁~                                                         = Γ~′ ⊢`let-return[-⇒-] L≈L′′ ⦂ ⊢↓ `in M≈M′
+~⊞-is-all-del∧⊢⇒≈ʳ {L = `let-return[ m₁ ⇒ _ ] _ `in _} Γ~ Γ₀Del (Γ₁~ & Γ₁₀∤ ⊢`let-return[ m≤m₁ ⇒-] L≈L′ ⦂ ⊢↓ `in M≈M′)
+  with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ Γ~ Γ₁~
+     | _ , Γ₀∤ , Γ₀′Del ← is-all-del⇒∤ m₁ Γ₀Del
+    with _ , Γ₁′∤ , Γ₁″~ ← ~⊞⁻¹-preserves-∤ Γ₀∤ Γ₁₀∤ Γ₁′~                                                              = Γ~′ & Γ₁′∤ ⊢`let-return[ m≤m₁ ⇒-] L≈L′′ ⦂ ⊢↓ `in M≈M′
   where
-    L≈L′′ = ~⊞-is-all-del∧⊢⇒≈ʳ Γ₁′~ Γ₀Del L≈L′
+    L≈L′′ = ~⊞-is-all-del∧⊢⇒≈ʳ Γ₁″~ Γ₀′Del L≈L′
 
-~⊞-is-all-del∧⊢⇒≈ʳ                           Γ~ Γ₀Del (`# x∈)                                    = `# x∈′
+~⊞-is-all-del∧⊢⇒≈ʳ                                     Γ~ Γ₀Del (`# x∈)                                                = `# x∈′
   where
     x∈′ = ~⊞-is-all-del∧∈⇒∈ʳ Γ~ Γ₀Del x∈
 
@@ -665,49 +669,52 @@ len∈-inversion (_ ∷ Δ) (there dDel lenΔ∈)
                   -----------------------
                   Δ ++ Γ ⊢[ m ] L ⦂ S
 
-∤⁻¹-preserves-⊢ Δ (`unit ΔΓ′Del)                          Γ∤ = `unit ΔΓDel
+∤⁻¹-preserves-⊢ Δ (`unit ΔΓ′Del)                                        Γ∤ = `unit ΔΓDel
   where
     ΔΓDel = All.++⁺ (All.++⁻ˡ Δ ΔΓ′Del) (∤⁻¹-preserves-is-all-del (All.++⁻ʳ Δ ΔΓ′Del) Γ∤)
 
-∤⁻¹-preserves-⊢ Δ (`λ⦂-∘ ⊢L)                              Γ∤ = `λ⦂-∘ ⊢L′
+∤⁻¹-preserves-⊢ Δ (`λ⦂-∘ ⊢L)                                            Γ∤ = `λ⦂-∘ ⊢L′
   where
     ⊢L′ = ∤⁻¹-preserves-⊢ (_ ∷ Δ) ⊢L Γ∤
 
-∤⁻¹-preserves-⊢ Δ (ΔΓ′~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                  Γ∤
+∤⁻¹-preserves-⊢ Δ (ΔΓ′~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                                Γ∤
   with _ , _ , _ , _ , refl , refl , Δ~ , Γ′~ ← ~⊞-preserves-++ Δ ΔΓ′~
-    with _ , _ , Γ~ , Γ₀∤ , Γ₁∤ ← ∤⁻¹-preserves-~⊞ Γ′~ Γ∤    = ΔΓ~ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M′
+    with _ , _ , Γ~ , Γ₀∤ , Γ₁∤ ← ∤⁻¹-preserves-~⊞ Γ′~ Γ∤                  = ΔΓ~ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M′
   where
     ΔΓ~ = ~⊞-++⁺ Δ~ Γ~
     ⊢L′ = ∤⁻¹-preserves-⊢ _ ⊢L Γ₀∤
     ⊢M′ = ∤⁻¹-preserves-⊢ _ ⊢M Γ₁∤
 
-∤⁻¹-preserves-⊢ Δ (`lift[-⇒-] ⊢L)                         Γ∤ = `lift[-⇒-] ⊢L′
+∤⁻¹-preserves-⊢ Δ (`lift[-⇒-] ⊢L)                                       Γ∤ = `lift[-⇒-] ⊢L′
   where
     ⊢L′ = ∤⁻¹-preserves-⊢ Δ ⊢L Γ∤
 
-∤⁻¹-preserves-⊢ Δ (ΔΓ′∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)            Γ∤
+∤⁻¹-preserves-⊢ Δ (ΔΓ′∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)                          Γ∤
   with _ , _ , refl , Δ∤ , Γ′∤ ← ∤-preserves-++ Δ ΔΓ′∤
-    with _ , Γ∤′ , ∤Γ″ ← assoc-∤ Γ∤ Γ′∤                      = ΔΓ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
+    with _ , Γ∤′ , ∤Γ″ ← assoc-∤ Γ∤ Γ′∤                                    = ΔΓ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
   where
     ΔΓ∤ = ∤-++⁺ Δ∤ Γ∤′
     ⊢L′ = ∤⁻¹-preserves-⊢ _ ⊢L ∤Γ″
 
-∤⁻¹-preserves-⊢ Δ (ΔΓ′∤ ⊢`return[-⇒-] ⊢L)                 Γ∤
+∤⁻¹-preserves-⊢ Δ (ΔΓ′∤ ⊢`return[-⇒-] ⊢L)                               Γ∤
   with _ , _ , refl , Δ∤ , Γ′∤ ← ∤-preserves-++ Δ ΔΓ′∤
-    with _ , Γ∤′ , ∤Γ″ ← assoc-∤ Γ∤ Γ′∤                      = ΔΓ∤ ⊢`return[-⇒-] ⊢L′
+    with _ , Γ∤′ , ∤Γ″ ← assoc-∤ Γ∤ Γ′∤                                    = ΔΓ∤ ⊢`return[-⇒-] ⊢L′
   where
     ΔΓ∤ = ∤-++⁺ Δ∤ Γ∤′
     ⊢L′ = ∤⁻¹-preserves-⊢ _ ⊢L ∤Γ″
 
-∤⁻¹-preserves-⊢ Δ (ΔΓ′~ ⊢`let-return[-⇒-] ⊢L ⦂ ⊢↓ `in ⊢M) Γ∤
-  with _ , _ , _ , _ , refl , refl , Δ~ , Γ′~ ← ~⊞-preserves-++ Δ ΔΓ′~
-    with _ , _ , Γ~ , Γ₀∤ , Γ₁∤ ← ∤⁻¹-preserves-~⊞ Γ′~ Γ∤    = ΔΓ~ ⊢`let-return[-⇒-] ⊢L′ ⦂ ⊢↓ `in ⊢M′
+∤⁻¹-preserves-⊢ Δ (ΔΓ′~ & Δ₀Γ′₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L ⦂ ⊢↓ `in ⊢M) Γ∤
+  with Δ₀ , _ , _ , _ , refl , refl , Δ~ , Γ′~ ← ~⊞-preserves-++ Δ ΔΓ′~
+    with _ , _ , refl , Δ₀∤ , Γ′₀∤ ← ∤-preserves-++ Δ₀ Δ₀Γ′₀∤
+       | _ , _ , Γ~ , Γ₀∤ , Γ₁∤ ← ∤⁻¹-preserves-~⊞ Γ′~ Γ∤
+      with _ , Γ₀∤′ , ∤Γ″₀ ← assoc-∤ Γ₀∤ Γ′₀∤                              = ΔΓ~ & Δ₀Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L′ ⦂ ⊢↓ `in ⊢M′
   where
     ΔΓ~ = ~⊞-++⁺ Δ~ Γ~
-    ⊢L′ = ∤⁻¹-preserves-⊢ _ ⊢L Γ₀∤
+    Δ₀Γ₀∤ = ∤-++⁺ Δ₀∤ Γ₀∤′
+    ⊢L′ = ∤⁻¹-preserves-⊢ _ ⊢L ∤Γ″₀
     ⊢M′ = ∤⁻¹-preserves-⊢ _ ⊢M Γ₁∤
 
-∤⁻¹-preserves-⊢ Δ (`# x∈)                                 Γ∤ = `# x∈′
+∤⁻¹-preserves-⊢ Δ (`# x∈)                                               Γ∤ = `# x∈′
   where
     x∈′ = ∤⁻¹-preserves-∈ Δ x∈ Γ∤
 
@@ -717,82 +724,85 @@ len∈-inversion (_ ∷ Δ) (there dDel lenΔ∈)
                   -----------------------------------
                   Δ ++ Γ ⊢[ m ] L ≈[≥ m′ ] L′ ⦂ S
 
-∤⁻¹-preserves-≈ Δ (`unit ΔΓ′Del)                              Γ∤ = `unit ΔΓDel
+∤⁻¹-preserves-≈ Δ (`unit ΔΓ′Del)                                            Γ∤ = `unit ΔΓDel
   where
     ΔΓDel = All.++⁺ (All.++⁻ˡ Δ ΔΓ′Del) (∤⁻¹-preserves-is-all-del (All.++⁻ʳ Δ ΔΓ′Del) Γ∤)
 
-∤⁻¹-preserves-≈ Δ (`lift[≤ m′≤m ⇒-] L≈L′)                     Γ∤ = `lift[≤ m′≤m ⇒-] L≈L′′
+∤⁻¹-preserves-≈ Δ (`lift[≤ m′≤m ⇒-] L≈L′)                                   Γ∤ = `lift[≤ m′≤m ⇒-] L≈L′′
   where
     L≈L′′ = ∤⁻¹-preserves-≈ Δ L≈L′ Γ∤
 
-∤⁻¹-preserves-≈ Δ (`lift[≰ m′≰m ⇒-] ⊢L ⊢L′)                   Γ∤ = `lift[≰ m′≰m ⇒-] (∤⁻¹-preserves-⊢ Δ ⊢L Γ∤) (∤⁻¹-preserves-⊢ Δ ⊢L′ Γ∤)
+∤⁻¹-preserves-≈ Δ (`lift[≰ m′≰m ⇒-] ⊢L ⊢L′)                                 Γ∤ = `lift[≰ m′≰m ⇒-] (∤⁻¹-preserves-⊢ Δ ⊢L Γ∤) (∤⁻¹-preserves-⊢ Δ ⊢L′ Γ∤)
 
-∤⁻¹-preserves-≈ Δ (ΔΓ′∤ ⊢`unlift[-⇒-] L≈L′ ⦂ ⊢↑)              Γ∤
+∤⁻¹-preserves-≈ Δ (ΔΓ′∤ ⊢`unlift[-⇒-] L≈L′ ⦂ ⊢↑)                            Γ∤
   with _ , _ , refl , Δ∤ , Γ′∤ ← ∤-preserves-++ Δ ΔΓ′∤
-    with _ , Γ∤′ , ∤Γ″ ← assoc-∤ Γ∤ Γ′∤                          = ΔΓ∤ ⊢`unlift[-⇒-] L≈L′′ ⦂ ⊢↑
+    with _ , Γ∤′ , ∤Γ″ ← assoc-∤ Γ∤ Γ′∤                                        = ΔΓ∤ ⊢`unlift[-⇒-] L≈L′′ ⦂ ⊢↑
   where
     ΔΓ∤ = ∤-++⁺ Δ∤ Γ∤′
     L≈L′′ = ∤⁻¹-preserves-≈ _ L≈L′ ∤Γ″
 
-∤⁻¹-preserves-≈ Δ (ΔΓ′∤ ⊢`return[-⇒-] L≈L′)                   Γ∤
+∤⁻¹-preserves-≈ Δ (ΔΓ′∤ ⊢`return[-⇒-] L≈L′)                                 Γ∤
   with _ , _ , refl , Δ∤ , Γ′∤ ← ∤-preserves-++ Δ ΔΓ′∤
-    with _ , Γ∤′ , ∤Γ″ ← assoc-∤ Γ∤ Γ′∤                          = ΔΓ∤ ⊢`return[-⇒-] L≈L′′
+    with _ , Γ∤′ , ∤Γ″ ← assoc-∤ Γ∤ Γ′∤                                        = ΔΓ∤ ⊢`return[-⇒-] L≈L′′
   where
     ΔΓ∤ = ∤-++⁺ Δ∤ Γ∤′
     L≈L′′ = ∤⁻¹-preserves-≈ _ L≈L′ ∤Γ″
 
-∤⁻¹-preserves-≈ Δ (ΔΓ′~ ⊢`let-return[-⇒-] L≈L′ ⦂ ⊢↓ `in M≈M′) Γ∤
-  with _ , _ , _ , _ , refl , refl , Δ~ , Γ′~ ← ~⊞-preserves-++ Δ ΔΓ′~
-    with _ , _ , Γ~ , Γ₀∤ , Γ₁∤ ← ∤⁻¹-preserves-~⊞ Γ′~ Γ∤        = ΔΓ~ ⊢`let-return[-⇒-] L≈L′′ ⦂ ⊢↓ `in M≈M′′
+∤⁻¹-preserves-≈ Δ (ΔΓ′~ & Δ₀Γ′₀∤ ⊢`let-return[ m≤m₁ ⇒-] L≈L′ ⦂ ⊢↓ `in M≈M′) Γ∤
+  with Δ₀ , _ , _ , _ , refl , refl , Δ~ , Γ′~ ← ~⊞-preserves-++ Δ ΔΓ′~
+    with _ , _ , refl , Δ₀∤ , Γ′₀∤ ← ∤-preserves-++ Δ₀ Δ₀Γ′₀∤
+       | _ , _ , Γ~ , Γ₀∤ , Γ₁∤ ← ∤⁻¹-preserves-~⊞ Γ′~ Γ∤
+      with _ , Γ₀∤′ , ∤Γ″₀ ← assoc-∤ Γ₀∤ Γ′₀∤                                  = ΔΓ~ & Δ₀Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] L≈L′′ ⦂ ⊢↓ `in M≈M′′
   where
     ΔΓ~ = ~⊞-++⁺ Δ~ Γ~
-    L≈L′′ = ∤⁻¹-preserves-≈ _ L≈L′ Γ₀∤
+    Δ₀Γ₀∤ = ∤-++⁺ Δ₀∤ Γ₀∤′
+    L≈L′′ = ∤⁻¹-preserves-≈ _ L≈L′ ∤Γ″₀
     M≈M′′ = ∤⁻¹-preserves-≈ _ M≈M′ Γ₁∤
 
-∤⁻¹-preserves-≈ Δ (`λ⦂-∘ L≈L′)                                Γ∤ = `λ⦂-∘ L≈L′′
+∤⁻¹-preserves-≈ Δ (`λ⦂-∘ L≈L′)                                              Γ∤ = `λ⦂-∘ L≈L′′
   where
     L≈L′′ = ∤⁻¹-preserves-≈ (_ ∷ Δ) L≈L′ Γ∤
 
-∤⁻¹-preserves-≈ Δ (ΔΓ′~ ⊢ L≈L′ ⦂ ⊢⊸ `$ M≈M′)                  Γ∤
+∤⁻¹-preserves-≈ Δ (ΔΓ′~ ⊢ L≈L′ ⦂ ⊢⊸ `$ M≈M′)                                Γ∤
   with _ , _ , _ , _ , refl , refl , Δ~ , Γ′~ ← ~⊞-preserves-++ Δ ΔΓ′~
-    with _ , _ , Γ~ , Γ₀∤ , Γ₁∤ ← ∤⁻¹-preserves-~⊞ Γ′~ Γ∤        = ΔΓ~ ⊢ L≈L′′ ⦂ ⊢⊸ `$ M≈M′′
+    with _ , _ , Γ~ , Γ₀∤ , Γ₁∤ ← ∤⁻¹-preserves-~⊞ Γ′~ Γ∤                      = ΔΓ~ ⊢ L≈L′′ ⦂ ⊢⊸ `$ M≈M′′
   where
     ΔΓ~ = ~⊞-++⁺ Δ~ Γ~
     L≈L′′ = ∤⁻¹-preserves-≈ _ L≈L′ Γ₀∤
     M≈M′′ = ∤⁻¹-preserves-≈ _ M≈M′ Γ₁∤
 
-∤⁻¹-preserves-≈ Δ (`# x∈)                                     Γ∤ = `# x∈′
+∤⁻¹-preserves-≈ Δ (`# x∈)                                                   Γ∤ = `# x∈′
   where
     x∈′ = ∤⁻¹-preserves-∈ Δ x∈ Γ∤
 
 ≈-sym : Γ ⊢[ m ] L ≈[≥ m′ ] L′ ⦂ S →
         Γ ⊢[ m ] L′ ≈[≥ m′ ] L ⦂ S
-≈-sym (`unit ΓDel)                              = `unit ΓDel
-≈-sym (`lift[≤ m′≤m₀ ⇒-] L≈L′)                  = `lift[≤ m′≤m₀ ⇒-] (≈-sym L≈L′)
-≈-sym (`lift[≰ m′≰m₀ ⇒-] ⊢L ⊢L′)                = `lift[≰ m′≰m₀ ⇒-] ⊢L′ ⊢L
-≈-sym (Γ∤ ⊢`unlift[-⇒-] L≈L′ ⦂ ⊢↑)              = Γ∤ ⊢`unlift[-⇒-] ≈-sym L≈L′ ⦂ ⊢↑
-≈-sym (Γ∤ ⊢`return[-⇒-] L≈L′)                   = Γ∤ ⊢`return[-⇒-] ≈-sym L≈L′
-≈-sym (Γ~ ⊢`let-return[-⇒-] L≈L′ ⦂ ⊢↓ `in M≈M′) = Γ~ ⊢`let-return[-⇒-] ≈-sym L≈L′ ⦂ ⊢↓ `in ≈-sym M≈M′
-≈-sym (`λ⦂-∘ L≈L′)                              = `λ⦂-∘ ≈-sym L≈L′
-≈-sym (Γ~ ⊢ L≈L′ ⦂ ⊢⊸ `$ M≈M′)                  = Γ~ ⊢ ≈-sym L≈L′ ⦂ ⊢⊸ `$ ≈-sym M≈M′
-≈-sym (`# x∈)                                   = `# x∈
+≈-sym (`unit ΓDel)                                         = `unit ΓDel
+≈-sym (`lift[≤ m′≤m₀ ⇒-] L≈L′)                             = `lift[≤ m′≤m₀ ⇒-] (≈-sym L≈L′)
+≈-sym (`lift[≰ m′≰m₀ ⇒-] ⊢L ⊢L′)                           = `lift[≰ m′≰m₀ ⇒-] ⊢L′ ⊢L
+≈-sym (Γ∤ ⊢`unlift[-⇒-] L≈L′ ⦂ ⊢↑)                         = Γ∤ ⊢`unlift[-⇒-] ≈-sym L≈L′ ⦂ ⊢↑
+≈-sym (Γ∤ ⊢`return[-⇒-] L≈L′)                              = Γ∤ ⊢`return[-⇒-] ≈-sym L≈L′
+≈-sym (Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] L≈L′ ⦂ ⊢↓ `in M≈M′) = Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ≈-sym L≈L′ ⦂ ⊢↓ `in ≈-sym M≈M′
+≈-sym (`λ⦂-∘ L≈L′)                                         = `λ⦂-∘ ≈-sym L≈L′
+≈-sym (Γ~ ⊢ L≈L′ ⦂ ⊢⊸ `$ M≈M′)                             = Γ~ ⊢ ≈-sym L≈L′ ⦂ ⊢⊸ `$ ≈-sym M≈M′
+≈-sym (`# x∈)                                              = `# x∈
 
 ≈⇒⊢ : Γ ⊢[ m ] L ≈[≥ m′ ] L′ ⦂ S →
       Γ ⊢[ m ] L ⦂ S × Γ ⊢[ m ] L′ ⦂ S
-≈⇒⊢ (`unit ΓDel)                              = `unit ΓDel , `unit ΓDel
+≈⇒⊢ (`unit ΓDel)                                         = `unit ΓDel , `unit ΓDel
 ≈⇒⊢ (`lift[≤ m′≤m ⇒-] L≈L′)
-  with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′                    = `lift[-⇒-] ⊢L , `lift[-⇒-] ⊢L′
-≈⇒⊢ (`lift[≰ m′≰m ⇒-] ⊢L ⊢L′)                 = `lift[-⇒-] ⊢L , `lift[-⇒-] ⊢L′
+  with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′                               = `lift[-⇒-] ⊢L , `lift[-⇒-] ⊢L′
+≈⇒⊢ (`lift[≰ m′≰m ⇒-] ⊢L ⊢L′)                            = `lift[-⇒-] ⊢L , `lift[-⇒-] ⊢L′
 ≈⇒⊢ (Γ∤ ⊢`unlift[-⇒-] L≈L′ ⦂ ⊢↑)
-  with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′                    = Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑ , Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
+  with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′                               = Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑ , Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
 ≈⇒⊢ (Γ∤ ⊢`return[-⇒-] L≈L′)
-  with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′                    = Γ∤ ⊢`return[-⇒-] ⊢L , Γ∤ ⊢`return[-⇒-] ⊢L′
-≈⇒⊢ (Γ~ ⊢`let-return[-⇒-] L≈L′ ⦂ ⊢↓ `in M≈M′)
+  with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′                               = Γ∤ ⊢`return[-⇒-] ⊢L , Γ∤ ⊢`return[-⇒-] ⊢L′
+≈⇒⊢ (Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] L≈L′ ⦂ ⊢↓ `in M≈M′)
   with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′
-     | ⊢M , ⊢M′ ← ≈⇒⊢ M≈M′                    = Γ~ ⊢`let-return[-⇒-] ⊢L ⦂ ⊢↓ `in ⊢M , Γ~ ⊢`let-return[-⇒-] ⊢L′ ⦂ ⊢↓ `in ⊢M′
+     | ⊢M , ⊢M′ ← ≈⇒⊢ M≈M′                               = Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L ⦂ ⊢↓ `in ⊢M , Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L′ ⦂ ⊢↓ `in ⊢M′
 ≈⇒⊢ (`λ⦂-∘ L≈L′)
-  with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′                    = `λ⦂-∘ ⊢L , `λ⦂-∘ ⊢L′
+  with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′                               = `λ⦂-∘ ⊢L , `λ⦂-∘ ⊢L′
 ≈⇒⊢ (Γ~ ⊢ L≈L′ ⦂ ⊢⊸ `$ M≈M′)
   with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′
-     | ⊢M , ⊢M′ ← ≈⇒⊢ M≈M′                    = Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M , Γ~ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M′
-≈⇒⊢ (`# x∈)                                   = `# x∈ , `# x∈
+     | ⊢M , ⊢M′ ← ≈⇒⊢ M≈M′                               = Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M , Γ~ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M′
+≈⇒⊢ (`# x∈)                                              = `# x∈ , `# x∈

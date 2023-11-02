@@ -72,20 +72,21 @@ data WeakNeut where
 ¬≢lift[-⇒-]⇒≡lift[-⇒-] (`# x) ¬≢lift with () ← ¬≢lift tt
 
 data DeferredTerm[_≤] where
-  `unit                 : DeferredTerm[ m ≤] `unit
+  `unit                  : DeferredTerm[ m ≤] `unit
 
-  `lift[_⇒_]            : ∀ m₀ m₁ → DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] (`lift[ m₀ ⇒ m₁ ] L)
-  `unlift[≰_⇒_]         : ¬ (m ≤ₘ m₀) → ∀ m₁ → DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] (`unlift[ m₀ ⇒ m₁ ] L)
-  `unlift[≤_⇒_]         : m ≤ₘ m₀ → ∀ m₁ → WeakNorm L → {≢lift[-⇒-] L} → DeferredTerm[ m ≤] (`unlift[ m₀ ⇒ m₁ ] L)
+  `lift[_⇒_]             : ∀ m₀ m₁ → DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] (`lift[ m₀ ⇒ m₁ ] L)
+  `unlift[≰_⇒_]          : ¬ (m ≤ₘ m₀) → ∀ m₁ → DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] (`unlift[ m₀ ⇒ m₁ ] L)
+  `unlift[≤_⇒_]          : m ≤ₘ m₀ → ∀ m₁ → WeakNorm L → {≢lift[-⇒-] L} → DeferredTerm[ m ≤] (`unlift[ m₀ ⇒ m₁ ] L)
 
-  `return[≰_⇒_]         : ¬ (m ≤ₘ m₀) → ∀ m₁ → DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] (`return[ m₀ ⇒ m₁ ] L)
-  `return[≤_⇒_]         : m ≤ₘ m₀ → ∀ m₁ → WeakNorm L → DeferredTerm[ m ≤] (`return[ m₀ ⇒ m₁ ] L)
-  `let-return[_⇒_]_`in_ : ∀ m₀ m₁ → DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] M → DeferredTerm[ m ≤] (`let-return[ m₀ ⇒ m₁ ] L `in M)
+  `return[≰_⇒_]          : ¬ (m ≤ₘ m₀) → ∀ m₁ → DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] (`return[ m₀ ⇒ m₁ ] L)
+  `return[≤_⇒_]          : m ≤ₘ m₀ → ∀ m₁ → WeakNorm L → DeferredTerm[ m ≤] (`return[ m₀ ⇒ m₁ ] L)
+  `let-return[≰_⇒_]_`in_ : ¬ (m ≤ₘ m₀) → ∀ m₁ → DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] M → DeferredTerm[ m ≤] (`let-return[ m₀ ⇒ m₁ ] L `in M)
+  `let-return[≤_⇒_]_`in_ : m ≤ₘ m₀ → ∀ m₁ → WeakNorm L → DeferredTerm[ m ≤] M → DeferredTerm[ m ≤] (`let-return[ m₀ ⇒ m₁ ] L `in M)
 
-  `λ⦂[_]_∘_             : ∀ m₀ S → DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] (`λ⦂[ m₀ ] S ∘ L)
-  _`$_                  : DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] M → DeferredTerm[ m ≤] (L `$ M)
+  `λ⦂[_]_∘_              : ∀ m₀ S → DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] (`λ⦂[ m₀ ] S ∘ L)
+  _`$_                   : DeferredTerm[ m ≤] L → DeferredTerm[ m ≤] M → DeferredTerm[ m ≤] (L `$ M)
 
-  `#_                   : ∀ x → DeferredTerm[ m ≤] (`# x)
+  `#_                    : ∀ x → DeferredTerm[ m ≤] (`# x)
 
 infixr 25 wk[_↑_]_
 infixr 25 wk_
@@ -104,17 +105,23 @@ wk[ n ↑ x ] (`# y) = `# wkidx[ n ↑ x ] y
 wk_ = wk[ 1 ↑ 0 ]_
 
 [_/[_]_]_ : Term → Mode → ℕ → Term → Term
+strengthen : Mode → ℕ → Term → Term
+strengthen m x = [ `unit `$ `unit /[ m ] x ]_  -- strengthening substitution (note that the argument is ill-typed)
+
 [ L /[ m ] x ] `unit = `unit
 [ L /[ m ] x ] `lift[ m₀ ⇒ m₁ ] M = `lift[ m₀ ⇒ m₁ ] ([ L /[ m ] x ] M)
 [ L /[ m ] x ] `unlift[ m₀ ⇒ m₁ ] M
   with m₀ ≤?ₘ m
 ...  | yes _ = `unlift[ m₀ ⇒ m₁ ] ([ L /[ m ] x ] M)
-...  | no  _ = `unlift[ m₀ ⇒ m₁ ] ([ `unlift[ m₀ ⇒ m₁ ] `unit /[ m ] x ] M) -- strengthening substitution (note that the argument is ill-typed)
+...  | no  _ = `unlift[ m₀ ⇒ m₁ ] (strengthen m x M)
 [ L /[ m ] x ] `return[ m₀ ⇒ m₁ ] M
   with m₀ ≤?ₘ m
 ...  | yes _ = `return[ m₀ ⇒ m₁ ] ([ L /[ m ] x ] M)
-...  | no  _ = `return[ m₀ ⇒ m₁ ] ([ `unlift[ m₀ ⇒ m₁ ] `unit /[ m ] x ] M) -- strengthening substitution
-[ L /[ m ] x ] (`let-return[ m₀ ⇒ m₁ ] M `in N) = `let-return[ m₀ ⇒ m₁ ] [ L /[ m ] x ] M `in [ wk L /[ m ] suc x ] N
+...  | no  _ = `return[ m₀ ⇒ m₁ ] (strengthen m x M)
+[ L /[ m ] x ] (`let-return[ m₀ ⇒ m₁ ] M `in N)
+  with m₀ ≤?ₘ m
+...  | yes _ = `let-return[ m₀ ⇒ m₁ ] [ L /[ m ] x ] M `in [ wk L /[ m ] suc x ] N
+...  | no  _ = `let-return[ m₀ ⇒ m₁ ] strengthen m x M `in [ wk L /[ m ] suc x ] N
 [ L /[ m ] x ] (`λ⦂[ m′ ] S ∘ M) = `λ⦂[ m′ ] S ∘ [ wk L /[ m ] suc x ] M
 [ L /[ m ] x ] (M `$ N) = [ L /[ m ] x ] M `$ [ L /[ m ] x ] N
 [ L /[ m ] x ] (`# y) = idx[ L / x ] y along `#_
@@ -167,58 +174,71 @@ data _⟶_ where
                             (`λ⦂[ m ] S ∘ L) `$ M ⟶ [ M /[ m ] 0 ] L
 
 data _⟶[_≤]_ where
-  ξ-`lift[-⇒-]             : L ⟶[ m ≤] L′ →
-                             -----------------------------------------------
-                             `lift[ m₀ ⇒ m₁ ] L ⟶[ m ≤] `lift[ m₀ ⇒ m₁ ] L′
+  ξ-`lift[-⇒-]              : L ⟶[ m ≤] L′ →
+                              -----------------------------------------------
+                              `lift[ m₀ ⇒ m₁ ] L ⟶[ m ≤] `lift[ m₀ ⇒ m₁ ] L′
 
-  ξ-`unlift[≰_⇒-]          : ¬ (m ≤ₘ m₀) →
-                             L ⟶[ m ≤] L′ →
-                             ---------------------------------------------------
-                             `unlift[ m₀ ⇒ m₁ ] L ⟶[ m ≤] `unlift[ m₀ ⇒ m₁ ] L′
+  ξ-`unlift[≰_⇒-]           : ¬ (m ≤ₘ m₀) →
+                              L ⟶[ m ≤] L′ →
+                              ---------------------------------------------------
+                              `unlift[ m₀ ⇒ m₁ ] L ⟶[ m ≤] `unlift[ m₀ ⇒ m₁ ] L′
 
-  ξ-`unlift[≤_⇒-]          : m ≤ₘ m₀ →
-                             L ⟶ L′ →
-                             ---------------------------------------------------
-                             `unlift[ m₀ ⇒ m₁ ] L ⟶[ m ≤] `unlift[ m₀ ⇒ m₁ ] L′
+  ξ-`unlift[≤_⇒-]           : m ≤ₘ m₀ →
+                              L ⟶ L′ →
+                              ---------------------------------------------------
+                              `unlift[ m₀ ⇒ m₁ ] L ⟶[ m ≤] `unlift[ m₀ ⇒ m₁ ] L′
 
-  β-`↑                     : m ≤ₘ m₁ →
-                             DeferredTerm[ m₁ ≤] L →
-                             --------------------------------------------------
-                             `unlift[ m₁ ⇒ m₀ ] (`lift[ m₀ ⇒ m₁ ] L) ⟶[ m ≤] L
-
-
-  ξ-`return[≰_⇒-]          : ¬ (m ≤ₘ m₀) →
-                             L ⟶[ m ≤] L′ →
-                             ---------------------------------------------------
-                             `return[ m₀ ⇒ m₁ ] L ⟶[ m ≤] `return[ m₀ ⇒ m₁ ] L′
-
-  ξ-`return[≤_⇒-]          : m ≤ₘ m₀ →
-                             L ⟶ L′ →
-                             ---------------------------------------------------
-                             `return[ m₀ ⇒ m₁ ] L ⟶[ m ≤] `return[ m₀ ⇒ m₁ ] L′
-
-  ξ-`let-return[-⇒-]_`in?  : L ⟶[ m ≤] L′ →
-                             -----------------------------------------------------------------------
-                             `let-return[ m₀ ⇒ m₁ ] L `in M ⟶[ m ≤] `let-return[ m₀ ⇒ m₁ ] L′ `in M
-
-  ξ-`let-return[-⇒-]!_`in_ : DeferredTerm[ m ≤] L →
-                             M ⟶[ m ≤] M′ →
-                             -----------------------------------------------------------------------
-                             `let-return[ m₀ ⇒ m₁ ] L `in M ⟶[ m ≤] `let-return[ m₀ ⇒ m₁ ] L `in M′
+  β-`↑                      : m ≤ₘ m₁ →
+                              DeferredTerm[ m₁ ≤] L →
+                              --------------------------------------------------
+                              `unlift[ m₁ ⇒ m₀ ] (`lift[ m₀ ⇒ m₁ ] L) ⟶[ m ≤] L
 
 
-  ξ-_`$?                   : L ⟶[ m ≤] L′ →
-                             -----------------------
-                             L `$ M ⟶[ m ≤] L′ `$ M
+  ξ-`return[≰_⇒-]           : ¬ (m ≤ₘ m₀) →
+                              L ⟶[ m ≤] L′ →
+                              ---------------------------------------------------
+                              `return[ m₀ ⇒ m₁ ] L ⟶[ m ≤] `return[ m₀ ⇒ m₁ ] L′
 
-  ξ-!_`$_                  : DeferredTerm[ m ≤] L →
-                             M ⟶[ m ≤] M′ →
-                             -----------------------
-                             L `$ M ⟶[ m ≤] L `$ M′
+  ξ-`return[≤_⇒-]           : m ≤ₘ m₀ →
+                              L ⟶ L′ →
+                              ---------------------------------------------------
+                              `return[ m₀ ⇒ m₁ ] L ⟶[ m ≤] `return[ m₀ ⇒ m₁ ] L′
 
-  ξ-`λ⦂[-]-∘_              : L ⟶[ m ≤] L′ →
-                             -----------------------------------------
-                             `λ⦂[ m₀ ] S ∘ L ⟶[ m ≤] `λ⦂[ m₀ ] S ∘ L′
+  ξ-`let-return[≰_⇒-]_`in?  : ¬ (m ≤ₘ m₀) →
+                              L ⟶[ m ≤] L′ →
+                              -----------------------------------------------------------------------
+                              `let-return[ m₀ ⇒ m₁ ] L `in M ⟶[ m ≤] `let-return[ m₀ ⇒ m₁ ] L′ `in M
+
+  ξ-`let-return[≤_⇒-]_`in?  : m ≤ₘ m₀ →
+                              L ⟶ L′ →
+                              -----------------------------------------------------------------------
+                              `let-return[ m₀ ⇒ m₁ ] L `in M ⟶[ m ≤] `let-return[ m₀ ⇒ m₁ ] L′ `in M
+
+  ξ-`let-return[≰_⇒-]!_`in_ : ¬ (m ≤ₘ m₀) →
+                              DeferredTerm[ m ≤] L →
+                              M ⟶[ m ≤] M′ →
+                              -----------------------------------------------------------------------
+                              `let-return[ m₀ ⇒ m₁ ] L `in M ⟶[ m ≤] `let-return[ m₀ ⇒ m₁ ] L `in M′
+
+  ξ-`let-return[≤_⇒-]!_`in_ : m ≤ₘ m₀ →
+                              WeakNorm L →
+                              M ⟶[ m ≤] M′ →
+                              -----------------------------------------------------------------------
+                              `let-return[ m₀ ⇒ m₁ ] L `in M ⟶[ m ≤] `let-return[ m₀ ⇒ m₁ ] L `in M′
+
+
+  ξ-_`$?                    : L ⟶[ m ≤] L′ →
+                              -----------------------
+                              L `$ M ⟶[ m ≤] L′ `$ M
+
+  ξ-!_`$_                   : DeferredTerm[ m ≤] L →
+                              M ⟶[ m ≤] M′ →
+                              -----------------------
+                              L `$ M ⟶[ m ≤] L `$ M′
+
+  ξ-`λ⦂[-]-∘_               : L ⟶[ m ≤] L′ →
+                              -----------------------------------------
+                              `λ⦂[ m₀ ] S ∘ L ⟶[ m ≤] `λ⦂[ m₀ ] S ∘ L′
 
 open ⟶* _⟶_ using (_⟶*_; ε; _◅_; _◅◅_; ξ-of-⟶*; ξ-of-↝*-⟶*; ⟶*length) public
 

@@ -40,21 +40,27 @@ WeakNeut⇒¬⟶ (`let-return[ m₀ ⇒ m₁ ] NL `in M) ξ-`let-return[-⇒-] L
 WeakNeut⇒¬⟶ (NL `$ VM)                        ξ- L⟶ `$?                  = WeakNeut⇒¬⟶ NL L⟶
 WeakNeut⇒¬⟶ (NL `$ VM)                        (ξ-! VL `$ M⟶)             = WeakNorm⇒¬⟶ VM M⟶
 
-DeferredTerm⇒¬⟶[≤] (`lift[ m₀ ⇒ m₁ ] WL)              (ξ-`lift[-⇒-] L⟶[≤])              = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
-DeferredTerm⇒¬⟶[≤] (`unlift[≰ m≰m₀ ⇒ m₁ ] WL)         (ξ-`unlift[≰ _ ⇒-] L⟶[≤])         = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
-DeferredTerm⇒¬⟶[≤] (`unlift[≰ m≰m₀ ⇒ m₁ ] WL)         (ξ-`unlift[≤ m≤m₀ ⇒-] L⟶)         = m≰m₀ m≤m₀
-DeferredTerm⇒¬⟶[≤] (`unlift[≰ m≰m₀ ⇒ m₁ ] WL)         (β-`↑ m≤m₀ _)                     = m≰m₀ m≤m₀
-DeferredTerm⇒¬⟶[≤] (`unlift[≤ m≤m₀ ⇒ m₁ ] VL)         (ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤])      = m≰m₀ m≤m₀
-DeferredTerm⇒¬⟶[≤] (`unlift[≤ m≤m₀ ⇒ m₁ ] VL)         (ξ-`unlift[≤ _ ⇒-] L⟶)            = WeakNorm⇒¬⟶ VL L⟶
-DeferredTerm⇒¬⟶[≤] (`return[≰ m≰m₀ ⇒ m₁ ] WL)         (ξ-`return[≰ _ ⇒-] L⟶[≤])         = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
-DeferredTerm⇒¬⟶[≤] (`return[≰ m≰m₀ ⇒ m₁ ] WL)         (ξ-`return[≤ m≤m₀ ⇒-] L⟶)         = m≰m₀ m≤m₀
-DeferredTerm⇒¬⟶[≤] (`return[≤ m≤m₀ ⇒ m₁ ] VL)         (ξ-`return[≰ m≰m₀ ⇒-] L⟶[≤])      = m≰m₀ m≤m₀
-DeferredTerm⇒¬⟶[≤] (`return[≤ m≤m₀ ⇒ m₁ ] VL)         (ξ-`return[≤ _ ⇒-] L⟶)            = WeakNorm⇒¬⟶ VL L⟶
-DeferredTerm⇒¬⟶[≤] (`let-return[ m₀ ⇒ m₁ ] WL `in WM) ξ-`let-return[-⇒-] L⟶[≤] `in?     = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
-DeferredTerm⇒¬⟶[≤] (`let-return[ m₀ ⇒ m₁ ] WL `in WM) (ξ-`let-return[-⇒-]! _ `in M⟶[≤]) = DeferredTerm⇒¬⟶[≤] WM M⟶[≤]
-DeferredTerm⇒¬⟶[≤] (`λ⦂[ m₀ ] S ∘ WL)                 (ξ-`λ⦂[-]-∘ L⟶[≤])                = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
-DeferredTerm⇒¬⟶[≤] (WL `$ WM)                         ξ- L⟶[≤] `$?                      = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
-DeferredTerm⇒¬⟶[≤] (WL `$ WM)                         (ξ-! _ `$ M⟶[≤])                  = DeferredTerm⇒¬⟶[≤] WM M⟶[≤]
+DeferredTerm⇒¬⟶[≤] (`lift[ m₀ ⇒ m₁ ] WL)                 (ξ-`lift[-⇒-] L⟶[≤])                    = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
+DeferredTerm⇒¬⟶[≤] (`unlift[≰ m≰m₀ ⇒ m₁ ] WL)            (ξ-`unlift[≰ _ ⇒-] L⟶[≤])               = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
+DeferredTerm⇒¬⟶[≤] (`unlift[≰ m≰m₀ ⇒ m₁ ] WL)            (ξ-`unlift[≤ m≤m₀ ⇒-] L⟶)               = m≰m₀ m≤m₀
+DeferredTerm⇒¬⟶[≤] (`unlift[≰ m≰m₀ ⇒ m₁ ] WL)            (β-`↑ m≤m₀ _)                           = m≰m₀ m≤m₀
+DeferredTerm⇒¬⟶[≤] (`unlift[≤ m≤m₀ ⇒ m₁ ] VL)            (ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤])            = m≰m₀ m≤m₀
+DeferredTerm⇒¬⟶[≤] (`unlift[≤ m≤m₀ ⇒ m₁ ] VL)            (ξ-`unlift[≤ _ ⇒-] L⟶)                  = WeakNorm⇒¬⟶ VL L⟶
+DeferredTerm⇒¬⟶[≤] (`return[≰ m≰m₀ ⇒ m₁ ] WL)            (ξ-`return[≰ _ ⇒-] L⟶[≤])               = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
+DeferredTerm⇒¬⟶[≤] (`return[≰ m≰m₀ ⇒ m₁ ] WL)            (ξ-`return[≤ m≤m₀ ⇒-] L⟶)               = m≰m₀ m≤m₀
+DeferredTerm⇒¬⟶[≤] (`return[≤ m≤m₀ ⇒ m₁ ] VL)            (ξ-`return[≰ m≰m₀ ⇒-] L⟶[≤])            = m≰m₀ m≤m₀
+DeferredTerm⇒¬⟶[≤] (`return[≤ m≤m₀ ⇒ m₁ ] VL)            (ξ-`return[≤ _ ⇒-] L⟶)                  = WeakNorm⇒¬⟶ VL L⟶
+DeferredTerm⇒¬⟶[≤] (`let-return[≰ m≰m₀ ⇒ m₁ ] WL `in WM) ξ-`let-return[≰ _ ⇒-] L⟶[≤] `in?        = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
+DeferredTerm⇒¬⟶[≤] (`let-return[≰ m≰m₀ ⇒ m₁ ] WL `in WM) ξ-`let-return[≤ m≤m₀ ⇒-] L⟶ `in?        = m≰m₀ m≤m₀
+DeferredTerm⇒¬⟶[≤] (`let-return[≤ m≤m₀ ⇒ m₁ ] VL `in WM) ξ-`let-return[≰ m≰m₀ ⇒-] L⟶[≤] `in?     = m≰m₀ m≤m₀
+DeferredTerm⇒¬⟶[≤] (`let-return[≤ m≤m₀ ⇒ m₁ ] VL `in WM) ξ-`let-return[≤ _ ⇒-] L⟶ `in?           = WeakNorm⇒¬⟶ VL L⟶
+DeferredTerm⇒¬⟶[≤] (`let-return[≰ m≰m₀ ⇒ m₁ ] WL `in WM) (ξ-`let-return[≰ _ ⇒-]! _ `in M⟶[≤])    = DeferredTerm⇒¬⟶[≤] WM M⟶[≤]
+DeferredTerm⇒¬⟶[≤] (`let-return[≰ m≰m₀ ⇒ m₁ ] WL `in WM) (ξ-`let-return[≤ m≤m₀ ⇒-]! _ `in M⟶[≤]) = m≰m₀ m≤m₀
+DeferredTerm⇒¬⟶[≤] (`let-return[≤ m≤m₀ ⇒ m₁ ] VL `in WM) (ξ-`let-return[≰ m≰m₀ ⇒-]! _ `in M⟶[≤]) = m≰m₀ m≤m₀
+DeferredTerm⇒¬⟶[≤] (`let-return[≤ m≤m₀ ⇒ m₁ ] VL `in WM) (ξ-`let-return[≤ _ ⇒-]! _ `in M⟶[≤])    = DeferredTerm⇒¬⟶[≤] WM M⟶[≤]
+DeferredTerm⇒¬⟶[≤] (`λ⦂[ m₀ ] S ∘ WL)                    (ξ-`λ⦂[-]-∘ L⟶[≤])                      = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
+DeferredTerm⇒¬⟶[≤] (WL `$ WM)                            ξ- L⟶[≤] `$?                            = DeferredTerm⇒¬⟶[≤] WL L⟶[≤]
+DeferredTerm⇒¬⟶[≤] (WL `$ WM)                            (ξ-! _ `$ M⟶[≤])                        = DeferredTerm⇒¬⟶[≤] WM M⟶[≤]
 
 ⟶-det : L ⟶ L₀ →
         L ⟶ L₁ →
@@ -81,29 +87,41 @@ DeferredTerm⇒¬⟶[≤] (WL `$ WM)                         (ξ-! _ `$ M⟶[≤
 ⟶-det (β-`⊸ VM₀) (ξ-! VL₁ `$ M⟶₁) with () ← WeakNorm⇒¬⟶ VM₀ M⟶₁
 ⟶-det (β-`⊸ VM₀) (β-`⊸ VM₁) = refl
 
-⟶[≤]-det (O.ξ-`lift[-⇒-] L⟶[≤]₀) (O.ξ-`lift[-⇒-] L⟶[≤]₁) = cong `lift[ _ ⇒ _ ] (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
-⟶[≤]-det (O.ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤]₀) (O.ξ-`unlift[≰ _ ⇒-] L⟶[≤]₁) = cong `unlift[ _ ⇒ _ ] (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
-⟶[≤]-det (O.ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤]₀) (O.ξ-`unlift[≤ m≤m₀ ⇒-] L⟶₁) with () ← m≰m₀ m≤m₀
-⟶[≤]-det (O.ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤]₀) (O.β-`↑ m≤m₀ WL₁) with () ← m≰m₀ m≤m₀
-⟶[≤]-det (O.ξ-`unlift[≤ m≤m₀ ⇒-] L⟶₀) (O.ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤]₁) with () ← m≰m₀ m≤m₀
-⟶[≤]-det (O.ξ-`unlift[≤ m≤m₀ ⇒-] L⟶₀) (O.ξ-`unlift[≤ _ ⇒-] L⟶₁) = cong `unlift[ _ ⇒ _ ] (⟶-det L⟶₀ L⟶₁)
-⟶[≤]-det (O.ξ-`unlift[≤ m≤m₀ ⇒-] (ξ-`lift[-⇒-] L⟶[≤]₀)) (O.β-`↑ _ WL₁) with () ← DeferredTerm⇒¬⟶[≤] WL₁ L⟶[≤]₀
-⟶[≤]-det (O.β-`↑ m≤m₀ WL₀) (O.ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤]₁) with () ← m≰m₀ m≤m₀
-⟶[≤]-det (O.β-`↑ m≤m₀ WL₀) (O.ξ-`unlift[≤ _ ⇒-] (ξ-`lift[-⇒-] L⟶[≤]₁)) with () ← DeferredTerm⇒¬⟶[≤] WL₀ L⟶[≤]₁
-⟶[≤]-det (O.β-`↑ m≤m₀ WL₀) (O.β-`↑ _ WL₁) = refl
-⟶[≤]-det (O.ξ-`return[≰ m≰m₀ ⇒-] L⟶[≤]₀) (O.ξ-`return[≰ _ ⇒-] L⟶[≤]₁) = cong `return[ _ ⇒ _ ] (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
-⟶[≤]-det (O.ξ-`return[≰ m≰m₀ ⇒-] L⟶[≤]₀) (O.ξ-`return[≤ m≤m₀ ⇒-] L⟶₁) with () ← m≰m₀ m≤m₀
-⟶[≤]-det (O.ξ-`return[≤ m≤m₀ ⇒-] L⟶₀) (O.ξ-`return[≰ m≰m₀ ⇒-] L⟶[≤]₁) with () ← m≰m₀ m≤m₀
-⟶[≤]-det (O.ξ-`return[≤ m≤m₀ ⇒-] L⟶₀) (O.ξ-`return[≤ _ ⇒-] L⟶₁) = cong `return[ _ ⇒ _ ] (⟶-det L⟶₀ L⟶₁)
-⟶[≤]-det O.ξ-`let-return[-⇒-] L⟶[≤]₀ `in? O.ξ-`let-return[-⇒-] L⟶[≤]₁ `in? = cong (`let-return[ _ ⇒ _ ]_`in _) (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
-⟶[≤]-det O.ξ-`let-return[-⇒-] L⟶[≤]₀ `in? (O.ξ-`let-return[-⇒-]! WL₁ `in M⟶[≤]₁) with () ← DeferredTerm⇒¬⟶[≤] WL₁ L⟶[≤]₀
-⟶[≤]-det (O.ξ-`let-return[-⇒-]! WL₀ `in M⟶[≤]₀) O.ξ-`let-return[-⇒-] L⟶[≤]₁ `in? with () ← DeferredTerm⇒¬⟶[≤] WL₀ L⟶[≤]₁
-⟶[≤]-det (O.ξ-`let-return[-⇒-]! WL₀ `in M⟶[≤]₀) (O.ξ-`let-return[-⇒-]! WL₁ `in M⟶[≤]₁) = cong `let-return[ _ ⇒ _ ] _ `in_ (⟶[≤]-det M⟶[≤]₀ M⟶[≤]₁)
-⟶[≤]-det O.ξ- L⟶[≤]₀ `$? O.ξ- L⟶[≤]₁ `$? = cong (_`$ _) (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
-⟶[≤]-det O.ξ- L⟶[≤]₀ `$? (O.ξ-! WL₁ `$ M⟶[≤]₁) with () ← DeferredTerm⇒¬⟶[≤] WL₁ L⟶[≤]₀
-⟶[≤]-det (O.ξ-! WL₀ `$ M⟶[≤]₀) O.ξ- L⟶[≤]₁ `$? with () ← DeferredTerm⇒¬⟶[≤] WL₀ L⟶[≤]₁
-⟶[≤]-det (O.ξ-! WL₀ `$ M⟶[≤]₀) (O.ξ-! WL₁ `$ M⟶[≤]₁) = cong (_ `$_) (⟶[≤]-det M⟶[≤]₀ M⟶[≤]₁)
-⟶[≤]-det (O.ξ-`λ⦂[-]-∘ L⟶[≤]₀) (O.ξ-`λ⦂[-]-∘ L⟶[≤]₁) = cong `λ⦂[ _ ] _ ∘_ (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
+⟶[≤]-det (O.ξ-`lift[-⇒-] L⟶[≤]₀)                        (O.ξ-`lift[-⇒-] L⟶[≤]₁)                      = cong `lift[ _ ⇒ _ ] (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
+⟶[≤]-det (O.ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤]₀)                (O.ξ-`unlift[≰ _ ⇒-] L⟶[≤]₁)                 = cong `unlift[ _ ⇒ _ ] (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
+⟶[≤]-det (O.ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤]₀)                (O.ξ-`unlift[≤ m≤m₀ ⇒-] L⟶₁)                 with () ← m≰m₀ m≤m₀
+⟶[≤]-det (O.ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤]₀)                (O.β-`↑ m≤m₀ WL₁)                            with () ← m≰m₀ m≤m₀
+⟶[≤]-det (O.ξ-`unlift[≤ m≤m₀ ⇒-] L⟶₀)                   (O.ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤]₁)              with () ← m≰m₀ m≤m₀
+⟶[≤]-det (O.ξ-`unlift[≤ m≤m₀ ⇒-] L⟶₀)                   (O.ξ-`unlift[≤ _ ⇒-] L⟶₁)                    = cong `unlift[ _ ⇒ _ ] (⟶-det L⟶₀ L⟶₁)
+⟶[≤]-det (O.ξ-`unlift[≤ m≤m₀ ⇒-] (ξ-`lift[-⇒-] L⟶[≤]₀)) (O.β-`↑ _ WL₁)                               with () ← DeferredTerm⇒¬⟶[≤] WL₁ L⟶[≤]₀
+⟶[≤]-det (O.β-`↑ m≤m₀ WL₀)                              (O.ξ-`unlift[≰ m≰m₀ ⇒-] L⟶[≤]₁)              with () ← m≰m₀ m≤m₀
+⟶[≤]-det (O.β-`↑ m≤m₀ WL₀)                              (O.ξ-`unlift[≤ _ ⇒-] (ξ-`lift[-⇒-] L⟶[≤]₁))  with () ← DeferredTerm⇒¬⟶[≤] WL₀ L⟶[≤]₁
+⟶[≤]-det (O.β-`↑ m≤m₀ WL₀)                              (O.β-`↑ _ WL₁)                               = refl
+⟶[≤]-det (O.ξ-`return[≰ m≰m₀ ⇒-] L⟶[≤]₀)                (O.ξ-`return[≰ _ ⇒-] L⟶[≤]₁)                 = cong `return[ _ ⇒ _ ] (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
+⟶[≤]-det (O.ξ-`return[≰ m≰m₀ ⇒-] L⟶[≤]₀)                (O.ξ-`return[≤ m≤m₀ ⇒-] L⟶₁)                 with () ← m≰m₀ m≤m₀
+⟶[≤]-det (O.ξ-`return[≤ m≤m₀ ⇒-] L⟶₀)                   (O.ξ-`return[≰ m≰m₀ ⇒-] L⟶[≤]₁)              with () ← m≰m₀ m≤m₀
+⟶[≤]-det (O.ξ-`return[≤ m≤m₀ ⇒-] L⟶₀)                   (O.ξ-`return[≤ _ ⇒-] L⟶₁)                    = cong `return[ _ ⇒ _ ] (⟶-det L⟶₀ L⟶₁)
+⟶[≤]-det O.ξ-`let-return[≰ m≰m₀ ⇒-] L⟶[≤]₀ `in?         O.ξ-`let-return[≰ _ ⇒-] L⟶[≤]₁ `in?          = cong (`let-return[ _ ⇒ _ ]_`in _) (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
+⟶[≤]-det O.ξ-`let-return[≰ m≰m₀ ⇒-] L⟶[≤]₀ `in?         O.ξ-`let-return[≤ m≤m₀ ⇒-] L⟶[≤]₁ `in?       with () ← m≰m₀ m≤m₀
+⟶[≤]-det O.ξ-`let-return[≰ m≰m₀ ⇒-] L⟶[≤]₀ `in?         (O.ξ-`let-return[≰ _ ⇒-]! WL₁ `in M⟶[≤]₁)    with () ← DeferredTerm⇒¬⟶[≤] WL₁ L⟶[≤]₀
+⟶[≤]-det O.ξ-`let-return[≰ m≰m₀ ⇒-] L⟶[≤]₀ `in?         (O.ξ-`let-return[≤ m≤m₀ ⇒-]! VL₁ `in M⟶[≤]₁) with () ← m≰m₀ m≤m₀
+⟶[≤]-det O.ξ-`let-return[≤ m≤m₀ ⇒-] L⟶₀ `in?            O.ξ-`let-return[≰ m≰m₀ ⇒-] L⟶[≤]₁ `in?       with () ← m≰m₀ m≤m₀
+⟶[≤]-det O.ξ-`let-return[≤ m≤m₀ ⇒-] L⟶₀ `in?            O.ξ-`let-return[≤ _ ⇒-] L⟶₁ `in?             = cong (`let-return[ _ ⇒ _ ]_`in _) (⟶-det L⟶₀ L⟶₁)
+⟶[≤]-det O.ξ-`let-return[≤ m≤m₀ ⇒-] L⟶₀ `in?            (O.ξ-`let-return[≰ m≰m₀ ⇒-]! WL₁ `in M⟶[≤]₁) with () ← m≰m₀ m≤m₀
+⟶[≤]-det O.ξ-`let-return[≤ m≤m₀ ⇒-] L⟶₀ `in?            (O.ξ-`let-return[≤ _ ⇒-]! VL₁ `in M⟶[≤]₁)    with () ← WeakNorm⇒¬⟶ VL₁ L⟶₀
+⟶[≤]-det (O.ξ-`let-return[≰ m≰m₀ ⇒-]! WL₀ `in M⟶[≤]₀)   O.ξ-`let-return[≰ _ ⇒-] L⟶[≤]₁ `in?          with () ← DeferredTerm⇒¬⟶[≤] WL₀ L⟶[≤]₁
+⟶[≤]-det (O.ξ-`let-return[≰ m≰m₀ ⇒-]! WL₀ `in M⟶[≤]₀)   O.ξ-`let-return[≤ m≤m₀ ⇒-] L⟶₁ `in?          with () ← m≰m₀ m≤m₀
+⟶[≤]-det (O.ξ-`let-return[≤ m≤m₀ ⇒-]! VL₀ `in M⟶[≤]₀)   O.ξ-`let-return[≰ m≰m₀ ⇒-] L⟶[≤]₁ `in?       with () ← m≰m₀ m≤m₀
+⟶[≤]-det (O.ξ-`let-return[≤ m≰m₀ ⇒-]! VL₀ `in M⟶[≤]₀)   O.ξ-`let-return[≤ _ ⇒-] L⟶₁ `in?             with () ← WeakNorm⇒¬⟶ VL₀ L⟶₁
+⟶[≤]-det (O.ξ-`let-return[≰ m≰m₀ ⇒-]! WL₀ `in M⟶[≤]₀)   (O.ξ-`let-return[≰ _ ⇒-]! WL₁ `in M⟶[≤]₁)    = cong `let-return[ _ ⇒ _ ] _ `in_ (⟶[≤]-det M⟶[≤]₀ M⟶[≤]₁)
+⟶[≤]-det (O.ξ-`let-return[≰ m≰m₀ ⇒-]! WL₀ `in M⟶[≤]₀)   (O.ξ-`let-return[≤ m≤m₀ ⇒-]! VL₁ `in M⟶[≤]₁) with () ← m≰m₀ m≤m₀
+⟶[≤]-det (O.ξ-`let-return[≤ m≤m₀ ⇒-]! VL₀ `in M⟶[≤]₀)   (O.ξ-`let-return[≰ m≰m₀ ⇒-]! WL₁ `in M⟶[≤]₁) with () ← m≰m₀ m≤m₀
+⟶[≤]-det (O.ξ-`let-return[≤ m≤m₀ ⇒-]! VL₀ `in M⟶[≤]₀)   (O.ξ-`let-return[≤ _ ⇒-]! VL₁ `in M⟶[≤]₁)    = cong `let-return[ _ ⇒ _ ] _ `in_ (⟶[≤]-det M⟶[≤]₀ M⟶[≤]₁)
+⟶[≤]-det O.ξ- L⟶[≤]₀ `$?                                O.ξ- L⟶[≤]₁ `$?                              = cong (_`$ _) (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
+⟶[≤]-det O.ξ- L⟶[≤]₀ `$?                                (O.ξ-! WL₁ `$ M⟶[≤]₁)                        with () ← DeferredTerm⇒¬⟶[≤] WL₁ L⟶[≤]₀
+⟶[≤]-det (O.ξ-! WL₀ `$ M⟶[≤]₀)                          O.ξ- L⟶[≤]₁ `$?                              with () ← DeferredTerm⇒¬⟶[≤] WL₀ L⟶[≤]₁
+⟶[≤]-det (O.ξ-! WL₀ `$ M⟶[≤]₀)                          (O.ξ-! WL₁ `$ M⟶[≤]₁)                        = cong (_ `$_) (⟶[≤]-det M⟶[≤]₀ M⟶[≤]₁)
+⟶[≤]-det (O.ξ-`λ⦂[-]-∘ L⟶[≤]₀)                          (O.ξ-`λ⦂[-]-∘ L⟶[≤]₁)                        = cong `λ⦂[ _ ] _ ∘_ (⟶[≤]-det L⟶[≤]₀ L⟶[≤]₁)
 
 -- Properties of multi-step relations
 --
@@ -291,20 +309,45 @@ halt[≤]-`return-inversion-≰ : ¬ (m′ ≤ₘ m₀) →
                               halt[ m′ ≤] L
 halt[≤]-`return-inversion-≰ m′≰m₀ (_  , rL⟶[≤]* , WL′) = halt[≤]-`return-inversion-≰-helper m′≰m₀ rL⟶[≤]* WL′
 
-halt[≤]-`let-return-`in-inversion-helper : `let-return[ m₀ ⇒ m ] L `in M ⟶[ m′ ≤]* L′ →
-                                           DeferredTerm[ m′ ≤] L′ →
-                                           ---------------------------------------------
-                                           halt[ m′ ≤] L × halt[ m′ ≤] M
-halt[≤]-`let-return-`in-inversion-helper ε                                               (`let-return[ _ ⇒ _ ] WL `in WM) = (-, ε , WL) , (-, ε , WM)
-halt[≤]-`let-return-`in-inversion-helper (ξ-`let-return[-⇒-] L⟶[≤] `in? ◅ lrL′M⟶[≤]*)    WLM″
-  with (_ , L′⟶[≤]* , WL″) , hM ← halt[≤]-`let-return-`in-inversion-helper lrL′M⟶[≤]* WLM″                                = (-, L⟶[≤] ◅ L′⟶[≤]* , WL″) , hM
-halt[≤]-`let-return-`in-inversion-helper (ξ-`let-return[-⇒-]! WL `in M⟶[≤] ◅ lrL′M⟶[≤]*) WLM″
-  with hL , (_ , M′⟶[≤]* , WM″) ← halt[≤]-`let-return-`in-inversion-helper lrL′M⟶[≤]* WLM″                                = hL , (-, M⟶[≤] ◅ M′⟶[≤]* , WM″)
+halt[≤]-`let-return[≤]-`in-inversion-helper : m′ ≤ₘ m₀ →
+                                              `let-return[ m₀ ⇒ m ] L `in M ⟶[ m′ ≤]* L′ →
+                                              DeferredTerm[ m′ ≤] L′ →
+                                              ---------------------------------------------
+                                              halt L × halt[ m′ ≤] M
+halt[≤]-`let-return[≤]-`in-inversion-helper m′≤m₀ ε                                                      (`let-return[≰ m′≰m₀ ⇒ _ ] WL `in WM) with () ← m′≰m₀ m′≤m₀
+halt[≤]-`let-return[≤]-`in-inversion-helper m′≤m₀ ε                                                      (`let-return[≤ _ ⇒ _ ] VL `in WM)     = (-, ε , VL) , (-, ε , WM)
+halt[≤]-`let-return[≤]-`in-inversion-helper m′≤m₀ (ξ-`let-return[≰ m′≰m₀ ⇒-] L⟶[≤] `in? ◅ lrL′M⟶[≤]*)    WLM″                                  with () ← m′≰m₀ m′≤m₀
+halt[≤]-`let-return[≤]-`in-inversion-helper m′≤m₀ (ξ-`let-return[≤ _ ⇒-] L⟶ `in? ◅ lrL′M⟶[≤]*)        WLM″
+  with (_ , L′⟶* , WL″) , hM ← halt[≤]-`let-return[≤]-`in-inversion-helper m′≤m₀ lrL′M⟶[≤]* WLM″                                               = (-, L⟶ ◅ L′⟶* , WL″) , hM
+halt[≤]-`let-return[≤]-`in-inversion-helper m′≤m₀ (ξ-`let-return[≰ m′≰m₀ ⇒-]! WL `in M⟶[≤] ◅ lrL′M⟶[≤]*) WLM″                                  with () ← m′≰m₀ m′≤m₀
+halt[≤]-`let-return[≤]-`in-inversion-helper m′≤m₀ (ξ-`let-return[≤ _ ⇒-]! VL `in M⟶[≤] ◅ lrL′M⟶[≤]*)     WLM″
+  with hL , (_ , M′⟶[≤]* , WM″) ← halt[≤]-`let-return[≤]-`in-inversion-helper m′≤m₀ lrL′M⟶[≤]* WLM″                                            = hL , (-, M⟶[≤] ◅ M′⟶[≤]* , WM″)
 
-halt[≤]-`let-return-`in-inversion : halt[ m′ ≤] (`let-return[ m₀ ⇒ m ] L `in M) →
-                                    ----------------------------------------------
-                                    halt[ m′ ≤] L × halt[ m′ ≤] M
-halt[≤]-`let-return-`in-inversion (_  , lrLM⟶[≤]* , WL′) = halt[≤]-`let-return-`in-inversion-helper lrLM⟶[≤]* WL′
+halt[≤]-`let-return[≤]-`in-inversion : m′ ≤ₘ m₀ →
+                                       halt[ m′ ≤] (`let-return[ m₀ ⇒ m ] L `in M) →
+                                       ----------------------------------------------
+                                       halt L × halt[ m′ ≤] M
+halt[≤]-`let-return[≤]-`in-inversion m′≤m₀ (_  , lrLM⟶[≤]* , WL′) = halt[≤]-`let-return[≤]-`in-inversion-helper m′≤m₀ lrLM⟶[≤]* WL′
+
+halt[≤]-`let-return[≰]-`in-inversion-helper : ¬ (m′ ≤ₘ m₀) →
+                                              `let-return[ m₀ ⇒ m ] L `in M ⟶[ m′ ≤]* L′ →
+                                              DeferredTerm[ m′ ≤] L′ →
+                                              ---------------------------------------------
+                                              halt[ m′ ≤] L × halt[ m′ ≤] M
+halt[≤]-`let-return[≰]-`in-inversion-helper m′≰m₀ ε                                                      (`let-return[≰ _ ⇒ _ ] WL `in WM)     = (-, ε , WL) , (-, ε , WM)
+halt[≤]-`let-return[≰]-`in-inversion-helper m′≰m₀ ε                                                      (`let-return[≤ m′≤m₀ ⇒ _ ] VL `in WM) with () ← m′≰m₀ m′≤m₀
+halt[≤]-`let-return[≰]-`in-inversion-helper m′≰m₀ (ξ-`let-return[≰ m′≰m₀ ⇒-] L⟶[≤] `in? ◅ lrL′M⟶[≤]*)    WLM″
+  with (_ , L′⟶[≤]* , WL″) , hM ← halt[≤]-`let-return[≰]-`in-inversion-helper m′≰m₀ lrL′M⟶[≤]* WLM″                                            = (-, L⟶[≤] ◅ L′⟶[≤]* , WL″) , hM
+halt[≤]-`let-return[≰]-`in-inversion-helper m′≰m₀ (ξ-`let-return[≤ m′≤m₀ ⇒-] L⟶[≤] `in? ◅ lrL′M⟶[≤]*)    WLM″                                  with () ← m′≰m₀ m′≤m₀
+halt[≤]-`let-return[≰]-`in-inversion-helper m′≰m₀ (ξ-`let-return[≰ _ ⇒-]! WL `in M⟶[≤] ◅ lrL′M⟶[≤]*)     WLM″
+  with hL , (_ , M′⟶[≤]* , WM″) ← halt[≤]-`let-return[≰]-`in-inversion-helper m′≰m₀ lrL′M⟶[≤]* WLM″                                            = hL , (-, M⟶[≤] ◅ M′⟶[≤]* , WM″)
+halt[≤]-`let-return[≰]-`in-inversion-helper m′≰m₀ (ξ-`let-return[≤ m′≤m₀ ⇒-]! WL `in M⟶[≤] ◅ lrL′M⟶[≤]*) WLM″                                  with () ← m′≰m₀ m′≤m₀
+
+halt[≤]-`let-return[≰]-`in-inversion : ¬ (m′ ≤ₘ m₀) →
+                                       halt[ m′ ≤] (`let-return[ m₀ ⇒ m ] L `in M) →
+                                       ----------------------------------------------
+                                       halt[ m′ ≤] L × halt[ m′ ≤] M
+halt[≤]-`let-return[≰]-`in-inversion m′≰m₀ (_  , lrLM⟶[≤]* , WL′) = halt[≤]-`let-return[≰]-`in-inversion-helper m′≰m₀ lrLM⟶[≤]* WL′
 
 halt[≤]-`λ⦂-∘-inversion-helper : `λ⦂[ m ] S ∘ L ⟶[ m′ ≤]* L′ →
                                  DeferredTerm[ m′ ≤] L′ →

@@ -46,6 +46,7 @@ module Variables where
     S S′ S″ S‴ S₀ S₁ S₂ S₃ T T′ T″ T‴ T₀ T₁ T₂ T₃ : Type
     L L′ L″ L‴ L₀ L₁ L₂ L₃ M M′ M″ M‴ M₀ M₁ M₂ M₃ N N′ N″ N‴ N₀ N₁ N₂ N₃ : Term
     e e′ e″ e‴ e₀ e₁ e₂ e₃ : ContextEntry
-    Γ Γ′ Γ″ Γ‴ Γ₀ Γ₁ Γ₂ Γ₃ Δ Δ′ Δ″ Δ‴ Δ₀ Δ₁ Δ₂ Δ₃ : Context
+    Γ Γ′ Γ″ Γ‴ Γ₀ Γ₀′ Γ₀″ Γ₀‴ Γ₁ Γ₁′ Γ₁″ Γ₁‴ Γ₂ Γ₂′ Γ₂″ Γ₂‴ Γ₃ Γ₃′ Γ₃″ Γ₃‴ : Context
+    Δ Δ′ Δ″ Δ‴ Δ₀ Δ₀′ Δ₀″ Δ₀‴ Δ₁ Δ₁′ Δ₁″ Δ₁‴ Δ₂ Δ₂′ Δ₂″ Δ₂‴ Δ₃ Δ₃′ Δ₃″ Δ₃‴ : Context
 
 open Variables public
