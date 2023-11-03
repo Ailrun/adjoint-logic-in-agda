@@ -372,30 +372,30 @@ preservation[≤] : ⊢[ m ] Γ →
                   -----------------
                   Γ ⊢[ m ] L′ ⦂ S
 
-preservation ⊢Γ ⊢S                     (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                                      ξ- L⟶ `$?                  = Γ~ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M
+preservation ⊢Γ ⊢S                     (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                                                  ξ- L⟶ `$?                   = Γ~ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M
   where
     ⊢L′ = preservation (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ ⊢L L⟶
 
-preservation ⊢Γ ⊢S                     (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                                      (ξ-! VL `$ M⟶)
-  with ⊢T `⊸[ _ ] _ ← ⊢⊸                                                                                                    = Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M′
+preservation ⊢Γ ⊢S                     (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                                                  (ξ-! VL `$ M⟶)
+  with ⊢T `⊸[ _ ] _ ← ⊢⊸                                                                                                                 = Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M′
   where
     ⊢M′ = preservation (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T ⊢M M⟶
 
-preservation ⊢Γ ⊢S                     (Γ~ ⊢ `λ⦂-∘ ⊢L ⦂ ⊢⊸ `$ ⊢M)                                (β-`⊸ VM)                  = true⊢[/]ʳ [] Γ~ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢M ⊢S ⊢L
-preservation ⊢Γ (`↑[-⇒ <m ][ ↑∈m ] ⊢S) (`lift[-⇒-] ⊢L)                                           (ξ-`lift[-⇒-] L⟶[≤])       = `lift[-⇒-] ⊢L′
+preservation ⊢Γ ⊢S                     (Γ~ ⊢ `λ⦂-∘ ⊢L ⦂ ⊢⊸ `$ ⊢M)                                            (β-`⊸ VM)                   = true⊢[/]ʳ [] Γ~ (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢M ⊢S ⊢L
+preservation ⊢Γ (`↑[-⇒ <m ][ ↑∈m ] ⊢S) (`lift[-⇒-] ⊢L)                                                       (ξ-`lift[-⇒-] L⟶[≤])        = `lift[-⇒-] ⊢L′
   where
     ⊢L′ = preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ <m) ⊢S ⊢L L⟶[≤]
 
-preservation ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)                                (ξ-`unlift[-⇒-] L⟶)        = Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
+preservation ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)                                            (ξ-`unlift[-⇒-] L⟶)         = Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
   where
     ⊢L′ = preservation (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ ⊢L L⟶
 
-preservation ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[-⇒-] ⊢L ⦂ ⊢↑)                     (β-`↑ WL)                  = ∤⁻¹-preserves-⊢ [] ⊢L Γ∤
-preservation ⊢Γ (`↓[-⇒ m< ][ ↓∈m ] ⊢S) (Γ∤ ⊢`return[-⇒-] ⊢L)                                     (ξ-`return[-⇒-] L⟶)        = Γ∤ ⊢`return[-⇒-] ⊢L′
+preservation ⊢Γ ⊢S                     (Γ∤ ⊢`unlift[-⇒-] `lift[-⇒-] ⊢L ⦂ ⊢↑)                                 (β-`↑ WL)                   = ∤⁻¹-preserves-⊢ [] ⊢L Γ∤
+preservation ⊢Γ (`↓[-⇒ m< ][ ↓∈m ] ⊢S) (Γ∤ ⊢`return[-⇒-] ⊢L)                                                 (ξ-`return[-⇒-] L⟶)         = Γ∤ ⊢`return[-⇒-] ⊢L′
   where
     ⊢L′ = preservation (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S ⊢L L⟶
 
-preservation ⊢Γ ⊢S                     (Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L ⦂ ⊢↓ `in ⊢M)          ξ-`let-return[-⇒-] L⟶ `in- = Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L′ ⦂ ⊢↓ `in ⊢M
+preservation ⊢Γ ⊢S                     (Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L ⦂ ⊢↓ `in ⊢M)                      ξ-`let-return[-⇒-] L⟶ `in-  = Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L′ ⦂ ⊢↓ `in ⊢M
   where
     ⊢L′ = preservation (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤) ⊢↓ ⊢L L⟶
 
@@ -404,36 +404,38 @@ preservation ⊢Γ ⊢S                     (Γ~ & Γ₀∤ ⊢`let-return[ m≤
      | Γ₀₁ , Γ₀~ , Γ₀₁Del ← ∤⇒~⊞-is-all-delʳ Γ₀∤
      | Γ₀′₁ , Γ₀′~ , Γ₀′₁Del ← ∤⇒~⊞-is-all-delʳ Γ₀′∤
     with Γ″ , Γ″~ , Γ~′ ← ~⊞-assocˡ Γ~ Γ₀~
-      with Γ‴ , Γ‴~ , Γ~″ ← ~⊞-assocˡ Γ~′ Γ₀′~                                                                              = true⊢[/]ˡ [] Γ~″ (⊢∧∤⇒⊢ (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤) Γ₀′∤) ⊢L ⊢S (~⊞-is-all-del∧⊢⇒⊢ʳ (to-right ∷ Γ‴~) (unusable ∷ Γ₀′₁Del) (~⊞-is-all-del∧⊢⇒⊢ʳ (to-right ∷ Γ″~) (unusable ∷ Γ₀₁Del) ⊢M))
+      with Γ‴ , Γ‴~ , Γ~″ ← ~⊞-assocˡ Γ~′ Γ₀′~
+        with ⊢Γ₀″ ← ⊢∧∤⇒⊢ (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤) Γ₀′∤
+           | ⊢M′ ← ~⊞-is-all-del∧⊢⇒⊢ʳ (to-right ∷ Γ‴~) (unusable ∷ Γ₀′₁Del) (~⊞-is-all-del∧⊢⇒⊢ʳ (to-right ∷ Γ″~) (unusable ∷ Γ₀₁Del) ⊢M) = true⊢[/]ˡ [] Γ~″ ⊢Γ₀″ ⊢L ⊢S ⊢M′
 
-preservation[≤] ⊢Γ ⊢S                   (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                  ξ- L⟶[≤] `$?                       = Γ~ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M
+preservation[≤] ⊢Γ ⊢S                   (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                             ξ- L⟶[≤] `$?                            = Γ~ ⊢ ⊢L′ ⦂ ⊢⊸ `$ ⊢M
   where
     ⊢L′ = preservation[≤] (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) ⊢⊸ ⊢L L⟶[≤]
 
-preservation[≤] ⊢Γ ⊢S                   (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                  (ξ-! WL `$ M⟶[≤])
-  with ⊢T `⊸[ _ ] _ ← ⊢⊸                                                                                         = Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M′
+preservation[≤] ⊢Γ ⊢S                   (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                             (ξ-! WL `$ M⟶[≤])
+  with ⊢T `⊸[ _ ] _ ← ⊢⊸                                                                                                         = Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M′
   where
     ⊢M′ = preservation[≤] (⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢T ⊢M M⟶[≤]
 
-preservation[≤] ⊢Γ (`↑[-⇒ <m ][ _ ] ⊢S) (`lift[-⇒-] ⊢L)                       (ξ-`lift[-⇒-] L⟶[≤])               = `lift[-⇒-] ⊢L′
+preservation[≤] ⊢Γ (`↑[-⇒ <m ][ _ ] ⊢S) (`lift[-⇒-] ⊢L)                                  (ξ-`lift[-⇒-] L⟶[≤])                    = `lift[-⇒-] ⊢L′
   where
     ⊢L′ = preservation[≤] (⊢∧<ₘ⇒⊢ ⊢Γ <m) ⊢S ⊢L L⟶[≤] 
 
-preservation[≤] ⊢Γ ⊢S                   (Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)            (ξ-`unlift[≰ ≰m₀ ⇒-] L⟶[≤])        = Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
+preservation[≤] ⊢Γ ⊢S                   (Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)                       (ξ-`unlift[≰ ≰m₀ ⇒-] L⟶[≤])             = Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
   where
     ⊢L′ = preservation[≤] (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ ⊢L L⟶[≤]
 
-preservation[≤] ⊢Γ ⊢S                   (Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)            (ξ-`unlift[≤ ≤m₀ ⇒-] L⟶)           = Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
+preservation[≤] ⊢Γ ⊢S                   (Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)                       (ξ-`unlift[≤ ≤m₀ ⇒-] L⟶)                = Γ∤ ⊢`unlift[-⇒-] ⊢L′ ⦂ ⊢↑
   where
     ⊢L′ = preservation (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢↑ ⊢L L⟶
 
-preservation[≤] ⊢Γ ⊢S                   (Γ∤ ⊢`unlift[-⇒-] `lift[-⇒-] ⊢L ⦂ ⊢↑) (β-`↑ m₀≤ WL)                      = ∤⁻¹-preserves-⊢ [] ⊢L Γ∤
+preservation[≤] ⊢Γ ⊢S                   (Γ∤ ⊢`unlift[-⇒-] `lift[-⇒-] ⊢L ⦂ ⊢↑)            (β-`↑ m₀≤ WL)                           = ∤⁻¹-preserves-⊢ [] ⊢L Γ∤
 
-preservation[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)  (Γ∤ ⊢`return[-⇒-] ⊢L)                 (ξ-`return[≰ ≰m₀ ⇒-] L⟶[≤])        = Γ∤ ⊢`return[-⇒-] ⊢L′
+preservation[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)  (Γ∤ ⊢`return[-⇒-] ⊢L)                            (ξ-`return[≰ ≰m₀ ⇒-] L⟶[≤])             = Γ∤ ⊢`return[-⇒-] ⊢L′
   where
     ⊢L′ = preservation[≤] (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S ⊢L L⟶[≤]
 
-preservation[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)  (Γ∤ ⊢`return[-⇒-] ⊢L)                 (ξ-`return[≤ ≤m₀ ⇒-] L⟶)           = Γ∤ ⊢`return[-⇒-] ⊢L′
+preservation[≤] ⊢Γ (`↓[-⇒ _ ][ _ ] ⊢S)  (Γ∤ ⊢`return[-⇒-] ⊢L)                            (ξ-`return[≤ ≤m₀ ⇒-] L⟶)                = Γ∤ ⊢`return[-⇒-] ⊢L′
   where
     ⊢L′ = preservation (⊢∧∤⇒⊢ ⊢Γ Γ∤) ⊢S ⊢L L⟶
 
@@ -446,16 +448,16 @@ preservation[≤] ⊢Γ ⊢S                   (Γ~ & Γ₀∤ ⊢`let-return[ m
     ⊢L′ = preservation (⊢∧∤⇒⊢ (⊢∧-~⊞-⇒⊢ˡ ⊢Γ Γ~) Γ₀∤) ⊢↓ ⊢L L⟶
 
 preservation[≤] ⊢Γ ⊢S                   (Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L ⦂ ⊢↓ `in ⊢M) (ξ-`let-return[≰ m₀≰ ⇒-]! WL `in M⟶[≤])
-  with `↓[-⇒ m< ][ _ ] ⊢T ← ⊢↓                                                                                   = Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L ⦂ ⊢↓ `in ⊢M′
+  with `↓[-⇒ m< ][ _ ] ⊢T ← ⊢↓                                                                                                   = Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L ⦂ ⊢↓ `in ⊢M′
   where
     ⊢M′ = preservation[≤] ((⊢T , valid (≤ₘ-trans m≤m₁ (<ₘ⇒≤ₘ m<))) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S ⊢M M⟶[≤]
 
 preservation[≤] ⊢Γ ⊢S                   (Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L ⦂ ⊢↓ `in ⊢M) (ξ-`let-return[≤ m₀≤ ⇒-]! VL `in M⟶[≤])
-  with `↓[-⇒ m< ][ _ ] ⊢T ← ⊢↓                                                                                   = Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L ⦂ ⊢↓ `in ⊢M′
+  with `↓[-⇒ m< ][ _ ] ⊢T ← ⊢↓                                                                                                   = Γ~ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢L ⦂ ⊢↓ `in ⊢M′
   where
     ⊢M′ = preservation[≤] ((⊢T , valid (≤ₘ-trans m≤m₁ (<ₘ⇒≤ₘ m<))) ∷ ⊢∧-~⊞-⇒⊢ʳ ⊢Γ Γ~) ⊢S ⊢M M⟶[≤]
 
-preservation[≤] ⊢Γ (⊢S `⊸[ _ ] ⊢T)      (`λ⦂-∘ ⊢L)                            (ξ-`λ⦂[-]-∘ L⟶[≤])                 = `λ⦂-∘ ⊢L′
+preservation[≤] ⊢Γ (⊢S `⊸[ _ ] ⊢T)      (`λ⦂-∘ ⊢L)                                       (ξ-`λ⦂[-]-∘ L⟶[≤])                      = `λ⦂-∘ ⊢L′
   where
     ⊢L′ = preservation[≤] ((⊢S , valid ≤ₘ-refl) ∷ ⊢Γ) ⊢T ⊢L L⟶[≤]
 
@@ -625,266 +627,348 @@ progress[≤] {L = `let-return[ m₁ ⇒ _ ] L `in M} m₀ ⊢Γ ⊢S           
 progress[≤]                          m₀ ⊢Γ ⊢S                   (`# x∈)                                = inj₁ (`# _)
 
 
--- -- Weakening property for equivalence
--- --
--- subst-wk[-↑-]≈wk[-↑-] : x ≡ x′ →
---                         k ≡ k′ →
---                         ∀ L L′ →
---                         Γ ⊢[ m ] wk[ x ↑ k ] L ≈[≥ m′ ] wk[ x ↑ k ] L′ ⦂ S →
---                         -------------------------------------------------------
---                         Γ ⊢[ m ] wk[ x′ ↑ k′ ] L ≈[≥ m′ ] wk[ x′ ↑ k′ ] L′ ⦂ S
--- subst-wk[-↑-]≈wk[-↑-] {Γ = Γ} {m} {m′} {S} eq₀ eq₁ L L′ = subst₂ (λ x k → Γ ⊢[ m ] wk[ x ↑ k ] L ≈[≥ m′ ] wk[ x ↑ k ] L′ ⦂ S) eq₀ eq₁
+-- Weakening property for equivalence
+--
+subst-wk[-↑-]≈wk[-↑-] : x ≡ x′ →
+                        k ≡ k′ →
+                        ∀ L L′ →
+                        Γ ⊢[ m ] wk[ x ↑ k ] L ≈[≥ m′ ] wk[ x ↑ k ] L′ ⦂ S →
+                        -------------------------------------------------------
+                        Γ ⊢[ m ] wk[ x′ ↑ k′ ] L ≈[≥ m′ ] wk[ x′ ↑ k′ ] L′ ⦂ S
+subst-wk[-↑-]≈wk[-↑-] {Γ = Γ} {m} {m′} {S} eq₀ eq₁ L L′ = subst₂ (λ x k → Γ ⊢[ m ] wk[ x ↑ k ] L ≈[≥ m′ ] wk[ x ↑ k ] L′ ⦂ S) eq₀ eq₁
 
--- -- Weakening preserves equivalence
--- wk[-↑-]≈wk[-↑-] : ∀ Δ →
---                   Γ′ is-all-del →
---                   Δ ++ Γ ⊢[ m ] L ≈[≥ m′ ] L′ ⦂ S →
---                   --------------------------------------------------------------------------------------------
---                   Δ ++ Γ′ ++ Γ ⊢[ m ] wk[ length Γ′ ↑ length Δ ] L ≈[≥ m′ ] wk[ length Γ′ ↑ length Δ ] L′ ⦂ S
--- wk[-↑-]≈wk[-↑-]                                                                               Δ Γ′Del (`unit ΔΓDel)                              = `unit ΔΓ′ΓDel
---   where
---     ΔΓ′ΓDel = All.++⁺ (All.++⁻ˡ Δ ΔΓDel) (All.++⁺ Γ′Del (All.++⁻ʳ Δ ΔΓDel))
--- wk[-↑-]≈wk[-↑-]                                                                               Δ Γ′Del (`lift[≤ m′≤m ⇒-] L≈L′)                    = `lift[≤ m′≤m ⇒-] (wk[-↑-]≈wk[-↑-] Δ Γ′Del L≈L′)
--- wk[-↑-]≈wk[-↑-]                                                                               Δ Γ′Del (`lift[≰ m′≰m ⇒-] ⊢L ⊢L′)                  = `lift[≰ m′≰m ⇒-] (⊢wk[-↑-] Δ Γ′Del ⊢L) (⊢wk[-↑-] Δ Γ′Del ⊢L′)
--- wk[-↑-]≈wk[-↑-]      {L = `unlift[ m₀ ⇒ _ ] L}          {L′ = `unlift[ _ ⇒ _ ] L′}            Δ Γ′Del (ΔΓ∤ ⊢`unlift[-⇒-] L≈L′ ⦂ ⊢↑)
---     with Δ′ , _ , refl , Δ∤ , Γ∤ ← ∤-preserves-++ Δ ΔΓ∤
---        | _ , Γ′∤ , _ ← is-all-del⇒∤ m₀ Γ′Del                                                                                                     = ΔΓ′Γ∤ ⊢`unlift[-⇒-] L≈L′′ ⦂ ⊢↑
---   where
---     ΔΓ′Γ∤ = ∤-++⁺ Δ∤ (∤-++⁺ Γ′∤ Γ∤)
---     L≈L′′ = subst-wk[-↑-]≈wk[-↑-] (length-respects-∤ Γ′∤) (length-respects-∤ Δ∤) L L′ (wk[-↑-]≈wk[-↑-] Δ′ (∤-preserves-is-all-del Γ′Del Γ′∤) L≈L′)
--- wk[-↑-]≈wk[-↑-]      {L = `return[ m₀ ⇒ _ ] L}          {L′ = `return[ _ ⇒ _ ] L′}            Δ Γ′Del (ΔΓ∤ ⊢`return[-⇒-] L≈L′)
---   with Δ′ , _ , refl , Δ∤ , Γ∤ ← ∤-preserves-++ Δ ΔΓ∤
---      | _ , Γ′∤ , _ ← is-all-del⇒∤ m₀ Γ′Del                                                                                                       = ΔΓ′Γ∤ ⊢`return[-⇒-] L≈L′′
---   where
---     ΔΓ′Γ∤ = ∤-++⁺ Δ∤ (∤-++⁺ Γ′∤ Γ∤)
---     L≈L′′ = subst-wk[-↑-]≈wk[-↑-] (length-respects-∤ Γ′∤) (length-respects-∤ Δ∤) L L′ (wk[-↑-]≈wk[-↑-] Δ′ (∤-preserves-is-all-del Γ′Del Γ′∤) L≈L′)
--- wk[-↑-]≈wk[-↑-] {Γ′} {L = `let-return[ _ ⇒ _ ] L `in M} {L′ = `let-return[ _ ⇒ _ ] L′ `in M′} Δ Γ′Del (ΔΓ~ ⊢`let-return[-⇒-] L≈L′ ⦂ ⊢↓ `in M≈M′)
---     with Δ₀ , Δ₁ , Γ₀ , Γ₁ , refl , refl , Δ~ , Γ~ ← ~⊞-preserves-++ Δ ΔΓ~
---        | Γ′₁ , Γ′~ ← left-bias-~⊞ Γ′
---       with _    , Γ′₁Del ← ~⊞-preserves-is-all-del Γ′Del Γ′~
---          | eqΔ₀ , eqΔ₁ ← length-respects-~⊞ Δ~                                                                                                   = ΔΓ′Γ~ ⊢`let-return[-⇒-] L≈L′′ ⦂ ⊢↓ `in M≈M′′
---   where
---     ΔΓ′Γ~ = ~⊞-++⁺ Δ~ (~⊞-++⁺ Γ′~ Γ~)
---     L≈L′′ = subst-wk[-↑-]≈wk[-↑-] refl eqΔ₀ L L′ (wk[-↑-]≈wk[-↑-] Δ₀ Γ′Del L≈L′)
---     M≈M′′ = subst-wk[-↑-]≈wk[-↑-] (proj₂ (length-respects-~⊞ Γ′~)) (cong suc eqΔ₁) M M′ (wk[-↑-]≈wk[-↑-] (_ ∷ Δ₁) Γ′₁Del M≈M′)
--- wk[-↑-]≈wk[-↑-]                                                                              Δ Γ′Del (`λ⦂-∘ L≈L′)                                = `λ⦂-∘ L≈L′′
---   where
---     L≈L′′ = wk[-↑-]≈wk[-↑-] (_ ∷ Δ) Γ′Del L≈L′
--- wk[-↑-]≈wk[-↑-] {Γ′} {L = L `$ M}                       {L′ = L′ `$ M′}                      Δ Γ′Del (ΔΓ~ ⊢ L≈L′ ⦂ ⊢⊸ `$ M≈M′)
---   with Δ₀ , Δ₁ , _ , _ , refl , refl , Δ~ , Γ~ ← ~⊞-preserves-++ Δ ΔΓ~
---      | _ , Γ′~ ← left-bias-~⊞ Γ′
---     with _    , Γ′₁Del ← ~⊞-preserves-is-all-del Γ′Del Γ′~
---        | eqΔ₀ , eqΔ₁ ← length-respects-~⊞ Δ~                                                                                                     = ΔΓ′Γ~ ⊢ L≈L′′ ⦂ ⊢⊸ `$ M≈M′′
---   where
---     ΔΓ′Γ~ = ~⊞-++⁺ Δ~ (~⊞-++⁺ Γ′~ Γ~)
---     L≈L′′ = subst-wk[-↑-]≈wk[-↑-] refl eqΔ₀ L L′ (wk[-↑-]≈wk[-↑-] Δ₀ Γ′Del L≈L′)
---     M≈M′′ = subst-wk[-↑-]≈wk[-↑-] (proj₂ (length-respects-~⊞ Γ′~)) eqΔ₁ M M′ (wk[-↑-]≈wk[-↑-] Δ₁ Γ′₁Del M≈M′)
--- wk[-↑-]≈wk[-↑-]                                                                              Δ Γ′Del (`#_ {x = x} x∈)
---   with x ℕ.≥? length Δ
--- ...  | yes x≥                                                                                                                                    = `# ≥∧∈-++⇒+-∈-++-++ Δ Γ′Del x∈ x≥
--- ...  | no  x≱                                                                                                                                    = `# <∧∈-++⇒∈-++-++ Δ Γ′Del x∈ (ℕ.≰⇒> x≱)
+-- Weakening preserves equivalence
+wk[-↑-]≈wk[-↑-] : ∀ Δ →
+                  Γ′ is-all-del →
+                  Δ ++ Γ ⊢[ m ] L ≈[≥ m′ ] L′ ⦂ S →
+                  --------------------------------------------------------------------------------------------
+                  Δ ++ Γ′ ++ Γ ⊢[ m ] wk[ length Γ′ ↑ length Δ ] L ≈[≥ m′ ] wk[ length Γ′ ↑ length Δ ] L′ ⦂ S
+wk[-↑-]≈wk[-↑-]                                                                                Δ Γ′Del (`unit ΔΓDel)                             = `unit ΔΓ′ΓDel
+  where
+    ΔΓ′ΓDel = All.++⁺ (All.++⁻ˡ Δ ΔΓDel) (All.++⁺ Γ′Del (All.++⁻ʳ Δ ΔΓDel))
+wk[-↑-]≈wk[-↑-]                                                                                Δ Γ′Del (`lift[≤ m′≤m ⇒-] L≈L′)                   = `lift[≤ m′≤m ⇒-] (wk[-↑-]≈wk[-↑-] Δ Γ′Del L≈L′)
+wk[-↑-]≈wk[-↑-]                                                                                Δ Γ′Del (`lift[≰ m′≰m ⇒-] ⊢L ⊢L′)                 = `lift[≰ m′≰m ⇒-] (⊢wk[-↑-] Δ Γ′Del ⊢L) (⊢wk[-↑-] Δ Γ′Del ⊢L′)
+wk[-↑-]≈wk[-↑-]      {L = `unlift[ m₀ ⇒ _ ] L}           {L′ = `unlift[ _ ⇒ _ ] L′}            Δ Γ′Del (ΔΓ∤ ⊢`unlift[-⇒-] L≈L′ ⦂ ⊢↑)
+    with Δ′ , _ , refl , Δ∤ , Γ∤ ← ∤-preserves-++ Δ ΔΓ∤
+       | _ , Γ′∤ , _ ← is-all-del⇒∤ m₀ Γ′Del                                                                                                     = ΔΓ′Γ∤ ⊢`unlift[-⇒-] L≈L′′ ⦂ ⊢↑
+  where
+    ΔΓ′Γ∤ = ∤-++⁺ Δ∤ (∤-++⁺ Γ′∤ Γ∤)
+    L≈L′′ = subst-wk[-↑-]≈wk[-↑-] (length-respects-∤ Γ′∤) (length-respects-∤ Δ∤) L L′ (wk[-↑-]≈wk[-↑-] Δ′ (∤-preserves-is-all-del Γ′Del Γ′∤) L≈L′)
+wk[-↑-]≈wk[-↑-]      {L = `return[ m₀ ⇒ _ ] L}           {L′ = `return[ _ ⇒ _ ] L′}            Δ Γ′Del (ΔΓ∤ ⊢`return[-⇒-] L≈L′)
+  with Δ′ , _ , refl , Δ∤ , Γ∤ ← ∤-preserves-++ Δ ΔΓ∤
+     | _ , Γ′∤ , _ ← is-all-del⇒∤ m₀ Γ′Del                                                                                                       = ΔΓ′Γ∤ ⊢`return[-⇒-] L≈L′′
+  where
+    ΔΓ′Γ∤ = ∤-++⁺ Δ∤ (∤-++⁺ Γ′∤ Γ∤)
+    L≈L′′ = subst-wk[-↑-]≈wk[-↑-] (length-respects-∤ Γ′∤) (length-respects-∤ Δ∤) L L′ (wk[-↑-]≈wk[-↑-] Δ′ (∤-preserves-is-all-del Γ′Del Γ′∤) L≈L′)
+wk[-↑-]≈wk[-↑-] {Γ′} {L = `let-return[ m₁ ⇒ _ ] L `in M} {L′ = `let-return[ _ ⇒ _ ] L′ `in M′} Δ Γ′Del (ΔΓ~ & Δ₀Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] L≈L′ ⦂ ⊢↓ `in M≈M′)
+    with Δ₀ , Δ₁ , Γ₀ , Γ₁ , refl , refl , Δ~ , Γ~ ← ~⊞-preserves-++ Δ ΔΓ~
+       | Γ′₁ , Γ′~ ← left-bias-~⊞ Γ′
+      with Δ₀′ , _ , refl , Δ₀∤ , Γ₀∤ ← ∤-preserves-++ Δ₀ Δ₀Γ₀∤
+         | _ , Γ′∤ , Γ″Del ← is-all-del⇒∤ m₁ Γ′Del
+         | _    , Γ′₁Del ← ~⊞-preserves-is-all-del Γ′Del Γ′~
+         | eqΔ₀ , eqΔ₁ ← length-respects-~⊞ Δ~                                                                                                   = ΔΓ′Γ~ & Δ₀Γ′Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] L≈L′′ ⦂ ⊢↓ `in M≈M′′
+  where
+    ΔΓ′Γ~ = ~⊞-++⁺ Δ~ (~⊞-++⁺ Γ′~ Γ~)
+    Δ₀Γ′Γ₀∤ = ∤-++⁺ Δ₀∤ (∤-++⁺ Γ′∤ Γ₀∤)
+    L≈L′′ = subst-wk[-↑-]≈wk[-↑-] (length-respects-∤ Γ′∤) (trans (length-respects-∤ Δ₀∤) eqΔ₀) L L′ (wk[-↑-]≈wk[-↑-] Δ₀′ Γ″Del L≈L′)
+    M≈M′′ = subst-wk[-↑-]≈wk[-↑-] (proj₂ (length-respects-~⊞ Γ′~)) (cong suc eqΔ₁) M M′ (wk[-↑-]≈wk[-↑-] (_ ∷ Δ₁) Γ′₁Del M≈M′)
+wk[-↑-]≈wk[-↑-]                                                                               Δ Γ′Del (`λ⦂-∘ L≈L′)                               = `λ⦂-∘ L≈L′′
+  where
+    L≈L′′ = wk[-↑-]≈wk[-↑-] (_ ∷ Δ) Γ′Del L≈L′
+wk[-↑-]≈wk[-↑-] {Γ′} {L = L `$ M}                        {L′ = L′ `$ M′}                      Δ Γ′Del (ΔΓ~ ⊢ L≈L′ ⦂ ⊢⊸ `$ M≈M′)
+  with Δ₀ , Δ₁ , _ , _ , refl , refl , Δ~ , Γ~ ← ~⊞-preserves-++ Δ ΔΓ~
+     | _ , Γ′~ ← left-bias-~⊞ Γ′
+    with _    , Γ′₁Del ← ~⊞-preserves-is-all-del Γ′Del Γ′~
+       | eqΔ₀ , eqΔ₁ ← length-respects-~⊞ Δ~                                                                                                     = ΔΓ′Γ~ ⊢ L≈L′′ ⦂ ⊢⊸ `$ M≈M′′
+  where
+    ΔΓ′Γ~ = ~⊞-++⁺ Δ~ (~⊞-++⁺ Γ′~ Γ~)
+    L≈L′′ = subst-wk[-↑-]≈wk[-↑-] refl eqΔ₀ L L′ (wk[-↑-]≈wk[-↑-] Δ₀ Γ′Del L≈L′)
+    M≈M′′ = subst-wk[-↑-]≈wk[-↑-] (proj₂ (length-respects-~⊞ Γ′~)) eqΔ₁ M M′ (wk[-↑-]≈wk[-↑-] Δ₁ Γ′₁Del M≈M′)
+wk[-↑-]≈wk[-↑-]                                                                               Δ Γ′Del (`#_ {x = x} x∈)
+  with x ℕ.≥? length Δ
+...  | yes x≥                                                                                                                                    = `# ≥∧∈-++⇒+-∈-++-++ Δ Γ′Del x∈ x≥
+...  | no  x≱                                                                                                                                    = `# <∧∈-++⇒∈-++-++ Δ Γ′Del x∈ (ℕ.≰⇒> x≱)
 
--- -- Substitution property for equivalence
--- --
--- subst-[/-]≈[/-] : x ≡ x′ →
---                   ∀ M M′ →
---                   Γ ⊢[ m ] [ L /[ m₀ ] x ] M ≈[≥ m′ ] [ L′ /[ m₀ ] x ] M′ ⦂ T →
---                   --------------------------------------------------------------
---                   Γ ⊢[ m ] [ L /[ m₀ ] x′ ] M ≈[≥ m′ ] [ L′ /[ m₀ ] x′ ] M′ ⦂ T
--- subst-[/-]≈[/-] {Γ = Γ} {m} {L} {m₀} {m′} {L′} {T} eq M M′ = subst (λ x → Γ ⊢[ m ] [ L /[ m₀ ] x ] M ≈[≥ m′ ] [ L′ /[ m₀ ] x ] M′ ⦂ T) eq
+-- Substitution property for equivalence
+--
+subst-[/-]≈[/-] : x ≡ x′ →
+                  ∀ M M′ →
+                  Γ ⊢[ m ] [ L /[ m₀ ] x ] M ≈[≥ m′ ] [ L′ /[ m₀ ] x ] M′ ⦂ T →
+                  --------------------------------------------------------------
+                  Γ ⊢[ m ] [ L /[ m₀ ] x′ ] M ≈[≥ m′ ] [ L′ /[ m₀ ] x′ ] M′ ⦂ T
+subst-[/-]≈[/-] {Γ = Γ} {m} {L} {m₀} {m′} {L′} {T} eq M M′ = subst (λ x → Γ ⊢[ m ] [ L /[ m₀ ] x ] M ≈[≥ m′ ] [ L′ /[ m₀ ] x ] M′ ⦂ T) eq
 
--- -- Strengthening preserves equivalence
--- false⊢[/]≈[/] : ∀ Δ₀ →
---                 Δ₀ ++ (S , m₀ , false) ∷ Δ′ ⊢[ m ] M ≈[≥ m′ ] M′ ⦂ T →
---                 -----------------------------------------------------------------------------------
---                 Δ₀ ++ Δ′ ⊢[ m ] [ L /[ m₀ ] length Δ₀ ] M ≈[≥ m′ ] [ L′ /[ m₀ ] length Δ₀ ] M′ ⦂ T
--- false⊢[/]≈[/]                                                                          Δ₀ (`unit Δ₀dΔ′Del)
---   with Δ₀Del , _ ∷ Δ′Del ← All.++⁻ Δ₀ Δ₀dΔ′Del                                                                                          = `unit Δ₀Δ′Del
---   where
---     Δ₀Δ′Del = All.++⁺ Δ₀Del Δ′Del
+-- Strengthening preserves equivalence
+false⊢[/]≈[/] : ∀ Δ₀ →
+                Δ₀ ++ (S , m₀ , false) ∷ Δ′ ⊢[ m ] M ≈[≥ m′ ] M′ ⦂ T →
+                -----------------------------------------------------------------------------------
+                Δ₀ ++ Δ′ ⊢[ m ] [ L /[ m₀ ] length Δ₀ ] M ≈[≥ m′ ] [ L′ /[ m₀ ] length Δ₀ ] M′ ⦂ T
+false⊢[/]≈[/]                                                                           Δ₀ (`unit Δ₀dΔ′Del)
+  with Δ₀Del , _ ∷ Δ′Del ← All.++⁻ Δ₀ Δ₀dΔ′Del                                                                                          = `unit Δ₀Δ′Del
+  where
+    Δ₀Δ′Del = All.++⁺ Δ₀Del Δ′Del
 
--- false⊢[/]≈[/]                                                                          Δ₀ (`lift[≤ m′≤m ⇒-] M≈M′)                       = `lift[≤ m′≤m ⇒-] M≈M′′
---   where
---     M≈M′′ = false⊢[/]≈[/] Δ₀ M≈M′
--- false⊢[/]≈[/]                                                                          Δ₀ (`lift[≰ m′≰m ⇒-] ⊢M ⊢M′)                     = `lift[≰ m′≰m ⇒-] (false⊢[/] Δ₀ ⊢M) (false⊢[/] Δ₀ ⊢M′)
+false⊢[/]≈[/]                                                                           Δ₀ (`lift[≤ m′≤m ⇒-] M≈M′)                      = `lift[≤ m′≤m ⇒-] M≈M′′
+  where
+    M≈M′′ = false⊢[/]≈[/] Δ₀ M≈M′
+false⊢[/]≈[/]                                                                           Δ₀ (`lift[≰ m′≰m ⇒-] ⊢M ⊢M′)                    = `lift[≰ m′≰m ⇒-] (false⊢[/] Δ₀ ⊢M) (false⊢[/] Δ₀ ⊢M′)
 
--- false⊢[/]≈[/] {M = `unlift[ _ ⇒ _ ] M}           {M′ = `unlift[ _ ⇒ _ ] M′}            Δ₀ (Δ₀dΔ′∤ ⊢`unlift[-⇒-] M≈M′ ⦂ ⊢↑)
---   with _ , _ ∷ _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
---     with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
---        | eqΔ₀ ← length-respects-∤ Δ₀∤
---       with d∤
--- ...      | keep m₁≤
---         rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
---           with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑
--- ...      | delete m₁≰ dDel
---         rewrite dec-no (_ ≤?ₘ _) m₁≰
---           with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑
+false⊢[/]≈[/] {M = `unlift[ _ ⇒ _ ] M}            {M′ = `unlift[ _ ⇒ _ ] M′}            Δ₀ (Δ₀dΔ′∤ ⊢`unlift[-⇒-] M≈M′ ⦂ ⊢↑)
+  with _ , _ ∷ _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
+    with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
+       | eqΔ₀ ← length-respects-∤ Δ₀∤
+      with d∤
+...      | keep m₁≤
+        rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
+          with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑
+...      | delete m₁≰ dDel
+        rewrite dec-no (_ ≤?ₘ _) m₁≰
+          with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑
 
--- false⊢[/]≈[/] {M = `return[ _ ⇒ _ ] M}           {M′ = `return[ _ ⇒ _ ] M′}            Δ₀ (Δ₀dΔ′∤ ⊢`return[-⇒-] M≈M′)
---   with _ , _ ∷ _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
---     with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
---        | eqΔ₀ ← length-respects-∤ Δ₀∤
---       with d∤
--- ...      | keep m₁≤
---         rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
---           with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`return[-⇒-] M≈M′′
--- ...      | delete m₁≰ dDel
---         rewrite dec-no (_ ≤?ₘ _) m₁≰
---           with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`return[-⇒-] M≈M′′
+false⊢[/]≈[/] {M = `return[ _ ⇒ _ ] M}            {M′ = `return[ _ ⇒ _ ] M′}            Δ₀ (Δ₀dΔ′∤ ⊢`return[-⇒-] M≈M′)
+  with _ , _ ∷ _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
+    with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
+       | eqΔ₀ ← length-respects-∤ Δ₀∤
+      with d∤
+...      | keep m₁≤
+        rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
+          with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`return[-⇒-] M≈M′′
+...      | delete m₁≰ dDel
+        rewrite dec-no (_ ≤?ₘ _) m₁≰
+          with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                 = Δ₀Δ′∤ ⊢`return[-⇒-] M≈M′′
 
--- false⊢[/]≈[/] {M = `let-return[ _ ⇒ _ ] M `in N} {M′ = `let-return[ _ ⇒ _ ] M′ `in N′} Δ₀ (Δ₀dΔ′~ ⊢`let-return[-⇒-] M≈M′ ⦂ ⊢↓ `in N≈N′)
---   with Δ₀₀ , Δ₀₁ , _ ∷ Δ′₀ , _ ∷ Δ′₁ , refl , refl , Δ₀~ , unusable ∷ Δ′~ ← ~⊞-preserves-++ Δ₀ Δ₀dΔ′~
---     with eqΔ₀₀ , eqΔ₀₁ ← length-respects-~⊞ Δ₀~                                                                                         = Δ₀Δ′~ ⊢`let-return[-⇒-] M≈M′′ ⦂ ⊢↓ `in N≈N′′
---   where
---     Δ₀Δ′~ = ~⊞-++⁺ Δ₀~ Δ′~
---     M≈M′′ = subst-[/-]≈[/-] eqΔ₀₀ M M′ (false⊢[/]≈[/] Δ₀₀ M≈M′)
---     N≈N′′ = subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ (false⊢[/]≈[/] (_ ∷ Δ₀₁) N≈N′)
+false⊢[/]≈[/] {M = `let-return[ m₁ ⇒ _ ] M `in N} {M′ = `let-return[ _ ⇒ _ ] M′ `in N′} Δ₀ (Δ₀dΔ′~ & Δ₀₀d₀Δ′₀∤ ⊢`let-return[ m≤m₁ ⇒-] M≈M′ ⦂ ⊢↓ `in N≈N′)
+  with Δ₀₀ , Δ₀₁ , _ ∷ Δ′₀ , _ ∷ Δ′₁ , refl , refl , Δ₀~ , unusable ∷ Δ′~ ← ~⊞-preserves-++ Δ₀ Δ₀dΔ′~
+    with Δ₀Δ′~ ← ~⊞-++⁺ Δ₀~ Δ′~
+       | Δ₀₀′ , _ ∷ _ , refl , Δ₀₀∤ , d₀∤ ∷ Δ′₀∤ ← ∤-preserves-++ Δ₀₀ Δ₀₀d₀Δ′₀∤
+       | eqΔ₀₀ , eqΔ₀₁ ← length-respects-~⊞ Δ₀~
+      with Δ₀₀Δ′₀∤ ← ∤-++⁺ Δ₀₀∤ Δ′₀∤
+      with d₀∤
+...      | keep m₁≤
+        rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
+          with M≈M′′ ← subst-[/-]≈[/-] (trans (length-respects-∤ Δ₀₀∤) eqΔ₀₀) M M′ (false⊢[/]≈[/] Δ₀₀′ M≈M′)
+             | N≈N′′ ← subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ (false⊢[/]≈[/] (_ ∷ Δ₀₁) N≈N′)                                             = Δ₀Δ′~ & Δ₀₀Δ′₀∤ ⊢`let-return[ m≤m₁ ⇒-] M≈M′′ ⦂ ⊢↓ `in N≈N′′
+...      | delete m₁≰ d₀Del
+        rewrite dec-no (_ ≤?ₘ _) m₁≰
+          with M≈M′′ ← subst-[/-]≈[/-] (trans (length-respects-∤ Δ₀₀∤) eqΔ₀₀) M M′ (false⊢[/]≈[/] Δ₀₀′ M≈M′)
+             | N≈N′′ ← subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ (false⊢[/]≈[/] (_ ∷ Δ₀₁) N≈N′)                                             = Δ₀Δ′~ & Δ₀₀Δ′₀∤ ⊢`let-return[ m≤m₁ ⇒-] M≈M′′ ⦂ ⊢↓ `in N≈N′′
 
--- false⊢[/]≈[/]                                                                         Δ₀ (`λ⦂-∘ M≈M′)                                   = `λ⦂-∘ M≈M′′
---   where
---     M≈M′′ = false⊢[/]≈[/] (_ ∷ Δ₀) M≈M′
+false⊢[/]≈[/]                                                                          Δ₀ (`λ⦂-∘ M≈M′)                                  = `λ⦂-∘ M≈M′′
+  where
+    M≈M′′ = false⊢[/]≈[/] (_ ∷ Δ₀) M≈M′
 
--- false⊢[/]≈[/] {M = M `$ N}                       {M′ = M′ `$ N′}                      Δ₀ (Δ₀dΔ′~ ⊢ M≈M′ ⦂ ⊢⊸ `$ N≈N′)
---   with ⊢S `⊸[ _ ] _ ← ⊢⊸
---      | Δ₀₀ , Δ₀₁ , _ ∷ Δ′₀ , _ ∷ Δ′₁ , refl , refl , Δ₀~ , unusable ∷ Δ′~ ← ~⊞-preserves-++ Δ₀ Δ₀dΔ′~
---     with eqΔ₀₀ , eqΔ₀₁ ← length-respects-~⊞ Δ₀~                                                                                         = Δ₀Δ′~ ⊢ M≈M′′ ⦂ ⊢⊸ `$ N≈N′′
---   where
---     Δ₀Δ′~ = ~⊞-++⁺ Δ₀~ Δ′~
---     M≈M′′ = subst-[/-]≈[/-] eqΔ₀₀ M M′ (false⊢[/]≈[/] Δ₀₀ M≈M′)
---     N≈N′′ = subst-[/-]≈[/-] eqΔ₀₁ N N′ (false⊢[/]≈[/] Δ₀₁ N≈N′)
+false⊢[/]≈[/] {M = M `$ N}                        {M′ = M′ `$ N′}                      Δ₀ (Δ₀dΔ′~ ⊢ M≈M′ ⦂ ⊢⊸ `$ N≈N′)
+  with ⊢S `⊸[ _ ] _ ← ⊢⊸
+     | Δ₀₀ , Δ₀₁ , _ ∷ Δ′₀ , _ ∷ Δ′₁ , refl , refl , Δ₀~ , unusable ∷ Δ′~ ← ~⊞-preserves-++ Δ₀ Δ₀dΔ′~
+    with eqΔ₀₀ , eqΔ₀₁ ← length-respects-~⊞ Δ₀~                                                                                         = Δ₀Δ′~ ⊢ M≈M′′ ⦂ ⊢⊸ `$ N≈N′′
+  where
+    Δ₀Δ′~ = ~⊞-++⁺ Δ₀~ Δ′~
+    M≈M′′ = subst-[/-]≈[/-] eqΔ₀₀ M M′ (false⊢[/]≈[/] Δ₀₀ M≈M′)
+    N≈N′′ = subst-[/-]≈[/-] eqΔ₀₁ N N′ (false⊢[/]≈[/] Δ₀₁ N≈N′)
 
--- false⊢[/]≈[/]                                                                         Δ₀ (`#_ {x = y} y∈)
---   with y ℕ.≥? length Δ₀
--- ...  | no  y≱
---     with y∈′ ← <∧∈-++-++⇒∈-++ Δ₀ (_ ∷ []) y∈ (ℕ.≰⇒> y≱)                                                                                 = `# y∈′
--- ...  | yes y≥
---     with y ℕ.≟ length Δ₀
--- ...    | yes refl with _ , _ , _ , () ← len∈-inversion Δ₀ y∈
--- ...    | no  y≢
---     with y> ← subst (y ℕ.≥_) (ℕ.+-comm 1 _) (ℕ.≤∧≢⇒< y≥ (≢-sym y≢))
---       with y∈′ ← ≥∧∈-++-++⇒∈-++ Δ₀ (_ ∷ []) y∈ y>                                                                                       = `# y∈′
+false⊢[/]≈[/]                                                                          Δ₀ (`#_ {x = y} y∈)
+  with y ℕ.≥? length Δ₀
+...  | no  y≱
+    with y∈′ ← <∧∈-++-++⇒∈-++ Δ₀ (_ ∷ []) y∈ (ℕ.≰⇒> y≱)                                                                                 = `# y∈′
+...  | yes y≥
+    with y ℕ.≟ length Δ₀
+...    | yes refl with _ , _ , _ , () ← len∈-inversion Δ₀ y∈
+...    | no  y≢
+    with y> ← subst (y ℕ.≥_) (ℕ.+-comm 1 _) (ℕ.≤∧≢⇒< y≥ (≢-sym y≢))
+      with y∈′ ← ≥∧∈-++-++⇒∈-++ Δ₀ (_ ∷ []) y∈ y>                                                                                       = `# y∈′
 
--- -- Substitution on a used variable preserves equivalence
--- true⊢[/]≈[/]ʳ : ∀ Δ₀ →
---                 Γ ~ Δ₀ ++ Δ′ ⊞ Γ₁ →
---                 ⊢[ m₀ ] Γ₁ →
---                 Γ₁ ⊢[ m₀ ] L ≈[≥ m′ ] L′ ⦂ S →
---                 ⊢[ m ] T ⦂⋆ →
---                 Δ₀ ++ (S , m₀ , true) ∷ Δ′ ⊢[ m ] M ≈[≥ m′ ] M′ ⦂ T →
---                 ----------------------------------------------------------------------------
---                 Γ ⊢[ m ] [ L /[ m₀ ] length Δ₀ ] M ≈[≥ m′ ] [ L′ /[ m₀ ] length Δ₀ ] M′ ⦂ T
--- true⊢[/]≈[/]ˡ : ∀ Δ₁ →
---                 Γ ~ Γ₀ ⊞ Δ₁ ++ Δ′ →
---                 ⊢[ m₀ ] Γ₀ →
---                 Γ₀ ⊢[ m₀ ] L ≈[≥ m′ ] L′ ⦂ S →
---                 ⊢[ m ] T ⦂⋆ →
---                 Δ₁ ++ (S , m₀ , true) ∷ Δ′ ⊢[ m ] M ≈[≥ m′ ] M′ ⦂ T →
---                 ----------------------------------------------------------------------------
---                 Γ ⊢[ m ] [ L /[ m₀ ] length Δ₁ ] M ≈[≥ m′ ] [ L′ /[ m₀ ] length Δ₁ ] M′ ⦂ T
--- true⊢[/]≈[/]ʳ                                                                          Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T                  (`unit Δ₀dΔ′Del)
---   with Δ₀Del , weakening Wk∈m₀ ∷ Δ′Del ← All.++⁻ Δ₀ Δ₀dΔ′Del                                                                                                            = `unit ΓDel
---   where
---     ΓDel = ~⊞⁻¹-preserves-is-all-del (All.++⁺ Δ₀Del Δ′Del) (⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀) Γ~
+-- Substitution on a used variable preserves equivalence
+true⊢[/]≈[/]ʳ : ∀ Δ₀ →
+                Γ ~ Δ₀ ++ Δ′ ⊞ Γ₁ →
+                ⊢[ m₀ ] Γ₁ →
+                Γ₁ ⊢[ m₀ ] L ≈[≥ m′ ] L′ ⦂ S →
+                ⊢[ m ] T ⦂⋆ →
+                Δ₀ ++ (S , m₀ , true) ∷ Δ′ ⊢[ m ] M ≈[≥ m′ ] M′ ⦂ T →
+                ----------------------------------------------------------------------------
+                Γ ⊢[ m ] [ L /[ m₀ ] length Δ₀ ] M ≈[≥ m′ ] [ L′ /[ m₀ ] length Δ₀ ] M′ ⦂ T
+true⊢[/]≈[/]ˡ : ∀ Δ₁ →
+                Γ ~ Γ₀ ⊞ Δ₁ ++ Δ′ →
+                ⊢[ m₀ ] Γ₀ →
+                Γ₀ ⊢[ m₀ ] L ≈[≥ m′ ] L′ ⦂ S →
+                ⊢[ m ] T ⦂⋆ →
+                Δ₁ ++ (S , m₀ , true) ∷ Δ′ ⊢[ m ] M ≈[≥ m′ ] M′ ⦂ T →
+                ----------------------------------------------------------------------------
+                Γ ⊢[ m ] [ L /[ m₀ ] length Δ₁ ] M ≈[≥ m′ ] [ L′ /[ m₀ ] length Δ₁ ] M′ ⦂ T
+true⊢[/]≈[/]ʳ                                                                           Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T                  (`unit Δ₀dΔ′Del)
+  with Δ₀Del , weakening Wk∈m₀ ∷ Δ′Del ← All.++⁻ Δ₀ Δ₀dΔ′Del                                                                                                            = `unit ΓDel
+  where
+    ΓDel = ~⊞⁻¹-preserves-is-all-del (All.++⁺ Δ₀Del Δ′Del) (⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀) Γ~
 
--- true⊢[/]≈[/]ʳ                                                                          Δ₀ Γ~ ⊢Γ₁ L≈L′ (`↑[-⇒ _ ][ _ ] ⊢T) (`lift[≤ m′≤m ⇒-] M≈M′)                       = `lift[≤ m′≤m ⇒-] M≈M′′
---   where
---     M≈M′′ = true⊢[/]≈[/]ʳ Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T M≈M′
+true⊢[/]≈[/]ʳ                                                                           Δ₀ Γ~ ⊢Γ₁ L≈L′ (`↑[-⇒ _ ][ _ ] ⊢T) (`lift[≤ m′≤m ⇒-] M≈M′)                      = `lift[≤ m′≤m ⇒-] M≈M′′
+  where
+    M≈M′′ = true⊢[/]≈[/]ʳ Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T M≈M′
 
--- true⊢[/]≈[/]ʳ                                                                          Δ₀ Γ~ ⊢Γ₁ L≈L′ (`↑[-⇒ _ ][ _ ] ⊢T) (`lift[≰ m′≰m ⇒-] ⊢M ⊢M′)
---   with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′                                                                                                                                              = `lift[≰ m′≰m ⇒-] (true⊢[/]ʳ Δ₀ Γ~ ⊢Γ₁ ⊢L ⊢T ⊢M) (true⊢[/]ʳ Δ₀ Γ~ ⊢Γ₁ ⊢L′ ⊢T ⊢M′)
+true⊢[/]≈[/]ʳ                                                                           Δ₀ Γ~ ⊢Γ₁ L≈L′ (`↑[-⇒ _ ][ _ ] ⊢T) (`lift[≰ m′≰m ⇒-] ⊢M ⊢M′)
+  with ⊢L , ⊢L′ ← ≈⇒⊢ L≈L′                                                                                                                                              = `lift[≰ m′≰m ⇒-] (true⊢[/]ʳ Δ₀ Γ~ ⊢Γ₁ ⊢L ⊢T ⊢M) (true⊢[/]ʳ Δ₀ Γ~ ⊢Γ₁ ⊢L′ ⊢T ⊢M′)
 
--- true⊢[/]≈[/]ʳ {M = `unlift[ _ ⇒ _ ] M}           {M′ = `unlift[ _ ⇒ _ ] M′}            Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T                  (Δ₀dΔ′∤ ⊢`unlift[-⇒-] M≈M′ ⦂ ⊢↑)
---   with _ , _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
---     with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
---        | eqΔ₀′ ← length-respects-∤ Δ₀∤
---       with d∤
--- ...      | keep m₁≤
---         rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
---           with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Δ₀Δ′∤ (⊢∧≤⇒∤ ⊢Γ₁ m₁≤) Γ~
---             with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀′ M M′ (true⊢[/]≈[/]ʳ _ Γ′~ ⊢Γ₁ L≈L′ ⊢↑ M≈M′)                                                                              = Γ∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑
--- ...      | delete m₁≰ (weakening Wk∈m₀)
---         rewrite dec-no (_ ≤?ₘ _) m₁≰
---           with Γ₁Del ← ⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀
---              | M≈M′′ ← subst-[/-]≈[/-] eqΔ₀′ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                                                = ~⊞-is-all-del∧⊢⇒≈ˡ Γ~ Γ₁Del (Δ₀Δ′∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑)
+true⊢[/]≈[/]ʳ {M = `unlift[ _ ⇒ _ ] M}            {M′ = `unlift[ _ ⇒ _ ] M′}            Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T                  (Δ₀dΔ′∤ ⊢`unlift[-⇒-] M≈M′ ⦂ ⊢↑)
+  with _ , _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
+    with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
+       | eqΔ₀′ ← length-respects-∤ Δ₀∤
+      with d∤
+...      | keep m₁≤
+        rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
+          with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Δ₀Δ′∤ (⊢∧≤⇒∤ ⊢Γ₁ m₁≤) Γ~
+            with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀′ M M′ (true⊢[/]≈[/]ʳ _ Γ′~ ⊢Γ₁ L≈L′ ⊢↑ M≈M′)                                                                              = Γ∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑
+...      | delete m₁≰ (weakening Wk∈m₀)
+        rewrite dec-no (_ ≤?ₘ _) m₁≰
+          with Γ₁Del ← ⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀
+             | M≈M′′ ← subst-[/-]≈[/-] eqΔ₀′ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                                                = ~⊞-is-all-del∧⊢⇒≈ˡ Γ~ Γ₁Del (Δ₀Δ′∤ ⊢`unlift[-⇒-] M≈M′′ ⦂ ⊢↑)
 
--- true⊢[/]≈[/]ʳ {M = `return[ _ ⇒ _ ] M}           {M′ = `return[ _ ⇒ _ ] M′}            Δ₀ Γ~ ⊢Γ₁ L≈L′ (`↓[-⇒ _ ][ _ ] ⊢T) (Δ₀dΔ′∤ ⊢`return[-⇒-] M≈M′)
---   with _ , _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
---     with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
---        | eqΔ₀′ ← length-respects-∤ Δ₀∤
---       with d∤
--- ...      | keep m₁≤
---         rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
---           with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Δ₀Δ′∤ (⊢∧≤⇒∤ ⊢Γ₁ m₁≤) Γ~
---             with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀′ M M′ (true⊢[/]≈[/]ʳ _ Γ′~ ⊢Γ₁ L≈L′ ⊢T M≈M′)                                                                              = Γ∤ ⊢`return[-⇒-] M≈M′′
--- ...      | delete m₁≰ (weakening Wk∈m₀)
---         rewrite dec-no (_ ≤?ₘ _) m₁≰
---           with Γ₁Del ← ⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀
---              | M≈M′′ ← subst-[/-]≈[/-] eqΔ₀′ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                                                = ~⊞-is-all-del∧⊢⇒≈ˡ Γ~ Γ₁Del (Δ₀Δ′∤ ⊢`return[-⇒-] M≈M′′)
+true⊢[/]≈[/]ʳ {M = `return[ _ ⇒ _ ] M}            {M′ = `return[ _ ⇒ _ ] M′}            Δ₀ Γ~ ⊢Γ₁ L≈L′ (`↓[-⇒ _ ][ _ ] ⊢T) (Δ₀dΔ′∤ ⊢`return[-⇒-] M≈M′)
+  with _ , _ , refl , Δ₀∤ , d∤ ∷ Δ′∤ ← ∤-preserves-++ Δ₀ Δ₀dΔ′∤
+    with Δ₀Δ′∤ ← ∤-++⁺ Δ₀∤ Δ′∤
+       | eqΔ₀′ ← length-respects-∤ Δ₀∤
+      with d∤
+...      | keep m₁≤
+        rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
+          with _ , Γ∤ , Γ′~ ← ~⊞⁻¹-preserves-∤ Δ₀Δ′∤ (⊢∧≤⇒∤ ⊢Γ₁ m₁≤) Γ~
+            with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀′ M M′ (true⊢[/]≈[/]ʳ _ Γ′~ ⊢Γ₁ L≈L′ ⊢T M≈M′)                                                                              = Γ∤ ⊢`return[-⇒-] M≈M′′
+...      | delete m₁≰ (weakening Wk∈m₀)
+        rewrite dec-no (_ ≤?ₘ _) m₁≰
+          with Γ₁Del ← ⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀
+             | M≈M′′ ← subst-[/-]≈[/-] eqΔ₀′ M M′ (false⊢[/]≈[/] _ M≈M′)                                                                                                = ~⊞-is-all-del∧⊢⇒≈ˡ Γ~ Γ₁Del (Δ₀Δ′∤ ⊢`return[-⇒-] M≈M′′)
 
--- true⊢[/]≈[/]ʳ {M = `let-return[ _ ⇒ _ ] M `in N} {M′ = `let-return[ _ ⇒ _ ] M′ `in N′} Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T                  (Δ₀dΔ′~ ⊢`let-return[-⇒-] M≈M′ ⦂ ⊢↓ `in N≈N′)
+-- true⊢[/]ʳ {M = `let-return[ m₁ ⇒ _ ] M `in N}                                        Δ₀ Γ~ ⊢Γ₁ ⊢L ⊢T                  (Δ₀dΔ′~ & Δ₀₀d₀Δ′₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢M ⦂ ⊢↓ `in ⊢N)
 --   with `↓[-⇒ _ ][ _ ] ⊢T₀ ← ⊢↓
---      | _ , _ , _ , _ , refl , refl , Δ₀~ , d~ ∷ Δ′~ ← ~⊞-preserves-++ Δ₀ Δ₀dΔ′~
---     with Δ₀Δ′~ ← ~⊞-++⁺ Δ₀~ Δ′~
+--      | Δ₀₀ , _ , _ , _ , refl , refl , Δ₀~ , d~ ∷ Δ′~ ← ~⊞-preserves-++ Δ₀ Δ₀dΔ′~
+--     with _ , _ , refl , Δ₀₀∤ , d₀∤ ∷ Δ′₀∤ ← ∤-preserves-++ Δ₀₀ Δ₀₀d₀Δ′₀∤
+--        | Δ₀Δ′~ ← ~⊞-++⁺ Δ₀~ Δ′~
 --        | eqΔ₀₀ , eqΔ₀₁ ← length-respects-~⊞ Δ₀~
---       with d~
--- ...      | contraction Co∈m₀
---         with _ , _ , Γ₂′~ , Γ₃′~ , Γ~′ ← ~⊞-contraction-assocˡ Γ~ Δ₀Δ′~ ⊢Γ₁ Co∈m₀
---           with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀₀ M M′ (true⊢[/]≈[/]ʳ _ Γ₂′~ ⊢Γ₁ L≈L′ ⊢↓ M≈M′)
---              | N≈N′′ ← true⊢[/]≈[/]ʳ _ (to-left ∷ Γ₃′~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (wk[-↑-]≈wk[-↑-] [] (unusable ∷ []) L≈L′) ⊢T N≈N′
---             with N≈N′″ ← subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ N≈N′′                                                                                                    = Γ~′ ⊢`let-return[-⇒-] M≈M′′ ⦂ ⊢↓ `in N≈N′″
--- ...      | to-left
---         with Γ₁′ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ (~⊞-commute Γ~) Δ₀Δ′~
---           with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀₀ M M′ (true⊢[/]≈[/]ˡ _ Γ₁′~ ⊢Γ₁ L≈L′ ⊢↓ M≈M′)
---              | N≈N′′ ← subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ (false⊢[/]≈[/] _ N≈N′)                                                                                     = Γ~′ ⊢`let-return[-⇒-] M≈M′′ ⦂ ⊢↓ `in N≈N′′
--- ...      | to-right
---         with Γ₁′ , Γ₁′~ , Γ~′ ← ~⊞-assocˡ Γ~ Δ₀Δ′~
---           with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀₀ M M′ (false⊢[/]≈[/] _ M≈M′)
---              | N≈N′′ ← true⊢[/]≈[/]ʳ _ (to-left ∷ Γ₁′~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (wk[-↑-]≈wk[-↑-] [] (unusable ∷ []) L≈L′) ⊢T N≈N′
---             with N≈N′″ ← subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ N≈N′′                                                                                                    = Γ~′ ⊢`let-return[-⇒-] M≈M′′ ⦂ ⊢↓ `in N≈N′″
+--       with Δ₀₀Δ′₀∤ ← ∤-++⁺ Δ₀₀∤ Δ′₀∤
+--          | eqΔ₀₀′ ← length-respects-∤ Δ₀₀∤
+--         with d~ | d₀∤
+-- ...        | contraction Co∈m₀ | keep m₁≤
+--           rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
+--             with _ , _ , Γ₂′~ , Γ₃′~ , Γ~′ ← ~⊞-contraction-assocˡ Γ~ Δ₀Δ′~ ⊢Γ₁ Co∈m₀
+--               with _ , Γ₀∤ , Γ₀′~ ← ~⊞⁻¹-preserves-∤ Δ₀₀Δ′₀∤ (⊢∧≤⇒∤ ⊢Γ₁ m₁≤) Γ₂′~
+--                  | ⊢N′ ← subst-[/-] (cong suc eqΔ₀₁) N (true⊢[/]ʳ _ (to-left ∷ Γ₃′~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (⊢wk[-↑-] [] (unusable ∷ []) ⊢L) ⊢T ⊢N)
+--                 with ⊢M′ ← subst-[/-] (trans eqΔ₀₀′ eqΔ₀₀) M (true⊢[/]ʳ _ Γ₀′~ ⊢Γ₁ ⊢L ⊢↓ ⊢M) = Γ~′ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢M′ ⦂ ⊢↓ `in ⊢N′
+-- ...        | contraction Co∈m₀ | delete m₁≰ (weakening Wk∈m₀)
+--           rewrite dec-no (_ ≤?ₘ _) m₁≰
+--             with _ , _ , Γ₂′~ , Γ₃′~ , Γ~′ ← ~⊞-contraction-assocˡ Γ~ Δ₀Δ′~ ⊢Γ₁ Co∈m₀
+--                | _ , Γ₁∤ , Γ₁′Del ← is-all-del⇒∤ m₁ (⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀)
+--               with _ , Γ₂′∤ , Γ₂″~ ← ~⊞⁻¹-preserves-∤ Δ₀₀Δ′₀∤ Γ₁∤ Γ₂′~
+--                  | ⊢N′ ← subst-[/-] (cong suc eqΔ₀₁) N (true⊢[/]ʳ _ (to-left ∷ Γ₃′~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (⊢wk[-↑-] [] (unusable ∷ []) ⊢L) ⊢T ⊢N)
+--                  | ⊢M′ ← subst-[/-] (trans eqΔ₀₀′ eqΔ₀₀) M (false⊢[/] _ ⊢M)                                                = Γ~′ & Γ₂′∤ ⊢`let-return[ m≤m₁ ⇒-] ~⊞-is-all-del∧⊢⇒⊢ˡ Γ₂″~ Γ₁′Del ⊢M′ ⦂ ⊢↓ `in ⊢N′
+-- ...        | to-left           | keep m₁≤
+--           rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
+--             with Γ₁′ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ (~⊞-commute Γ~) Δ₀Δ′~
+--               with _ , Γ₁′∤ , Γ₁″~ ← ~⊞⁻¹-preserves-∤ (⊢∧≤⇒∤ ⊢Γ₁ m₁≤) Δ₀₀Δ′₀∤ Γ₁′~
+--                  | ⊢N′ ← subst-[/-] (cong suc eqΔ₀₁) N (false⊢[/] _ ⊢N)
+--                 with ⊢M′ ← subst-[/-] (trans eqΔ₀₀′ eqΔ₀₀) M (true⊢[/]ˡ _ Γ₁″~ ⊢Γ₁ ⊢L ⊢↓ ⊢M) = Γ~′ & Γ₁′∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢M′ ⦂ ⊢↓ `in ⊢N′
+-- ...        | to-left           | delete m₁≰ (weakening Wk∈m₀)
+--           rewrite dec-no (_ ≤?ₘ _) m₁≰
+--             with Γ₁′ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ (~⊞-commute Γ~) Δ₀Δ′~
+--               with _ , Γ₁∤ , Γ₁′Del ← is-all-del⇒∤ m₁ (⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀)
+--                 with _ , Γ₁′∤ , Γ₁″~ ← ~⊞⁻¹-preserves-∤ Γ₁∤ Δ₀₀Δ′₀∤ Γ₁′~
+--                    | ⊢N′ ← subst-[/-] (cong suc eqΔ₀₁) N (false⊢[/] _ ⊢N)
+--                    | ⊢M′ ← subst-[/-] (trans eqΔ₀₀′ eqΔ₀₀) M (false⊢[/] _ ⊢M) = Γ~′ & Γ₁′∤ ⊢`let-return[ m≤m₁ ⇒-] ~⊞-is-all-del∧⊢⇒⊢ʳ Γ₁″~ Γ₁′Del ⊢M′ ⦂ ⊢↓ `in ⊢N′
+-- ...        | to-right          | keep m₁≤
+--           rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
+--             with Γ₁′ , Γ₁′~ , Γ~′ ← ~⊞-assocˡ Γ~ Δ₀Δ′~
+--               with ⊢N′ ← subst-[/-] (cong suc eqΔ₀₁) N (true⊢[/]ʳ _ (to-left ∷ Γ₁′~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (⊢wk[-↑-] [] (unusable ∷ []) ⊢L) ⊢T ⊢N)
+--                  | ⊢M′ ← subst-[/-] (trans eqΔ₀₀′ eqΔ₀₀) M (false⊢[/] _ ⊢M) = Γ~′ & Δ₀₀Δ′₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢M′ ⦂ ⊢↓ `in ⊢N′
+-- ...        | to-right          | delete m₁≰ unusable
+--           rewrite dec-no (_ ≤?ₘ _) m₁≰
+--             with Γ₁′ , Γ₁′~ , Γ~′ ← ~⊞-assocˡ Γ~ Δ₀Δ′~
+--               with ⊢N′ ← subst-[/-] (cong suc eqΔ₀₁) N (true⊢[/]ʳ _ (to-left ∷ Γ₁′~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (⊢wk[-↑-] [] (unusable ∷ []) ⊢L) ⊢T ⊢N)
+--                  | ⊢M′ ← subst-[/-] (trans eqΔ₀₀′ eqΔ₀₀) M (false⊢[/] _ ⊢M)                                 = Γ~′ & Δ₀₀Δ′₀∤ ⊢`let-return[ m≤m₁ ⇒-] ⊢M′ ⦂ ⊢↓ `in ⊢N′
 
--- true⊢[/]≈[/]ʳ                                                                          Δ₀ Γ~ ⊢Γ₁ L≈L′ (⊢T₀ `⊸[ _ ] ⊢T₁)   (`λ⦂-∘ M≈M′)                                  = `λ⦂-∘ L≈L′′
---   where
---     L≈L′′ = true⊢[/]≈[/]ʳ (_ ∷ Δ₀) (to-left ∷ Γ~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (wk[-↑-]≈wk[-↑-] [] (unusable ∷ []) L≈L′) ⊢T₁ M≈M′
+true⊢[/]≈[/]ʳ {M = `let-return[ m₁ ⇒ _ ] M `in N} {M′ = `let-return[ _ ⇒ _ ] M′ `in N′} Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T                  (Δ₀dΔ′~ & Δ₀₀d₀Δ′₀∤ ⊢`let-return[ m≤m₁ ⇒-] M≈M′ ⦂ ⊢↓ `in N≈N′)
+  with `↓[-⇒ _ ][ _ ] ⊢T₀ ← ⊢↓
+     | Δ₀₀ , _ , _ , _ , refl , refl , Δ₀~ , d~ ∷ Δ′~ ← ~⊞-preserves-++ Δ₀ Δ₀dΔ′~
+    with _ , _ , refl , Δ₀₀∤ , d₀∤ ∷ Δ′₀∤ ← ∤-preserves-++ Δ₀₀ Δ₀₀d₀Δ′₀∤
+       | Δ₀Δ′~ ← ~⊞-++⁺ Δ₀~ Δ′~
+       | eqΔ₀₀ , eqΔ₀₁ ← length-respects-~⊞ Δ₀~
+      with Δ₀₀Δ′₀∤ ← ∤-++⁺ Δ₀₀∤ Δ′₀∤
+         | eqΔ₀₀′ ← length-respects-∤ Δ₀₀∤
+        with d~ | d₀∤
+...        | contraction Co∈m₀ | keep m₁≤
+          rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
+            with _ , _ , Γ₂′~ , Γ₃′~ , Γ~′ ← ~⊞-contraction-assocˡ Γ~ Δ₀Δ′~ ⊢Γ₁ Co∈m₀
+              with _ , Γ₀∤ , Γ₀′~ ← ~⊞⁻¹-preserves-∤ Δ₀₀Δ′₀∤ (⊢∧≤⇒∤ ⊢Γ₁ m₁≤) Γ₂′~
+                 | N≈N′′ ← subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ (true⊢[/]≈[/]ʳ _ (to-left ∷ Γ₃′~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (wk[-↑-]≈wk[-↑-] [] (unusable ∷ []) L≈L′) ⊢T N≈N′)
+                with M≈M′′ ← subst-[/-]≈[/-] (trans eqΔ₀₀′ eqΔ₀₀) M M′ (true⊢[/]≈[/]ʳ _ Γ₀′~ ⊢Γ₁ L≈L′ ⊢↓ M≈M′) = Γ~′ & Γ₀∤ ⊢`let-return[ m≤m₁ ⇒-] M≈M′′ ⦂ ⊢↓ `in N≈N′′
+...        | contraction Co∈m₀ | delete m₁≰ (weakening Wk∈m₀)
+          rewrite dec-no (_ ≤?ₘ _) m₁≰
+            with _ , _ , Γ₂′~ , Γ₃′~ , Γ~′ ← ~⊞-contraction-assocˡ Γ~ Δ₀Δ′~ ⊢Γ₁ Co∈m₀
+               | _ , Γ₁∤ , Γ₁′Del ← is-all-del⇒∤ m₁ (⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀)
+              with _ , Γ₂′∤ , Γ₂″~ ← ~⊞⁻¹-preserves-∤ Δ₀₀Δ′₀∤ Γ₁∤ Γ₂′~
+                 | N≈N′′ ← subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ (true⊢[/]≈[/]ʳ _ (to-left ∷ Γ₃′~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (wk[-↑-]≈wk[-↑-] [] (unusable ∷ []) L≈L′) ⊢T N≈N′)
+                 | M≈M′′ ← subst-[/-]≈[/-] (trans eqΔ₀₀′ eqΔ₀₀) M M′ (false⊢[/]≈[/] _ M≈M′)                                                = Γ~′ & Γ₂′∤ ⊢`let-return[ m≤m₁ ⇒-] ~⊞-is-all-del∧⊢⇒≈ˡ Γ₂″~ Γ₁′Del M≈M′′ ⦂ ⊢↓ `in N≈N′′
+...        | to-left           | keep m₁≤
+          rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
+            with Γ₁′ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ (~⊞-commute Γ~) Δ₀Δ′~
+              with _ , Γ₁′∤ , Γ₁″~ ← ~⊞⁻¹-preserves-∤ (⊢∧≤⇒∤ ⊢Γ₁ m₁≤) Δ₀₀Δ′₀∤ Γ₁′~
+                 | N≈N′′ ← subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ (false⊢[/]≈[/] _ N≈N′)
+                with M≈M′′ ← subst-[/-]≈[/-] (trans eqΔ₀₀′ eqΔ₀₀) M M′ (true⊢[/]≈[/]ˡ _ Γ₁″~ ⊢Γ₁ L≈L′ ⊢↓ M≈M′) = Γ~′ & Γ₁′∤ ⊢`let-return[ m≤m₁ ⇒-] M≈M′′ ⦂ ⊢↓ `in N≈N′′
+...        | to-left           | delete m₁≰ (weakening Wk∈m₀)
+          rewrite dec-no (_ ≤?ₘ _) m₁≰
+            with Γ₁′ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ (~⊞-commute Γ~) Δ₀Δ′~
+              with _ , Γ₁∤ , Γ₁′Del ← is-all-del⇒∤ m₁ (⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀)
+                with _ , Γ₁′∤ , Γ₁″~ ← ~⊞⁻¹-preserves-∤ Γ₁∤ Δ₀₀Δ′₀∤ Γ₁′~
+                   | N≈N′′ ← subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ (false⊢[/]≈[/] _ N≈N′)
+                   | M≈M′′ ← subst-[/-]≈[/-] (trans eqΔ₀₀′ eqΔ₀₀) M M′ (false⊢[/]≈[/] _ M≈M′) = Γ~′ & Γ₁′∤ ⊢`let-return[ m≤m₁ ⇒-] ~⊞-is-all-del∧⊢⇒≈ʳ Γ₁″~ Γ₁′Del M≈M′′ ⦂ ⊢↓ `in N≈N′′
+...        | to-right          | keep m₁≤
+          rewrite proj₂ (dec-yes (_ ≤?ₘ _) m₁≤)
+            with Γ₁′ , Γ₁′~ , Γ~′ ← ~⊞-assocˡ Γ~ Δ₀Δ′~
+              with N≈N′′ ← subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ (true⊢[/]≈[/]ʳ _ (to-left ∷ Γ₁′~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (wk[-↑-]≈wk[-↑-] [] (unusable ∷ []) L≈L′) ⊢T N≈N′)
+                 | M≈M′′ ← subst-[/-]≈[/-] (trans eqΔ₀₀′ eqΔ₀₀) M M′ (false⊢[/]≈[/] _ M≈M′) = Γ~′ & Δ₀₀Δ′₀∤ ⊢`let-return[ m≤m₁ ⇒-] M≈M′′ ⦂ ⊢↓ `in N≈N′′
+...        | to-right          | delete m₁≰ unusable
+          rewrite dec-no (_ ≤?ₘ _) m₁≰
+            with Γ₁′ , Γ₁′~ , Γ~′ ← ~⊞-assocˡ Γ~ Δ₀Δ′~
+              with N≈N′′ ← subst-[/-]≈[/-] (cong suc eqΔ₀₁) N N′ (true⊢[/]≈[/]ʳ _ (to-left ∷ Γ₁′~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (wk[-↑-]≈wk[-↑-] [] (unusable ∷ []) L≈L′) ⊢T N≈N′)
+                 | M≈M′′ ← subst-[/-]≈[/-] (trans eqΔ₀₀′ eqΔ₀₀) M M′ (false⊢[/]≈[/] _ M≈M′)                                 = Γ~′ & Δ₀₀Δ′₀∤ ⊢`let-return[ m≤m₁ ⇒-] M≈M′′ ⦂ ⊢↓ `in N≈N′′
 
--- true⊢[/]≈[/]ʳ {M = M `$ N}                       {M′ = M′ `$ N′}                       Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T                  (Δ₀dΔ′~ ⊢ M≈M′ ⦂ ⊢⊸ `$ N≈N′)
---   with ⊢T₀ `⊸[ _ ] _ ← ⊢⊸
---      | _ , _ , _ , _ , refl , refl , Δ₀~ , d~ ∷ Δ′~ ← ~⊞-preserves-++ Δ₀ Δ₀dΔ′~
---     with Δ₀Δ′~ ← ~⊞-++⁺ Δ₀~ Δ′~
---        | eqΔ₀₀ , eqΔ₀₁ ← length-respects-~⊞ Δ₀~
---       with d~
--- ...      | contraction Co∈m₀
---         with _ , _ , Γ₂′~ , Γ₃′~ , Γ~′ ← ~⊞-contraction-assocˡ Γ~ Δ₀Δ′~ ⊢Γ₁ Co∈m₀
---           with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀₀ M M′ (true⊢[/]≈[/]ʳ _ Γ₂′~ ⊢Γ₁ L≈L′ ⊢⊸ M≈M′)
---              | N≈N′′ ← subst-[/-]≈[/-] eqΔ₀₁ N N′ (true⊢[/]≈[/]ʳ _ Γ₃′~ ⊢Γ₁ L≈L′ ⊢T₀ N≈N′)                                                                              = Γ~′ ⊢ M≈M′′ ⦂ ⊢⊸ `$ N≈N′′
--- ...      | to-left
---         with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ (~⊞-commute Γ~) Δ₀Δ′~
---           with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀₀ M M′ (true⊢[/]≈[/]ˡ _ Γ₁′~ ⊢Γ₁ L≈L′ ⊢⊸ M≈M′)
---              | N≈N′′ ← subst-[/-]≈[/-] eqΔ₀₁ N N′ (false⊢[/]≈[/] _ N≈N′)                                                                                                = Γ~′ ⊢ M≈M′′ ⦂ ⊢⊸ `$ N≈N′′
--- ...      | to-right
---         with _ , Γ₁′~ , Γ~′ ← ~⊞-assocˡ Γ~ Δ₀Δ′~
---           with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀₀ M M′ (false⊢[/]≈[/] _ M≈M′)
---              | N≈N′′ ← subst-[/-]≈[/-] eqΔ₀₁ N N′ (true⊢[/]≈[/]ʳ _ Γ₁′~ ⊢Γ₁ L≈L′ ⊢T₀ N≈N′)                                                                              = Γ~′ ⊢ M≈M′′ ⦂ ⊢⊸ `$ N≈N′′
+true⊢[/]≈[/]ʳ                                                                           Δ₀ Γ~ ⊢Γ₁ L≈L′ (⊢T₀ `⊸[ _ ] ⊢T₁)   (`λ⦂-∘ M≈M′)                                 = `λ⦂-∘ L≈L′′
+  where
+    L≈L′′ = true⊢[/]≈[/]ʳ (_ ∷ Δ₀) (to-left ∷ Γ~) ((⊢T₀ , unusable) ∷ ⊢Γ₁) (wk[-↑-]≈wk[-↑-] [] (unusable ∷ []) L≈L′) ⊢T₁ M≈M′
 
--- true⊢[/]≈[/]ʳ                                                                          Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T                  (`#_ {x = y} y∈)
---   with y ℕ.≥? length Δ₀
--- ...  | no  y≱
---     with y< ← ℕ.≰⇒> y≱
---       with weakening Wk∈m₀ ∷ _ ← <∧∈-++⇒is-all-del Δ₀ y∈ y<
---          | y∈′ ← <∧∈-++-++⇒∈-++ Δ₀ (_ ∷ []) y∈ y<
---         with y∈″ ← ~⊞-is-all-del∧∈⇒∈ˡ Γ~ (⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀) y∈′                                                                                       = `# y∈″
--- ...  | yes y≥
---     with y ℕ.≟ length Δ₀
--- ...    | yes refl
---       with Δ₀Δ′Del , refl , refl , refl ← len∈-inversion Δ₀ y∈                                                                                                          = ~⊞-is-all-del∧⊢⇒≈ʳ Γ~ Δ₀Δ′Del L≈L′
--- ...    | no  y≢
---       with y∈′ ← subst (_ ⦂[ _ ] _ ∈_) (sym (List.++-assoc Δ₀ (_ ∷ []) _)) y∈
---          | y> ← subst (y ℕ.≥_) (ℕ.+-comm 1 _) (ℕ.≤∧≢⇒< y≥ (≢-sym y≢))
---         with y∈″ ← ≥∧∈-++-++⇒∈-++ Δ₀ (_ ∷ []) y∈ y>
---            | Δ₀dDel ← ≥∧∈-++⇒is-all-del _ y∈′ (subst (y ℕ.≥_) (sym (List.length-++ Δ₀)) y>)
---           with weakening Wk∈m₀ ∷ _ ← All.++⁻ʳ Δ₀ Δ₀dDel
---             with y∈‴ ← ~⊞-is-all-del∧∈⇒∈ˡ Γ~ (⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀) y∈″                                                                                   = `# y∈‴
+true⊢[/]≈[/]ʳ {M = M `$ N}                        {M′ = M′ `$ N′}                       Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T                  (Δ₀dΔ′~ ⊢ M≈M′ ⦂ ⊢⊸ `$ N≈N′)
+  with ⊢T₀ `⊸[ _ ] _ ← ⊢⊸
+     | _ , _ , _ , _ , refl , refl , Δ₀~ , d~ ∷ Δ′~ ← ~⊞-preserves-++ Δ₀ Δ₀dΔ′~
+    with Δ₀Δ′~ ← ~⊞-++⁺ Δ₀~ Δ′~
+       | eqΔ₀₀ , eqΔ₀₁ ← length-respects-~⊞ Δ₀~
+      with d~
+...      | contraction Co∈m₀
+        with _ , _ , Γ₂′~ , Γ₃′~ , Γ~′ ← ~⊞-contraction-assocˡ Γ~ Δ₀Δ′~ ⊢Γ₁ Co∈m₀
+          with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀₀ M M′ (true⊢[/]≈[/]ʳ _ Γ₂′~ ⊢Γ₁ L≈L′ ⊢⊸ M≈M′)
+             | N≈N′′ ← subst-[/-]≈[/-] eqΔ₀₁ N N′ (true⊢[/]≈[/]ʳ _ Γ₃′~ ⊢Γ₁ L≈L′ ⊢T₀ N≈N′)                                                                              = Γ~′ ⊢ M≈M′′ ⦂ ⊢⊸ `$ N≈N′′
+...      | to-left
+        with _ , Γ₁′~ , Γ~′ ← ~⊞-assocʳ (~⊞-commute Γ~) Δ₀Δ′~
+          with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀₀ M M′ (true⊢[/]≈[/]ˡ _ Γ₁′~ ⊢Γ₁ L≈L′ ⊢⊸ M≈M′)
+             | N≈N′′ ← subst-[/-]≈[/-] eqΔ₀₁ N N′ (false⊢[/]≈[/] _ N≈N′)                                                                                                = Γ~′ ⊢ M≈M′′ ⦂ ⊢⊸ `$ N≈N′′
+...      | to-right
+        with _ , Γ₁′~ , Γ~′ ← ~⊞-assocˡ Γ~ Δ₀Δ′~
+          with M≈M′′ ← subst-[/-]≈[/-] eqΔ₀₀ M M′ (false⊢[/]≈[/] _ M≈M′)
+             | N≈N′′ ← subst-[/-]≈[/-] eqΔ₀₁ N N′ (true⊢[/]≈[/]ʳ _ Γ₁′~ ⊢Γ₁ L≈L′ ⊢T₀ N≈N′)                                                                              = Γ~′ ⊢ M≈M′′ ⦂ ⊢⊸ `$ N≈N′′
 
--- true⊢[/]≈[/]ˡ Δ₁ Γ~ ⊢Γ₀ L≈L′ ⊢T M≈M′ = true⊢[/]≈[/]ʳ Δ₁ (~⊞-commute Γ~) ⊢Γ₀ L≈L′ ⊢T M≈M′
+true⊢[/]≈[/]ʳ                                                                           Δ₀ Γ~ ⊢Γ₁ L≈L′ ⊢T                  (`#_ {x = y} y∈)
+  with y ℕ.≥? length Δ₀
+...  | no  y≱
+    with y< ← ℕ.≰⇒> y≱
+      with weakening Wk∈m₀ ∷ _ ← <∧∈-++⇒is-all-del Δ₀ y∈ y<
+         | y∈′ ← <∧∈-++-++⇒∈-++ Δ₀ (_ ∷ []) y∈ y<
+        with y∈″ ← ~⊞-is-all-del∧∈⇒∈ˡ Γ~ (⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀) y∈′                                                                                       = `# y∈″
+...  | yes y≥
+    with y ℕ.≟ length Δ₀
+...    | yes refl
+      with Δ₀Δ′Del , refl , refl , refl ← len∈-inversion Δ₀ y∈                                                                                                          = ~⊞-is-all-del∧⊢⇒≈ʳ Γ~ Δ₀Δ′Del L≈L′
+...    | no  y≢
+      with y∈′ ← subst (_ ⦂[ _ ] _ ∈_) (sym (List.++-assoc Δ₀ (_ ∷ []) _)) y∈
+         | y> ← subst (y ℕ.≥_) (ℕ.+-comm 1 _) (ℕ.≤∧≢⇒< y≥ (≢-sym y≢))
+        with y∈″ ← ≥∧∈-++-++⇒∈-++ Δ₀ (_ ∷ []) y∈ y>
+           | Δ₀dDel ← ≥∧∈-++⇒is-all-del _ y∈′ (subst (y ℕ.≥_) (sym (List.length-++ Δ₀)) y>)
+          with weakening Wk∈m₀ ∷ _ ← All.++⁻ʳ Δ₀ Δ₀dDel
+            with y∈‴ ← ~⊞-is-all-del∧∈⇒∈ˡ Γ~ (⊢∧Wk≤⇒is-all-del ⊢Γ₁ ≤ₘ-refl Wk∈m₀) y∈″                                                                                   = `# y∈‴
+
+true⊢[/]≈[/]ˡ Δ₁ Γ~ ⊢Γ₀ L≈L′ ⊢T M≈M′ = true⊢[/]≈[/]ʳ Δ₁ (~⊞-commute Γ~) ⊢Γ₀ L≈L′ ⊢T M≈M′
 
 
 -- -- Properties of stepping relations about equivalence
