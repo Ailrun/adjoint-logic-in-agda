@@ -56,7 +56,7 @@ pattern `↑ S = `↑[ pMode ⇒ cMode ] S
 pattern `lift L              = `lift[ pMode ⇒ cMode ] L
 pattern `unlift L            = `unlift[ cMode ⇒ pMode ] L
 pattern `return L            = `return[ cMode ⇒ pMode ] L
-pattern `let-return_`in_ L M = `let-return[ pMode ⇒ cMode ] L `in M
+pattern `let-return_`in_ L M = `let-return[ refl ⇒ cMode ] L `in M
 pattern `λ⦂ᵖ_∘_ S L          = `λ⦂[ pMode ] S ∘ L
 pattern `unlift`lift L       = `unlift (`lift L)
 pattern `unlift`#_ x         = `unlift (`# x)
@@ -69,31 +69,31 @@ pattern ⊢`↓ neq ⊢S  = `↓[-⇒ p≤c , neq ][ _ ] ⊢S
 pattern ⊢`↑ neq ⊢S  = `↑[-⇒ p≤c , neq ][ _ ] ⊢S
 pattern ⊢_`⊸_ ⊢S ⊢T = ⊢S `⊸[ _ ] ⊢T
 
-pattern ⊢`lift ⊢L                        = `lift[-⇒-] ⊢L
-pattern _⊢`unlift_⦂_ Γ∤ ⊢L ⊢S            = Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢S
-pattern _⊢`return_ Γ∤ ⊢L                 = Γ∤ ⊢`return[-⇒-] ⊢L
-pattern _⊢`let-return_⦂_`in_ Γ~ ⊢L ⊢S ⊢M = Γ~ ⊢`let-return[-⇒-] ⊢L ⦂ ⊢S `in ⊢M
-pattern _⊢`unlift`lift_⦂_ Γ∤ ⊢L ⊢S       = Γ∤ ⊢`unlift ⊢`lift ⊢L ⦂ ⊢S
-pattern _⊢`unlift`#_⦂_ Γ∤ x∈ ⊢S          = Γ∤ ⊢`unlift `# x∈ ⦂ ⊢S
-pattern _⊢`return`lift_ Γ∤ ⊢L            = Γ∤ ⊢`return ⊢`lift ⊢L
+pattern ⊢`lift ⊢L                              = `lift[-⇒-] ⊢L
+pattern _⊢`unlift_⦂_ Γ∤ ⊢L ⊢S                  = Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢S
+pattern _⊢`return_ Γ∤ ⊢L                       = Γ∤ ⊢`return[-⇒-] ⊢L
+pattern _&_⊢`let-return_⦂_`in_ Γ~ Γ₀∤ ⊢L ⊢S ⊢M = Γ~ & Γ₀∤ ⊢`let-return[ refl ⇒-] ⊢L ⦂ ⊢S `in ⊢M
+pattern _⊢`unlift`lift_⦂_ Γ∤ ⊢L ⊢S             = Γ∤ ⊢`unlift ⊢`lift ⊢L ⦂ ⊢S
+pattern _⊢`unlift`#_⦂_ Γ∤ x∈ ⊢S                = Γ∤ ⊢`unlift `# x∈ ⦂ ⊢S
+pattern _⊢`return`lift_ Γ∤ ⊢L                  = Γ∤ ⊢`return ⊢`lift ⊢L
 
 -- Pattern Synonyms for OpSem
 --
 pattern `unlift≤ VL = `unlift[≤ refl ⇒ pMode ] VL
 pattern `return≤ VL = `return[≤ refl ⇒ pMode ] VL
 
-pattern ξ-`lift L⟶                = ξ-`lift[-⇒-] L⟶
-pattern ξ-`unlift L⟶              = ξ-`unlift[-⇒-] L⟶
-pattern ξ-`unlift≤ L⟶             = ξ-`unlift[≤ refl ⇒-] L⟶
-pattern ξ-`return L⟶              = ξ-`return[-⇒-] L⟶
-pattern ξ-`return≤ L⟶             = ξ-`return[≤ refl ⇒-] L⟶
-pattern ξ-`let-return_`in- L⟶     = ξ-`let-return[-⇒-] L⟶ `in-
-pattern ξ-`let-return_`in? L⟶     = ξ-`let-return[-⇒-] L⟶ `in?
-pattern ξ-`let-return!_`in_ WL M⟶ = ξ-`let-return[-⇒-]! WL `in M⟶
-pattern ξ-`unlift`lift L⟶         = ξ-`unlift (ξ-`lift L⟶)
-pattern ξ-`unlift≤`lift L⟶        = ξ-`unlift≤ (ξ-`lift L⟶)
-pattern ξ-`return`lift L⟶         = ξ-`return (ξ-`lift L⟶)
-pattern ξ-`return≤`lift L⟶        = ξ-`return≤ (ξ-`lift L⟶)
+pattern ξ-`lift L⟶                       = ξ-`lift[-⇒-] L⟶
+pattern ξ-`unlift L⟶                     = ξ-`unlift[-⇒-] L⟶
+pattern ξ-`unlift≤ L⟶                    = ξ-`unlift[≤ refl ⇒-] L⟶
+pattern ξ-`return L⟶                     = ξ-`return[-⇒-] L⟶
+pattern ξ-`return≤ L⟶                    = ξ-`return[≤ refl ⇒-] L⟶
+pattern ξ-`let-return_`in- L⟶            = ξ-`let-return[-⇒-] L⟶ `in-
+pattern ξ-`let-return[_]_`in? c≰m L⟶     = ξ-`let-return[≰ c≰m ⇒-] L⟶ `in?
+pattern ξ-`let-return![_]_`in_ c≰m WL M⟶ = ξ-`let-return[≰ c≰m ⇒-]! WL `in M⟶
+pattern ξ-`unlift`lift L⟶                = ξ-`unlift (ξ-`lift L⟶)
+pattern ξ-`unlift≤`lift L⟶               = ξ-`unlift≤ (ξ-`lift L⟶)
+pattern ξ-`return`lift L⟶                = ξ-`return (ξ-`lift L⟶)
+pattern ξ-`return≤`lift L⟶               = ξ-`return≤ (ξ-`lift L⟶)
 
 ------------------------------------------------------------
 -- Bisimilar Embedding Relation
