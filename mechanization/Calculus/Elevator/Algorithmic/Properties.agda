@@ -212,11 +212,12 @@ unused-is-all-del (_ ∷ Γ) = unusable ∷ unused-is-all-del Γ
 ~⊞-preserves-usageˡ {Γ₁ = Γ₁} Γ~ (`return[-⇒-]_ {m₀ = m₀} ⊢L⇒)
   with _ , Δ~ , ⊢L⇒′ ← ~⊞-preserves-usageˡ (~⊞-preserves-drop⇒ m₀ Γ~) ⊢L⇒
     rewrite unused-cancelˡ-drop⇒ m₀ Γ₁                                          = -, Δ~ , `return[-⇒-] ⊢L⇒′
-~⊞-preserves-usageˡ           Γ~ (Δ₀~ ⊢`let-return[-⇒ dUsed ] ⊢L⇒ ⦂ ⊢↓ `in ⊢M⇒)
-  with _ , ~ΔuΓ₁ , ⊢L⇒′ ← ~⊞-preserves-usageˡ Γ~ ⊢L⇒
+~⊞-preserves-usageˡ {Γ₁ = Γ₁} Γ~ (_⊢`let-return[_⇒_]_⦂_`in_ {m₁ = m₁} Δ₀~ m≤m₁ dUsed ⊢L⇒ ⊢↓ ⊢M⇒)
+  with _ , ~ΔuΓ₁ , ⊢L⇒′ ← ~⊞-preserves-usageˡ (~⊞-preserves-drop⇒ m₁ Γ~) ⊢L⇒
      | _ , ~d ∷ ~Δ′uΓ₁ , ⊢M′⇒ ← ~⊞-preserves-usageˡ (to-left ∷ Γ~) ⊢M⇒
-    with _ , Δ~ , Δ~′ ← ~⊞-unused-assoc _ Δ₀~ ~ΔuΓ₁ ~Δ′uΓ₁
-      rewrite ~d⊞-uniqueˡ ~d                                                    = -, Δ~ , Δ~′ ⊢`let-return[-⇒ dUsed ] ⊢L⇒′ ⦂ ⊢↓ `in ⊢M′⇒
+    rewrite unused-cancelˡ-drop⇒ m₁ Γ₁
+      with _ , Δ~ , Δ~′ ← ~⊞-unused-assoc _ Δ₀~ ~ΔuΓ₁ ~Δ′uΓ₁
+        rewrite ~d⊞-uniqueˡ ~d                                                  = -, Δ~ , Δ~′ ⊢`let-return[ m≤m₁ ⇒ dUsed ] ⊢L⇒′ ⦂ ⊢↓ `in ⊢M′⇒
 ~⊞-preserves-usageˡ           Γ~ (`# x∈⇒)
   with _ , Δ~ , x∈⇒′ ← ~⊞-preserves-usage∈ˡ Γ~ x∈⇒                              = -, Δ~ , `# x∈⇒′
 
@@ -347,22 +348,22 @@ is-all-used-by⇒~⊞-is-all-delˡ (dUsed ∷ ΓUsed)
           x ⦂[ m₀ ] T ∈ Δ ⇒ Δ′ →
           -----------------------
           x ⦂[ m₀ ] T ∈ Γ ⇒ Δ′
-⊢∧∈⇒⇒∈⇒ `unit                                      x∈⇒ with () ← ∉unused _ x∈⇒
-⊢∧∈⇒⇒∈⇒ (`λ⦂[ dDel ]-∘ ⊢L)                         x∈⇒
-  with there x∈⇒′ ← ⊢∧∈⇒⇒∈⇒ ⊢L (there x∈⇒)             = x∈⇒′
-⊢∧∈⇒⇒∈⇒ (Δ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                       x∈⇒
+⊢∧∈⇒⇒∈⇒ `unit                                           x∈⇒ with () ← ∉unused _ x∈⇒
+⊢∧∈⇒⇒∈⇒ (`λ⦂[ dDel ]-∘ ⊢L)                              x∈⇒
+  with there x∈⇒′ ← ⊢∧∈⇒⇒∈⇒ ⊢L (there x∈⇒)                  = x∈⇒′
+⊢∧∈⇒⇒∈⇒ (Δ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)                            x∈⇒
   with ~⊞-preserves-∈ Δ~ x∈⇒
-...  | inj₁ x∈⇒₀                                       = ⊢∧∈⇒⇒∈⇒ ⊢L x∈⇒₀
-...  | inj₂ x∈⇒₁                                       = ⊢∧∈⇒⇒∈⇒ ⊢M x∈⇒₁
-⊢∧∈⇒⇒∈⇒ (`lift[-⇒-] ⊢L)                            x∈⇒ = ⊢∧∈⇒⇒∈⇒ ⊢L x∈⇒
-⊢∧∈⇒⇒∈⇒ (`unlift[-⇒-] ⊢L ⦂ ⊢↑)                     x∈⇒ = ∈drop⇒∈ _ (⊢∧∈⇒⇒∈⇒ ⊢L x∈⇒)
-⊢∧∈⇒⇒∈⇒ (`return[-⇒-] ⊢L)                          x∈⇒ = ∈drop⇒∈ _ (⊢∧∈⇒⇒∈⇒ ⊢L x∈⇒)
-⊢∧∈⇒⇒∈⇒ (Δ~ ⊢`let-return[-⇒ dDel ] ⊢L ⦂ ⊢↓ `in ⊢M) x∈⇒
+...  | inj₁ x∈⇒₀                                            = ⊢∧∈⇒⇒∈⇒ ⊢L x∈⇒₀
+...  | inj₂ x∈⇒₁                                            = ⊢∧∈⇒⇒∈⇒ ⊢M x∈⇒₁
+⊢∧∈⇒⇒∈⇒ (`lift[-⇒-] ⊢L)                                 x∈⇒ = ⊢∧∈⇒⇒∈⇒ ⊢L x∈⇒
+⊢∧∈⇒⇒∈⇒ (`unlift[-⇒-] ⊢L ⦂ ⊢↑)                          x∈⇒ = ∈drop⇒∈ _ (⊢∧∈⇒⇒∈⇒ ⊢L x∈⇒)
+⊢∧∈⇒⇒∈⇒ (`return[-⇒-] ⊢L)                               x∈⇒ = ∈drop⇒∈ _ (⊢∧∈⇒⇒∈⇒ ⊢L x∈⇒)
+⊢∧∈⇒⇒∈⇒ (Δ~ ⊢`let-return[ m≤m₁ ⇒ dDel ] ⊢L ⦂ ⊢↓ `in ⊢M) x∈⇒
   with ~⊞-preserves-∈ Δ~ x∈⇒
-...  | inj₁ x∈⇒₀                                       = ⊢∧∈⇒⇒∈⇒ ⊢L x∈⇒₀
+...  | inj₁ x∈⇒₀                                            = ∈drop⇒∈ _ (⊢∧∈⇒⇒∈⇒ ⊢L x∈⇒₀)
 ...  | inj₂ x∈⇒₁
-    with there x∈⇒′ ← ⊢∧∈⇒⇒∈⇒ ⊢M (there x∈⇒₁)          = x∈⇒′
-⊢∧∈⇒⇒∈⇒ (`# y∈⇒)                                   x∈⇒ = ∈⇒∧∈⇒⇒∈⇒ y∈⇒ x∈⇒
+    with there x∈⇒′ ← ⊢∧∈⇒⇒∈⇒ ⊢M (there x∈⇒₁)               = x∈⇒′
+⊢∧∈⇒⇒∈⇒ (`# y∈⇒)                                        x∈⇒ = ∈⇒∧∈⇒⇒∈⇒ y∈⇒ x∈⇒
 
 ¬∈⇒⇒∤self : (∀ {x m₀ S Δ} → ¬ (m ≤ₘ m₀) → ¬ x ⦂[ m₀ ] S ∈ Γ ⇒ Δ) →
             -------------------------------------------------------
@@ -406,9 +407,9 @@ completeness (Γ~ ⊢ ⊢L ⦂ ⊢⊸ `$ ⊢M)
      | _ , ⊢M⇒ , Γ₁Used ← completeness ⊢M
     with _ , Δ₀~ , ⊢L⇒′ ← ~⊞-preserves-usageˡ Γ~ ⊢L⇒
        | _ , Δ₁~ , ⊢M⇒′ ← ~⊞-preserves-usageʳ Γ~ ⊢M⇒
+       | _ , Δ~ , ΓUsed ← ~⊞-preserves-is-all-used-by Γ~ Γ₀Used Γ₁Used
       rewrite ~⊞-uniqueˡ _ Δ₀~
-            | ~⊞-uniqueʳ _ Δ₁~
-        with _ , Δ~ , ΓUsed ← ~⊞-preserves-is-all-used-by Γ~ Γ₀Used Γ₁Used = -, Δ~ ⊢ ⊢L⇒′ ⦂ ⊢⊸ `$ ⊢M⇒′ , ΓUsed
+            | ~⊞-uniqueʳ _ Δ₁~                                             = -, Δ~ ⊢ ⊢L⇒′ ⦂ ⊢⊸ `$ ⊢M⇒′ , ΓUsed
 completeness (`lift[-⇒-] ⊢L)
   with _ , ⊢L⇒ , Γ′Used ← completeness ⊢L                                  = -, `lift[-⇒-] ⊢L⇒ , Γ′Used
 completeness (Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)
@@ -417,15 +418,17 @@ completeness (Γ∤ ⊢`unlift[-⇒-] ⊢L ⦂ ⊢↑)
 completeness (Γ∤ ⊢`return[-⇒-] ⊢L)
   with _ , ⊢L⇒ , Γ′Used ← completeness ⊢L
      | refl ← drop⇒-∤-consistent Γ∤                                        = -, `return[-⇒-] ⊢L⇒ , ∤⁻¹-preserves-is-all-used-by Γ∤ Γ′Used
-completeness (Γ~ ⊢`let-return[-⇒-] ⊢L ⦂ ⊢↓ `in ⊢M)
-  with _ , ⊢L⇒ , Γ₀Used ← completeness ⊢L
-     | _ , ⊢M⇒ , dUsed ∷ Γ₁Used ← completeness ⊢M
-    with _ , Δ₀~ , ⊢L⇒′ ← ~⊞-preserves-usageˡ Γ~ ⊢L⇒
-       | _ , d~ ∷ Δ₁~ , ⊢M⇒′ ← ~⊞-preserves-usageʳ (to-right ∷ Γ~) ⊢M⇒
-      rewrite ~⊞-uniqueˡ _ Δ₀~
-            | ~d⊞-uniqueʳ d~
-            | ~⊞-uniqueʳ _ Δ₁~
-        with _ , Δ~ , ΓUsed ← ~⊞-preserves-is-all-used-by Γ~ Γ₀Used Γ₁Used = -, Δ~ ⊢`let-return[-⇒ dUsed ] ⊢L⇒′ ⦂ ⊢↓ `in ⊢M⇒′ , ΓUsed
+completeness (_&_⊢`let-return[_⇒-]_⦂_`in_ {m₁ = m₁} Γ~ Γ₀∤ m≤m₁ ⊢L ⊢↓ ⊢M)
+  with Δ₀ , ⊢L⇒ , Γ₀′Used ← completeness ⊢L
+     | Δ₁ , ⊢M⇒ , dUsed ∷ Γ₁Used ← completeness ⊢M
+    with refl ← drop⇒-∤-consistent Γ₀∤
+       | Γ₀Used ← ∤⁻¹-preserves-is-all-used-by Γ₀∤ Γ₀′Used
+      with _ , Δ₀~ , ⊢L⇒′ ← ~⊞-preserves-usageˡ (~⊞-preserves-drop⇒ m₁ Γ~) ⊢L⇒
+         | _ , d~ ∷ Δ₁~ , ⊢M⇒′ ← ~⊞-preserves-usageʳ (to-right ∷ Γ~) ⊢M⇒
+         | _ , Δ~ , ΓUsed ← ~⊞-preserves-is-all-used-by Γ~ Γ₀Used Γ₁Used
+        rewrite ~⊞-uniqueˡ _ Δ₀~
+              | ~d⊞-uniqueʳ d~
+              | ~⊞-uniqueʳ _ Δ₁~                                           = -, Δ~ ⊢`let-return[ m≤m₁ ⇒ dUsed ] ⊢L⇒′ ⦂ ⊢↓ `in ⊢M⇒′ , ΓUsed
 completeness (`# x∈)
   with _ , x∈⇒ , ΓUsed ← completeness∈ x∈                                  = -, `# x∈⇒ , ΓUsed
 
@@ -458,12 +461,13 @@ soundness-helper {Γ = Γ}         (`return[-⇒-] ⊢L⇒)                     
   where
     Δ∤ = ¬∈⇒⇒∤self (λ ≰m₀ x∈ → ¬∈drop⇒ Γ ≰m₀ (⊢∧∈⇒⇒∈⇒ ⊢L⇒ x∈))
 
-soundness-helper                 (_⊢`let-return[-⇒_]_⦂_`in_ {Δ₁ = Δ₁} Δ~ dUsed ⊢L⇒ ⊢↓ ⊢M⇒)
+soundness-helper {Γ = Γ}         (_⊢`let-return[_⇒_]_⦂_`in_ {Δ₁ = Δ₁} Δ~ m≤m₁ dUsed ⊢L⇒ ⊢↓ ⊢M⇒)
   with _ , Δ₁~ ← left-bias-~⊞ Δ₁
      | Δ₁′Del ← left-bias-~⊞-is-all-del Δ₁
-     | _ , ~d , d₁Del ← used-by⇒~d⊞ˡ dUsed                                                 = Δ~ ⊢`let-return[-⇒-] soundness-helper ⊢L⇒ ⦂ ⊢↓ `in ⊢M
-    where
-      ⊢M = ~⊞-is-all-del∧⊢⇒⊢ˡ (~d ∷ Δ₁~) (d₁Del ∷ Δ₁′Del) (soundness-helper ⊢M⇒)
+     | _ , ~d , d₁Del ← used-by⇒~d⊞ˡ dUsed                                                 = Δ~ & Δ∤ ⊢`let-return[ m≤m₁ ⇒-] soundness-helper ⊢L⇒ ⦂ ⊢↓ `in ⊢M
+  where
+    ⊢M = ~⊞-is-all-del∧⊢⇒⊢ˡ (~d ∷ Δ₁~) (d₁Del ∷ Δ₁′Del) (soundness-helper ⊢M⇒)
+    Δ∤ = ¬∈⇒⇒∤self (λ ≰m₀ x∈ → ¬∈drop⇒ Γ ≰m₀ (⊢∧∈⇒⇒∈⇒ ⊢L⇒ x∈))
 
 soundness-helper (`# x∈⇒)                                                                  = `# soundness-helper∈ x∈⇒
 
@@ -502,7 +506,7 @@ infix   4 _A⊢[_]_⦂?
   with refl , refl ← ⊢-det ⊢L ⊢L′                                                                = refl , refl
 ⊢-det (`return[-⇒-] ⊢L)                          (`return[-⇒-] ⊢L′)
   with refl , refl ← ⊢-det ⊢L ⊢L′                                                                = refl , refl
-⊢-det (Δ~ ⊢`let-return[-⇒ dDel ] ⊢L ⦂ ⊢↓ `in ⊢M) (Δ′~ ⊢`let-return[-⇒ dDel′ ] ⊢L′ ⦂ ⊢↓′ `in ⊢M′)
+⊢-det (Δ~ ⊢`let-return[ _ ⇒ _ ] ⊢L ⦂ ⊢↓ `in ⊢M) (Δ′~ ⊢`let-return[ _ ⇒ _ ] ⊢L′ ⦂ ⊢↓′ `in ⊢M′)
   with refl , refl ← ⊢-det ⊢L ⊢L′
     with refl , refl ← ⊢-det ⊢M ⊢M′                                                              = refl , ~⊞⁻¹-det Δ~ Δ′~
 ⊢-det (`# x∈)                                    (`# x∈′)                                        = ∈-det x∈ x∈′
@@ -615,31 +619,31 @@ _⊢[_]_⦂?⇒? : ∀ Γ m L → Dec (∃₂ (λ S Δ → Γ ⊢[ m ] L ⦂ S �
                                                  (λ{ (_ , _ , `return[-⇒-] ⊢L′) → refl , -, -, ⊢L′ })
                                                  (m ≟ₘ m₁ ×-dec Γ drop[ m₀ ]⇒ ⊢[ m₀ ] L ⦂?⇒?)
 Γ ⊢[ m ] `let-return[ m₀ ⇒ m₁ ] L `in M ⦂?⇒?
-  with m ≟ₘ m₀
-...  | no m≢m₀                               = no λ{ (_ , _ , _ ⊢`let-return[-⇒ _ ] _ ⦂ _ `in _) → m≢m₀ refl }
-...  | yes refl
-    with Γ ⊢[ m ] L ⦂?⇒?
-...    | no  ⊬L                              = no λ{ (_ , _ , _ ⊢`let-return[-⇒ _ ] ⊢L ⦂ _ `in _) → ⊬L (-, -, ⊢L) }
+  with m ≤?ₘ m₀
+...  | no  m≰m₀                              = no λ{ (_ , _ , _ ⊢`let-return[ m≤m₀ ⇒ _ ] _ ⦂ _ `in _) → m≰m₀ m≤m₀ }
+...  | yes m≤m₀
+    with Γ drop[ m₀ ]⇒ ⊢[ m₀ ] L ⦂?⇒?
+...    | no  ⊬L                              = no λ{ (_ , _ , _ ⊢`let-return[ _ ⇒ _ ] ⊢L ⦂ _ `in _) → ⊬L (-, -, ⊢L) }
 ...    | yes (↓T , Δ₀ , ⊢L)
       with ↓T
-...      | `⊤                                = no λ{ (_ , _ , _ ⊢`let-return[-⇒ _ ] ⊢L′ ⦂ _ `in _) → case (⊢-det ⊢L ⊢L′) of λ() }
-...      | `↑[ _ ⇒ _ ] _                     = no λ{ (_ , _ , _ ⊢`let-return[-⇒ _ ] ⊢L′ ⦂ _ `in _) → case (⊢-det ⊢L ⊢L′) of λ() }
-...      | _ `⊸ _                            = no λ{ (_ , _ , _ ⊢`let-return[-⇒ _ ] ⊢L′ ⦂ _ `in _) → case (⊢-det ⊢L ⊢L′) of λ() }
+...      | `⊤                                = no λ{ (_ , _ , _ ⊢`let-return[ _ ⇒ _ ] ⊢L′ ⦂ _ `in _) → case (⊢-det ⊢L ⊢L′) of λ() }
+...      | `↑[ _ ⇒ _ ] _                     = no λ{ (_ , _ , _ ⊢`let-return[ _ ⇒ _ ] ⊢L′ ⦂ _ `in _) → case (⊢-det ⊢L ⊢L′) of λ() }
+...      | _ `⊸ _                            = no λ{ (_ , _ , _ ⊢`let-return[ _ ⇒ _ ] ⊢L′ ⦂ _ `in _) → case (⊢-det ⊢L ⊢L′) of λ() }
 ...      | ↓T@(`↓[ m₂ ⇒ m₃ ] T)
         with m₁ ≟ₘ m₂
-...        | no m₁≢m₂                        = no λ{ (_ , _ , _ ⊢`let-return[-⇒ _ ] ⊢L′ ⦂ _ `in _) → case (⊢-det ⊢L ⊢L′) of λ{ (refl , refl) → m₁≢m₂ refl } }
+...        | no m₁≢m₂                        = no λ{ (_ , _ , _ ⊢`let-return[ _ ⇒ _ ] ⊢L′ ⦂ _ `in _) → case (⊢-det ⊢L ⊢L′) of λ{ (refl , refl) → m₁≢m₂ refl } }
 ...        | yes refl
           with ⊢[ m₀ ] ↓T ?⦂⋆
-...          | no ⊬↓                         = no λ{ (_ , _ , _ ⊢`let-return[-⇒ _ ] ⊢L′ ⦂ ⊢↓ `in _) → case (⊢-det ⊢L ⊢L′) of λ{ (refl , refl) → ⊬↓ ⊢↓ } }
+...          | no ⊬↓                         = no λ{ (_ , _ , _ ⊢`let-return[ _ ⇒ _ ] ⊢L′ ⦂ ⊢↓ `in _) → case (⊢-det ⊢L ⊢L′) of λ{ (refl , refl) → ⊬↓ ⊢↓ } }
 ...          | yes ⊢↓@(`↓[-⇒ _ ][ _ ] _)
           with (T , m₁ , true) ∷ Γ ⊢[ m ] M ⦂?⇒?
-...          | no  ⊬M                        = no λ{ (_ , _ , _ ⊢`let-return[-⇒ _ ] ⊢L′ ⦂ _ `in ⊢M) → case (⊢-det ⊢L ⊢L′) of λ{ (refl , refl) → ⊬M (-, -, ⊢M) } }
+...          | no  ⊬M                        = no λ{ (_ , _ , _ ⊢`let-return[ _ ⇒ _ ] ⊢L′ ⦂ _ `in ⊢M) → case (⊢-det ⊢L ⊢L′) of λ{ (refl , refl) → ⊬M (-, -, ⊢M) } }
 ...          | yes (_ , TΔ₁ , ⊢M)
             with TΔ₁
-...            | []                          = no λ{ (_ , _ , _ ⊢`let-return[-⇒ _ ] ⊢L′ ⦂ _ `in ⊢M′) → case (⊢-det ⊢L ⊢L′) of λ{ (refl , refl) → case (⊢-det ⊢M ⊢M′) of λ() } }
+...            | []                          = no λ{ (_ , _ , _ ⊢`let-return[ _ ⇒ _ ] ⊢L′ ⦂ _ `in ⊢M′) → case (⊢-det ⊢L ⊢L′) of λ{ (refl , refl) → case (⊢-det ⊢M ⊢M′) of λ() } }
 ...            | (T′ , m₁′ , d) ∷ Δ₁         = Dec.map′
-                                                 (λ{ ((_ , Δ~) , refl , refl , dUsed) → -, -, Δ~ ⊢`let-return[-⇒ dUsed ] ⊢L ⦂ ⊢↓ `in ⊢M })
-                                                 (λ{ (_ , _ , Δ~ ⊢`let-return[-⇒ dUsed ] ⊢L′ ⦂ _ `in ⊢M′) →
+                                                 (λ{ ((_ , Δ~) , refl , refl , dUsed) → -, -, Δ~ ⊢`let-return[ m≤m₀ ⇒ dUsed ] ⊢L ⦂ ⊢↓ `in ⊢M })
+                                                 (λ{ (_ , _ , Δ~ ⊢`let-return[ _ ⇒ dUsed ] ⊢L′ ⦂ _ `in ⊢M′) →
                                                    case (⊢-det ⊢L ⊢L′) of
                                                    λ{ (refl , refl) →
                                                      case (⊢-det ⊢M ⊢M′) of
