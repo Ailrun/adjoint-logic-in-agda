@@ -53,14 +53,15 @@ infixr  5 _++ˣ⁻_
 pattern `↓ S = `↓[ cMode ⇒ pMode ] S
 pattern `↑ S = `↑[ pMode ⇒ cMode ] S
 
-pattern `lift L              = `lift[ pMode ⇒ cMode ] L
-pattern `unlift L            = `unlift[ cMode ⇒ pMode ] L
-pattern `return L            = `return[ cMode ⇒ pMode ] L
-pattern `let-return_`in_ L M = `let-return[ refl ⇒ cMode ] L `in M
-pattern `λ⦂ᵖ_∘_ S L          = `λ⦂[ pMode ] S ∘ L
-pattern `unlift`lift L       = `unlift (`lift L)
-pattern `unlift`#_ x         = `unlift (`# x)
-pattern `return`lift L       = `return (`lift L)
+pattern `lift L                     = `lift[ pMode ⇒ cMode ] L
+pattern `unlift L                   = `unlift[ cMode ⇒ pMode ] L
+pattern `return L                   = `return[ cMode ⇒ pMode ] L
+pattern `let-return_`in_    L M     = `let-return[ pMode ⇒ cMode ] L `in M
+pattern `let-return[_]_`in_ c≰p L M = `let-return[≰ c≰p ⇒ cMode ] L `in M
+pattern `λ⦂ᵖ_∘_ S L                 = `λ⦂[ pMode ] S ∘ L
+pattern `unlift`lift L              = `unlift (`lift L)
+pattern `unlift`#_ x                = `unlift (`# x)
+pattern `return`lift L              = `return (`lift L)
 
 -- Pattern Synonyms for Typing
 --
@@ -88,12 +89,15 @@ pattern ξ-`unlift≤ L⟶                    = ξ-`unlift[≤ refl ⇒-] L⟶
 pattern ξ-`return L⟶                     = ξ-`return[-⇒-] L⟶
 pattern ξ-`return≤ L⟶                    = ξ-`return[≤ refl ⇒-] L⟶
 pattern ξ-`let-return_`in- L⟶            = ξ-`let-return[-⇒-] L⟶ `in-
-pattern ξ-`let-return[_]_`in? c≰m L⟶     = ξ-`let-return[≰ c≰m ⇒-] L⟶ `in?
-pattern ξ-`let-return![_]_`in_ c≰m WL M⟶ = ξ-`let-return[≰ c≰m ⇒-]! WL `in M⟶
+pattern ξ-`let-return[_]_`in? c≰p L⟶     = ξ-`let-return[≰ c≰p ⇒-] L⟶ `in?
+pattern ξ-`let-return![_]_`in_ c≰p WL M⟶ = ξ-`let-return[≰ c≰p ⇒-]! WL `in M⟶
 pattern ξ-`unlift`lift L⟶                = ξ-`unlift (ξ-`lift L⟶)
 pattern ξ-`unlift≤`lift L⟶               = ξ-`unlift≤ (ξ-`lift L⟶)
 pattern ξ-`return`lift L⟶                = ξ-`return (ξ-`lift L⟶)
 pattern ξ-`return≤`lift L⟶               = ξ-`return≤ (ξ-`lift L⟶)
+
+c≰p : ¬ (cMode ≤ₘ² pMode)
+c≰p ()
 
 ------------------------------------------------------------
 -- Bisimilar Embedding Relation
@@ -264,6 +268,16 @@ is-all-del² (_ ∷ Γ) = is-del² _ _ ∷ is-all-del² _
       Γ ~ Γ ⊞ Γ
 ~⊞² []      = []
 ~⊞² (_ ∷ Γ) = ~d⊞² _ _ ∷ ~⊞² _
+
+d∤ᵖ : ∀ m d →
+      d [ m ]∤[ pMode ]d d
+d∤ᵖ cMode d = keep p≤c
+d∤ᵖ pMode d = keep refl
+
+∤ᵖ : ∀ Γ →
+     Γ ∤[ pMode ] Γ
+∤ᵖ []                = []
+∤ᵖ ((_ , m , d) ∷ Γ) = (d∤ᵖ m d) ∷ (∤ᵖ Γ)
 
 -- A termination measure for _⊢_~ᴹ_
 depth~ᴹ : kk′~ ⊢ E ~ᴹ L → ℕ
@@ -660,8 +674,9 @@ extractˣ⁻ᶜ⁻¹-~ᴹ-depth~ᴹ          kk′~ k″k‴~ (`unlift-`lift ~L)
 ~ᴹ∧⊢⇒~ᵀ ~Γ (`box ~L)            (Γ∤ ⊢`return`lift ⊢L)
   rewrite extractˣᶜ-eraseˣ-extractˣ⁻ᶜ ~Γ
         | ∤-extractˣᶜ ~Γ Γ∤                                                   = -, `□ (proj₂ (~ᴹ∧⊢⇒~ᵀ (proj₂ (extractˣᶜ ~Γ)) ~L ⊢L))
-~ᴹ∧⊢⇒~ᵀ ~Γ (`let-box ~L `in ~M) (Γ~ ⊢`let-return ⊢L ⦂ ⊢↓ `in ⊢M)
-  with _ , `□ ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L (~⊞-is-all-del∧⊢⇒⊢ˡ Γ~ (is-all-del² _) ⊢L)   = ~ᴹ∧⊢⇒~ᵀ (~T !∷ᶜ ~Γ) ~M (~⊞-is-all-del∧⊢⇒⊢ʳ (contraction _ ∷ Γ~) (is-all-del² _) ⊢M)
+~ᴹ∧⊢⇒~ᵀ ~Γ (`let-box ~L `in ~M) (Γ~ & Γ₀∤ ⊢`let-return ⊢L ⦂ ⊢↓ `in ⊢M)
+  rewrite ∤-det (∤ᵖ _) Γ₀∤
+    with _ , `□ ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L (~⊞-is-all-del∧⊢⇒⊢ˡ Γ~ (is-all-del² _) ⊢L) = ~ᴹ∧⊢⇒~ᵀ (~T !∷ᶜ ~Γ) ~M (~⊞-is-all-del∧⊢⇒⊢ʳ (contraction _ ∷ Γ~) (is-all-del² _) ⊢M)
 ~ᴹ∧⊢⇒~ᵀ ~Γ (`#¹ u<)             (Γ∤ ⊢`unlift`# u∈ ⦂ ⊢↑)
   rewrite ∤-extractˣᶜ ~Γ Γ∤                                                   = ∈ᶜ⇒~ᵀ (proj₂ (extractˣᶜ ~Γ)) u∈ 
 ~ᴹ∧⊢⇒~ᵀ ~Γ (`λ⦂ ~S ∙ ~L)        (`λ⦂-∘ ⊢L)                                    = -, ~S `→ (proj₂ (~ᴹ∧⊢⇒~ᵀ (~S !∷ᵖ ~Γ) ~L ⊢L))
@@ -681,7 +696,7 @@ extractˣ⁻ᶜ⁻¹-~ᴹ-depth~ᴹ          kk′~ k″k‴~ (`unlift-`lift ~L)
                -----------------------
                Γ ⊢[ pMode ] L ⦂ S
 ~ᴹ-soundness ~Γ ~S          (`let-box ~L `in ~M) (DP.`let-box_`in_ {B = B} ⊢E ⊢F)
-  with _ , ~T ← ~ᵀ-total B                                                        = ~⊞² _ ⊢`let-return ~ᴹ-soundness ~Γ (`□ ~T) ~L ⊢E  ⦂ ⊢`↓ (λ ()) (⊢`↑ (λ ()) (~ᵀ⇒⊢ ~T)) `in ~ᴹ-soundness (~T !∷ᶜ ~Γ) ~S ~M ⊢F
+  with _ , ~T ← ~ᵀ-total B                                                        = ~⊞² _ & ∤ᵖ _ ⊢`let-return ~ᴹ-soundness ~Γ (`□ ~T) ~L ⊢E  ⦂ ⊢`↓ (λ ()) (⊢`↑ (λ ()) (~ᵀ⇒⊢ ~T)) `in ~ᴹ-soundness (~T !∷ᶜ ~Γ) ~S ~M ⊢F
 ~ᴹ-soundness ~Γ ~S          (`#¹ u<)             (DP.`#¹ u∈)
   with _ , ~Γ′ ← extractˣᶜ ~Γ
      | ∤Γ′ ← extractˣᶜ-∤ ~Γ
@@ -707,9 +722,10 @@ extractˣ⁻ᶜ⁻¹-~ᴹ-depth~ᴹ          kk′~ k″k‴~ (`unlift-`lift ~L)
                   Γ ⊢[ pMode ] L ⦂ S →
                   -----------------------
                   Ψ₁ DP.⍮ Ψ₀ ⊢ E ⦂ A
-~ᴹ-completeness ~Γ ~S          (`let-box ~L `in ~M) (Γ~ ⊢`let-return ⊢L ⦂ ⊢↓ `in ⊢M)
-  with ⊢L′ ← ~⊞-is-all-del∧⊢⇒⊢ˡ Γ~ (is-all-del² _) ⊢L
-    with _ , `□ ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L ⊢L′                                               = DP.`let-box ~ᴹ-completeness ~Γ (`□ ~T) ~L ⊢L′ `in ~ᴹ-completeness (~T !∷ᶜ ~Γ) ~S ~M (~⊞-is-all-del∧⊢⇒⊢ʳ (contraction _ ∷ Γ~) (is-all-del² _) ⊢M)
+~ᴹ-completeness ~Γ ~S          (`let-box ~L `in ~M) (Γ~ & Γ₀∤ ⊢`let-return ⊢L ⦂ ⊢↓ `in ⊢M)
+  rewrite ∤-det (∤ᵖ _) Γ₀∤
+    with ⊢L′ ← ~⊞-is-all-del∧⊢⇒⊢ˡ Γ~ (is-all-del² _) ⊢L
+      with _ , `□ ~T ← ~ᴹ∧⊢⇒~ᵀ ~Γ ~L ⊢L′                                             = DP.`let-box ~ᴹ-completeness ~Γ (`□ ~T) ~L ⊢L′ `in ~ᴹ-completeness (~T !∷ᶜ ~Γ) ~S ~M (~⊞-is-all-del∧⊢⇒⊢ʳ (contraction _ ∷ Γ~) (is-all-del² _) ⊢M)
 ~ᴹ-completeness ~Γ ~S          (`#¹ u<)             (Γ∤ ⊢`unlift`# u∈ ⦂ ⊢↑)
   rewrite idxˣ⁻ᶜ-extractˣᶜ-eraseˣ ~Γ u<
         | ∤-extractˣᶜ ~Γ Γ∤                                                          = DP.`#¹ idxˣ⁻ᶜ-eraseˣ∈⇒∈ᶜ (proj₂ (extractˣᶜ ~Γ)) ~S u< u∈ 
@@ -737,8 +753,8 @@ extractˣ⁻ᶜ⁻¹-~ᴹ-depth~ᴹ          kk′~ k″k‴~ (`unlift-`lift ~L)
                     kk′~ ⊢ E ~ᴹ L′
 ⟶[≤]-preserves-~ᴹ (`box ~L)            (ξ-`return[≰ ≰cMode ⇒-] L⟶[≤]) with () ← ≰cMode refl
 ⟶[≤]-preserves-~ᴹ (`box ~L)            (ξ-`return≤`lift L⟶[≤])        = `box (⟶[≤]-preserves-~ᴹ ~L L⟶[≤])
-⟶[≤]-preserves-~ᴹ (`let-box ~L `in ~M) ξ-`let-return L⟶[≤] `in?       = `let-box (⟶[≤]-preserves-~ᴹ ~L L⟶[≤]) `in ~M
-⟶[≤]-preserves-~ᴹ (`let-box ~L `in ~M) (ξ-`let-return! WL `in M⟶[≤])  = `let-box ~L `in ⟶[≤]-preserves-~ᴹ ~M M⟶[≤]
+⟶[≤]-preserves-~ᴹ (`let-box ~L `in ~M) ξ-`let-return[ c≰p ] L⟶[≤] `in?       = `let-box (⟶[≤]-preserves-~ᴹ ~L L⟶[≤]) `in ~M
+⟶[≤]-preserves-~ᴹ (`let-box ~L `in ~M) (ξ-`let-return![ c≰p ] WL `in M⟶[≤])  = `let-box ~L `in ⟶[≤]-preserves-~ᴹ ~M M⟶[≤]
 ⟶[≤]-preserves-~ᴹ (`λ⦂ ~S ∙ ~L)        (ξ-`λ⦂[-]-∘ L⟶[≤])             = `λ⦂ ~S ∙ ⟶[≤]-preserves-~ᴹ ~L L⟶[≤]
 ⟶[≤]-preserves-~ᴹ (~L `$ ~M)           ξ- L⟶[≤] `$?                   = ⟶[≤]-preserves-~ᴹ ~L L⟶[≤] `$ ~M
 ⟶[≤]-preserves-~ᴹ (~L `$ ~M)           (ξ-! WL `$ M⟶[≤])              = ~L `$ ⟶[≤]-preserves-~ᴹ ~M M⟶[≤]
@@ -781,9 +797,9 @@ extractˣ⁻ᶜ⁻¹-~ᴹ-depth~ᴹ          kk′~ k″k‴~ (`unlift-`lift ~L)
                                                           , s≤s L′≤
 ~ᴹ-normalize[≤] (`let-box ~L `in ~M)
   with _ , ⟶*L′[≤] , WL′ , ~L′ , L′≤ ← ~ᴹ-normalize[≤] ~L
-     | _ , ⟶*M′[≤] , WM′ , ~M′ , M′≤ ← ~ᴹ-normalize[≤] ~M = -, ξ-of-⟶[ cMode ≤]* (`let-return_`in _) ξ-`let-return_`in? ⟶*L′[≤]
-                                                              ◅◅ ξ-of-⟶[ cMode ≤]* (`let-return _ `in_) (ξ-`let-return! WL′ `in_) ⟶*M′[≤]
-                                                          , `let-return WL′ `in WM′
+     | _ , ⟶*M′[≤] , WM′ , ~M′ , M′≤ ← ~ᴹ-normalize[≤] ~M = -, ξ-of-⟶[ cMode ≤]* (`let-return_`in _) ξ-`let-return[ c≰p ]_`in? ⟶*L′[≤]
+                                                              ◅◅ ξ-of-⟶[ cMode ≤]* (`let-return _ `in_) (ξ-`let-return![ c≰p ] WL′ `in_) ⟶*M′[≤]
+                                                          , `let-return[ c≰p ] WL′ `in WM′
                                                           , `let-box ~L′ `in ~M′
                                                           , s≤s (ℕ.⊔-mono-≤ L′≤ M′≤)
 ~ᴹ-normalize[≤] (`#¹ u<)                                  = -, ε
@@ -1152,7 +1168,7 @@ wk[↑⁰]~ᴹwk[↑]ᵖ {k} {k′} {k₀}           kk′~ 0k₀~ {k″k‴~} (
 ~ᴹ[/]ᵖ          kk′~         _ `unit                                 = `unit
 ~ᴹ[/]ᵖ          kk′~ {k″k‴~} _ (`box ~M)
   rewrite extractˣ⁻ᶜ-++ˣ⁻ kk′~ (?∷ᵖ k″k‴~)
-    with ~M′ ← ~ᴹ[/]ᵖ (extractˣ⁻ᶜ kk′~) (`unlift `unit) ~M
+    with ~M′ ← ~ᴹ[/]ᵖ (extractˣ⁻ᶜ kk′~) (`unit `$ `unit) ~M
       rewrite sym (extractˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~)
             | lengthˣ⁻-extractˣ⁻ᶜ kk′~                               = `box ~M′
 ~ᴹ[/]ᵖ          kk′~         _ (`let-box ~M `in ~N)                  = `let-box ~ᴹ[/]ᵖ kk′~ _ ~M `in ~ᴹ[/]ᵖ (!∷ᶜ kk′~) _ ~N
@@ -1187,7 +1203,7 @@ wk[↑⁰]~ᴹwk[↑]ᵖ {k} {k′} {k₀}           kk′~ 0k₀~ {k″k‴~} (
             | ≥⇒lengthˣ⁻+idxˣ⁻ᵖ≡idxˣ⁻ᵖ-++ˣ⁻ kk′~ k″k‴~ x≥k′ x< x∸k′< = `#⁰ x<
 ~ᴹ[/]ᵖ          kk′~ {k″k‴~} _ (`unlift-`lift ~M)
   rewrite extractˣ⁻ᶜ-++ˣ⁻ kk′~ (?∷ᵖ k″k‴~)
-    with ~M′ ← ~ᴹ[/]ᵖ (extractˣ⁻ᶜ kk′~) (`unlift `unit) ~M
+    with ~M′ ← ~ᴹ[/]ᵖ (extractˣ⁻ᶜ kk′~) (`unit `$ `unit) ~M
       rewrite sym (extractˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~)
             | lengthˣ⁻-extractˣ⁻ᶜ kk′~                               = `unlift-`lift ~M′
 
@@ -1199,7 +1215,7 @@ wk[↑⁰]~ᴹwk[↑]ᵖ {k} {k′} {k₀}           kk′~ 0k₀~ {k″k‴~} (
 [/⁰]~ᴹ[/]ᵖ                              kk′~         ~L `unit                        = `unit
 [/⁰]~ᴹ[/]ᵖ                              kk′~ {k″k‴~} ~L (`box ~M)
   rewrite extractˣ⁻ᶜ-++ˣ⁻ kk′~ (!∷ᵖ k″k‴~)
-    with ~M′ ← ~ᴹ[/]ᵖ (extractˣ⁻ᶜ kk′~) (`unlift `unit) ~M
+    with ~M′ ← ~ᴹ[/]ᵖ (extractˣ⁻ᶜ kk′~) (`unit `$ `unit) ~M
       rewrite sym (extractˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~)
             | lengthˣ⁻-extractˣ⁻ᶜ kk′~                                               = `box ~M′
 [/⁰]~ᴹ[/]ᵖ                              kk′~         ~L (`let-box ~M `in ~N)         = `let-box [/⁰]~ᴹ[/]ᵖ kk′~ ~L ~M `in [/⁰]~ᴹ[/]ᵖ (!∷ᶜ kk′~) (wk[↑¹]~ᴹwk[↑]ᶜ [] (!∷ᶜ []) ~L) ~N
@@ -1246,7 +1262,7 @@ wk[↑⁰]~ᴹwk[↑]ᵖ {k} {k′} {k₀}           kk′~ 0k₀~ {k″k‴~} (
 [/⁰]~ᴹ[/]ᵖ {_} {k′} {_}  {_}  {E}     kk′~ {k″k‴~} ~L (`unlift-`lift ~M)
   rewrite ~ᴹ∧≥⇒[/⁰]≡ E ~M (z≤n {k′})
         | extractˣ⁻ᶜ-++ˣ⁻ kk′~ (!∷ᵖ k″k‴~)
-    with ~M′ ← ~ᴹ[/]ᵖ (extractˣ⁻ᶜ kk′~) (`unlift `unit) ~M
+    with ~M′ ← ~ᴹ[/]ᵖ (extractˣ⁻ᶜ kk′~) (`unit `$ `unit) ~M
       rewrite sym (extractˣ⁻ᶜ-++ˣ⁻ kk′~ k″k‴~)
             | lengthˣ⁻-extractˣ⁻ᶜ kk′~                                               = `unlift-`lift ~M′
 
