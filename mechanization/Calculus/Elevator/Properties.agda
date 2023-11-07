@@ -1440,7 +1440,7 @@ mode-safety-helper m′≤m ⊢Γ ⊢S L≈M (L⟶ ◅ L′⟶*) VL″ ε       
 mode-safety-helper m′≤m ⊢Γ ⊢S L≈M (L⟶ ◅ L′⟶*) VL‴ (M⟶ ◅ M′⟶*) VM‴ (acc r)
   with _ , _ , L′⟶*′ , M′⟶*′ , L″≈M″ ← ≈-diamond m′≤m ⊢Γ ⊢S L≈M L⟶ M⟶ (-, L′⟶* , VL‴) (-, M′⟶* , VM‴)
     with L″⟶* , L″⟶*≤L′⟶* ← ⟶*-factor L′⟶*′ L′⟶* (⟶*length≤⟶*length-halt L′⟶*′ L′⟶* VL‴)
-       | M″⟶* , _ ← ⟶*-factor M′⟶*′ M′⟶* (⟶*length≤⟶*length-halt M′⟶*′ M′⟶* VM‴) = mode-safety-helper m′≤m ⊢Γ ⊢S L″≈M″ L″⟶* VL‴ M″⟶* VM‴ (r _ (s≤s L″⟶*≤L′⟶*))
+       | M″⟶* , _ ← ⟶*-factor M′⟶*′ M′⟶* (⟶*length≤⟶*length-halt M′⟶*′ M′⟶* VM‴) = mode-safety-helper m′≤m ⊢Γ ⊢S L″≈M″ L″⟶* VL‴ M″⟶* VM‴ (r (s≤s L″⟶*≤L′⟶*))
 
 mode-safety[≤]-helper : m′ ≤ₘ m →
                         ⊢[ m ] Γ →
@@ -1458,7 +1458,7 @@ mode-safety[≤]-helper m′≤m ⊢Γ ⊢S L≈M (L⟶[≤] ◅ L′⟶[≤]*) 
 mode-safety[≤]-helper m′≤m ⊢Γ ⊢S L≈M (L⟶[≤] ◅ L′⟶[≤]*) WL‴ (M⟶[≤] ◅ M′⟶[≤]*) WM‴ (acc r)
   with _ , _ , L′⟶[≤]*′ , M′⟶[≤]*′ , L″≈M″ ← ≈-diamond[≤] m′≤m ⊢Γ ⊢S L≈M L⟶[≤] M⟶[≤] (-, L′⟶[≤]* , WL‴) (-, M′⟶[≤]* , WM‴)
     with L″⟶[≤]* , L″⟶[≤]*≤L′⟶[≤]* ← ⟶[≤]*-factor L′⟶[≤]*′ L′⟶[≤]* (⟶[≤]*length≤⟶[≤]*length-halt L′⟶[≤]*′ L′⟶[≤]* WL‴)
-       | M″⟶[≤]* , _ ← ⟶[≤]*-factor M′⟶[≤]*′ M′⟶[≤]* (⟶[≤]*length≤⟶[≤]*length-halt M′⟶[≤]*′ M′⟶[≤]* WM‴) = mode-safety[≤]-helper m′≤m ⊢Γ ⊢S L″≈M″ L″⟶[≤]* WL‴ M″⟶[≤]* WM‴ (r _ (s≤s L″⟶[≤]*≤L′⟶[≤]*))
+       | M″⟶[≤]* , _ ← ⟶[≤]*-factor M′⟶[≤]*′ M′⟶[≤]* (⟶[≤]*length≤⟶[≤]*length-halt M′⟶[≤]*′ M′⟶[≤]* WM‴) = mode-safety[≤]-helper m′≤m ⊢Γ ⊢S L″≈M″ L″⟶[≤]* WL‴ M″⟶[≤]* WM‴ (r (s≤s L″⟶[≤]*≤L′⟶[≤]*))
 
 mode-safety : m′ ≤ₘ m →
               ⊢[ m ] Γ →

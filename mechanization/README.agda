@@ -1,6 +1,6 @@
 -- This mechanization uses
 -- * Agda v2.6.3
--- * agda-stdlib of commit 2839cec94
+-- * agda-stdlib of commit e0879db86
 
 {-# OPTIONS --safe #-}
 module README where
