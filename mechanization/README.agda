@@ -46,3 +46,6 @@ import Calculus.Elevator.Algorithmic
 
 -- Soundness/Completeness of Algorithmic Typing of Elevator
 import Calculus.Elevator.Algorithmic.Properties
+
+-- Completeness of Elevator with regard to Adjoint sequent calculus
+import Calculus.Adjoint.Sequent
