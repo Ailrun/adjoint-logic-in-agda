@@ -1426,18 +1426,18 @@ Value~ᴹ-normalize-helper : (~L : kk′~ ⊢ I ~ᴹ L) →
                            Acc ℕ._<_ (depth~ᴹ ~L) →
                            --------------------------------------------------
                            ∃ (λ L′ → L ⟶* L′ × WeakNorm L′ × kk′~ ⊢ I ~ᴹ L′)
-Value~ᴹ-normalize-helper (`unit kk′~Dis)            VI rec                      = -, ε , `unit , `unit kk′~Dis
+Value~ᴹ-normalize-helper (`unit kk′~Dis)            VI rec                    = -, ε , `unit , `unit kk′~Dis
 Value~ᴹ-normalize-helper (`bang kk′~Dis ~L)         VI (acc r)
-  with _ , ⟶*L′[≤] , WL′ , ~L′ , _ ← ~ᴹ-normalize[≤] ~L                         = -, ξ-of-↝*-⟶* _⟶[ _ ≤]_ `return`lift ξ-`return`lift ⟶*L′[≤]
-                                                                                , `return`lift WL′
-                                                                                , `bang kk′~Dis ~L′
-Value~ᴹ-normalize-helper (`λ⦂ ~S ∘ ~L)              VI rec                      = -, ε , `λ⦂ˡ _ ∘ _ , `λ⦂ ~S ∘ ~L
+  with _ , ⟶*L′[≤] , WL′ , ~L′ , _ ← ~ᴹ-normalize[≤] ~L                       = -, ξ-of-↝*-⟶* _⟶[ _ ≤]_ `return`lift ξ-`return`lift ⟶*L′[≤]
+                                                                              , `return`lift WL′
+                                                                              , `bang kk′~Dis ~L′
+Value~ᴹ-normalize-helper (`λ⦂ ~S ∘ ~L)              VI rec                    = -, ε , `λ⦂ˡ _ ∘ _ , `λ⦂ ~S ∘ ~L
 Value~ᴹ-normalize-helper (`unlift-`lift kk′~Dis ~L) VI (acc r)
   with _ , ⟶*L′[≤] , WL′ , ~L′ , L′≤ ← ~ᴹ-normalize[≤] ~L
-    with _ , ⟶*L″ , VL″ , ~L″ ← Value~ᴹ-normalize-helper ~L′ VI (r _ (s≤s L′≤)) = -, ξ-of-↝*-⟶* _⟶[ uMode ≤]_ `unlift`lift ξ-`unlift`lift ⟶*L′[≤]
-                                                                                    ◅◅ β-`↑ WL′ ◅ ⟶*L″
-                                                                                , VL″
-                                                                                , ~L″
+    with _ , ⟶*L″ , VL″ , ~L″ ← Value~ᴹ-normalize-helper ~L′ VI (r (s≤s L′≤)) = -, ξ-of-↝*-⟶* _⟶[ uMode ≤]_ `unlift`lift ξ-`unlift`lift ⟶*L′[≤]
+                                                                                  ◅◅ β-`↑ WL′ ◅ ⟶*L″
+                                                                              , VL″
+                                                                              , ~L″
 
 Value~ᴹ-normalize : kk′~ ⊢ I ~ᴹ L →
                     BP.Value I →
@@ -1452,15 +1452,15 @@ Value~ᴹ-normalize ~L VI = Value~ᴹ-normalize-helper ~L VI (ℕ.<-wellFounded 
                              × DeferredTerm[ uMode ≤] L′
                              × kk′~ ⊢ I ~ᴹ L′)
 `bang-~ᴹ-inv-helper (`bang kk′~Dis ~L)         rec
-  with _ , ⟶*L′[≤] , WL′ , ~L′ , L′≤ ← ~ᴹ-normalize[≤] ~L                    = -, ξ-of-↝*-⟶* _⟶[ _ ≤]_ `return`lift ξ-`return`lift ⟶*L′[≤]
-                                                                             , WL′
-                                                                             , ~L′
+  with _ , ⟶*L′[≤] , WL′ , ~L′ , L′≤ ← ~ᴹ-normalize[≤] ~L                  = -, ξ-of-↝*-⟶* _⟶[ _ ≤]_ `return`lift ξ-`return`lift ⟶*L′[≤]
+                                                                           , WL′
+                                                                           , ~L′
 `bang-~ᴹ-inv-helper (`unlift-`lift kk′~Dis ~L) (acc r)
   with _ , ⟶*L′[≤] , WL′ , ~L′ , L′≤ ← ~ᴹ-normalize[≤] ~L
-    with _ , ⟶*`bangL″ , WL″ , ~L″ ← `bang-~ᴹ-inv-helper ~L′ (r _ (s≤s L′≤)) = -, ξ-of-↝*-⟶* _⟶[ uMode ≤]_ `unlift`lift ξ-`unlift`lift ⟶*L′[≤]
-                                                                                 ◅◅ β-`↑ WL′ ◅ ⟶*`bangL″
-                                                                             , WL″
-                                                                             , ~L″
+    with _ , ⟶*`bangL″ , WL″ , ~L″ ← `bang-~ᴹ-inv-helper ~L′ (r (s≤s L′≤)) = -, ξ-of-↝*-⟶* _⟶[ uMode ≤]_ `unlift`lift ξ-`unlift`lift ⟶*L′[≤]
+                                                                               ◅◅ β-`↑ WL′ ◅ ⟶*`bangL″
+                                                                           , WL″
+                                                                           , ~L″
 
 `bang-~ᴹ-inv : kk′~ ⊢ BP.`bang I ~ᴹ L →
               ------------------------------------
@@ -1475,15 +1475,15 @@ Value~ᴹ-normalize ~L VI = Value~ᴹ-normalize-helper ~L VI (ℕ.<-wellFounded 
                       ∃₂ (λ S′ L′ → L ⟶* `λ⦂ˡ S′ ∘ L′
                                   × !∷ˡ kk′~ ⊢ I ~ᴹ L′
                                   × P ~ᵀ S′)
-`λ⦂-∙-~ᴹ-inv-helper (`λ⦂ ~S ∘ ~L)              rec                                 = -, -, ε
-                                                                                   , ~L
-                                                                                   , ~S
+`λ⦂-∙-~ᴹ-inv-helper (`λ⦂ ~S ∘ ~L)              rec                               = -, -, ε
+                                                                                 , ~L
+                                                                                 , ~S
 `λ⦂-∙-~ᴹ-inv-helper (`unlift-`lift kk′~Dis ~L) (acc r)
   with _ , ⟶*L′[≤] , WL′ , ~L′ , L′≤ ← ~ᴹ-normalize[≤] ~L
-    with _ , _ , ⟶*`λ⦂ˡS″∘L″ , ~L″ , ~S″ ← `λ⦂-∙-~ᴹ-inv-helper ~L′ (r _ (s≤s L′≤)) = -, -, ξ-of-↝*-⟶* _⟶[ uMode ≤]_ `unlift`lift ξ-`unlift`lift ⟶*L′[≤]
-                                                                                       ◅◅ β-`↑ WL′ ◅ ⟶*`λ⦂ˡS″∘L″
-                                                                                   , ~L″
-                                                                                   , ~S″
+    with _ , _ , ⟶*`λ⦂ˡS″∘L″ , ~L″ , ~S″ ← `λ⦂-∙-~ᴹ-inv-helper ~L′ (r (s≤s L′≤)) = -, -, ξ-of-↝*-⟶* _⟶[ uMode ≤]_ `unlift`lift ξ-`unlift`lift ⟶*L′[≤]
+                                                                                     ◅◅ β-`↑ WL′ ◅ ⟶*`λ⦂ˡS″∘L″
+                                                                                 , ~L″
+                                                                                 , ~S″
 
 `λ⦂-∙-~ᴹ-inv : kk′~ ⊢ BP.`λ⦂ P ∘ I ~ᴹ L →
                ---------------------------------
@@ -1517,21 +1517,21 @@ Value~ᴹ-normalize ~L VI = Value~ᴹ-normalize-helper ~L VI (ℕ.<-wellFounded 
                x ℕ.≥ k′ →
                ---------------------------
                BP.wk[ k₀ ↑⁰ x ] I ≡ I
-~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (`unit kk′~k″k‴~Dis)              k″k‴~Dis x≥                      = refl
-~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (`bang kk′~k″k‴~Dis ~M)           k″k‴~Dis x≥                      = refl
+~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (`unit kk′~k″k‴~Dis)              k″k‴~Dis x≥                       = refl
+~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (`bang kk′~k″k‴~Dis ~M)           k″k‴~Dis x≥                       = refl
 ~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (kk′~k″k‴~~ ⊢`let-bang ~M `in ~N) k″k‴~Dis x≥
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~k″k‴~~
     with kk′~₀~ , kk′~₁~ , _ , _ , refl , refl , kk′~~ , k″k‴~~ ← ~~ˣ⁻⊞-preserves-++ kk′~ kk′~k″k‴~~
-      with k″k‴~₀Dis , k″k‴~₁Dis ← ~~ˣ⁻⊞-preserves-is-all-dis⁰~ˣ⁻ k″k‴~Dis k″k‴~~      = cong₂ BP.`let-bang_`in_ (~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~₀~ ~M k″k‴~₀Dis x≥) (~ᴹ∧≥⇒wk[↑⁰]≡ _ (!∷ᵘ kk′~₁~) ~N k″k‴~₁Dis x≥)
-~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (`#¹ ~u)                          k″k‴~Dis x≥                      = refl
-~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (`λ⦂ ~S ∘ ~M)                     k″k‴~Dis x≥                      = cong (BP.`λ⦂ _ ∘_) (~ᴹ∧≥⇒wk[↑⁰]≡ _ (!∷ˡ kk′~) ~M k″k‴~Dis (s≤s x≥))
+      with k″k‴~₀Dis , k″k‴~₁Dis ← ~~ˣ⁻⊞-preserves-is-all-dis⁰~ˣ⁻ k″k‴~Dis k″k‴~~       = cong₂ BP.`let-bang_`in_ (~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~₀~ ~M k″k‴~₀Dis x≥) (~ᴹ∧≥⇒wk[↑⁰]≡ _ (!∷ᵘ kk′~₁~) ~N k″k‴~₁Dis x≥)
+~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (`#¹ ~u)                          k″k‴~Dis x≥                       = refl
+~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (`λ⦂ ~S ∘ ~M)                     k″k‴~Dis x≥                       = cong (BP.`λ⦂ _ ∘_) (~ᴹ∧≥⇒wk[↑⁰]≡ _ (!∷ˡ kk′~) ~M k″k‴~Dis (s≤s x≥))
 ~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (kk′~k″k‴~~ ⊢ ~M `$ ~N)           k″k‴~Dis x≥
   with refl , refl , refl , refl ← ~~ˣ⁻⊞-index kk′~k″k‴~~
     with kk′~₀~ , kk′~₁~ , _ , _ , refl , refl , kk′~~ , k″k‴~~ ← ~~ˣ⁻⊞-preserves-++ kk′~ kk′~k″k‴~~
-      with k″k‴~₀Dis , k″k‴~₁Dis ← ~~ˣ⁻⊞-preserves-is-all-dis⁰~ˣ⁻ k″k‴~Dis k″k‴~~      = cong₂ BP._`$_ (~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~₀~ ~M k″k‴~₀Dis x≥) (~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~₁~ ~N k″k‴~₁Dis x≥)
+      with k″k‴~₀Dis , k″k‴~₁Dis ← ~~ˣ⁻⊞-preserves-is-all-dis⁰~ˣ⁻ k″k‴~Dis k″k‴~~       = cong₂ BP._`$_ (~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~₀~ ~M k″k‴~₀Dis x≥) (~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~₁~ ~N k″k‴~₁Dis x≥)
 ~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (`#⁰ ~y)                          k″k‴~Dis x≥
-  rewrite dec-no (_ ℕ.≤? _) (ℕ.<⇒≱ (ℕ.<-transˡ (~ᵛ∧is-all-dis⇒< kk′~ ~y k″k‴~Dis) x≥)) = refl
-~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (`unlift-`lift kk′~k″k‴~Dis ~M)   k″k‴~Dis x≥                      = ~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ ~M k″k‴~Dis x≥
+  rewrite dec-no (_ ℕ.≤? _) (ℕ.<⇒≱ (ℕ.<-≤-trans (~ᵛ∧is-all-dis⇒< kk′~ ~y k″k‴~Dis) x≥)) = refl
+~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ (`unlift-`lift kk′~k″k‴~Dis ~M)   k″k‴~Dis x≥                       = ~ᴹ∧≥⇒wk[↑⁰]≡ _ kk′~ ~M k″k‴~Dis x≥
 
 subst-~ᴹwk[↑-] : x ≡ x′ →
                  ∀ M →
@@ -1935,13 +1935,13 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
     with BPv ℕ.≥? k
 ...    | no  BPv≱k
       with BPv<k ← ℕ.≰⇒> BPv≱k
-        with v<kk′~ ← ℕ.<-transˡ (∈ᵘ∧<⇒< k₁k′₁~ ~v BPv<k) (ℕ.≤-reflexive eq₁)
+        with v<kk′~ ← ℕ.<-≤-trans (∈ᵘ∧<⇒< k₁k′₁~ ~v BPv<k) (ℕ.≤-reflexive eq₁)
           rewrite dec-no (_ ℕ.≥? _) (ℕ.<⇒≱ v<kk′~)                                                                                                              = `#¹ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ᵘ⇒∈ᵘ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ᵘ!∷ᵘ∧<⇒~ᵛ∈ᵘ k₁k′₁~ ~v BPv<k)
 ...    | yes BPv≥k
       with BPv ℕ.≟ k
 ...      | no  BPv≢k
         with BPv>k ← ℕ.≤∧≢⇒< BPv≥k (≢-sym BPv≢k)
-          with v>kk′~ ← ℕ.<-transʳ (ℕ.≤-reflexive (sym eq₁)) (∈ᵘ∧>⇒> k₁k′₁~ ~v BPv>k)
+          with v>kk′~ ← ℕ.≤-<-trans (ℕ.≤-reflexive (sym eq₁)) (∈ᵘ∧>⇒> k₁k′₁~ ~v BPv>k)
             rewrite proj₂ (dec-yes (_ ℕ.≥? _) (ℕ.<⇒≤ v>kk′~))
                   | dec-no (_ ℕ.≟ _) (≢-sym (ℕ.<⇒≢ v>kk′~))                                                                                                     = `#¹ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ᵘ⇒∈ᵘ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ᵘ!∷ᵘ∧>⇒pred~ᵛpred∈ᵘ k₁k′₁~ ~v BPv>k)
 ...      | yes refl
@@ -1963,11 +1963,11 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
      | kk′~k″k‴~~ ← ~~ˣ⁻⊞-++ kk′~~ k″k‴~~
     with y ℕ.≥? lengthˣ⁻ kk′~
 ...    | no  y≱kk′~
-      with y<kk′~ ← ℕ.≰⇒> y≱kk′~ = `#⁰ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ˡ⇒∈ˡ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ˡ!∷ᵘ∧<⇒~ᵛ∈ˡ k₁k′₁~ ~y (ℕ.<-transˡ y<kk′~ (ℕ.≤-reflexive (sym eq₁))))
+      with y<kk′~ ← ℕ.≰⇒> y≱kk′~ = `#⁰ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ˡ⇒∈ˡ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ˡ!∷ᵘ∧<⇒~ᵛ∈ˡ k₁k′₁~ ~y (ℕ.<-≤-trans y<kk′~ (ℕ.≤-reflexive (sym eq₁))))
 ...    | yes y≥kk′~
       with y≢kk′~ ← subst (_ ≢_) (proj₂ (lengthˣ⁻-respects-~~ˣ⁻⊞ kk′~~)) (∈ˡ!∷ᵘ⇒≢ k₁k′₁~ ~y)
         with y>kk′~ ← ℕ.≤∧≢⇒< y≥kk′~ (≢-sym y≢kk′~)
-          rewrite dec-no (_ ℕ.≟ _) y≢kk′~                                                                                                                       = `#⁰ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ˡ⇒∈ˡ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ˡ!∷ᵘ∧>⇒~ᵛpred∈ˡ k₁k′₁~ ~y (ℕ.<-transʳ (ℕ.≤-reflexive eq₁) y>kk′~))
+          rewrite dec-no (_ ℕ.≟ _) y≢kk′~                                                                                                                       = `#⁰ ~~ˣ⁻⊞∧is-all-dis⁰~ˣ⁻∧∈ˡ⇒∈ˡ kk′~k″k‴~~ k₀k′₀~k″₀k‴₀~Dis (~ᵛ∈ˡ!∷ᵘ∧>⇒~ᵛpred∈ˡ k₁k′₁~ ~y (ℕ.≤-<-trans (ℕ.≤-reflexive eq₁) y>kk′~))
 !∷ᵘ[/¹]~ᴹ[/]ᵘ     {J = _}          {_}                   {_}    {_}      {k₁k′₁~} kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L (`unlift-`lift k₁k′₁~!∷ᵘk″₁k‴₁~Dis ~M)   = `unlift-`lift kk′~k″k‴~Dis (!∷ᵘ[/¹]~ᴹ[/]ᵘ kk′~~ k″k‴~~ k₀k′₀~Dis k″₀k‴₀~Dis ~L ~M)
   where
     kk′~k″k‴~Dis = is-all-dis⁰~ˣ⁻-++⁺ (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ k₀k′₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ˡ k₁k′₁~ k₁k′₁~!∷ᵘk″₁k‴₁~Dis) kk′~~) (~~ˣ⁻⊞⁻¹-preserves-is-all-dis⁰~ˣ⁻ k″₀k‴₀~Dis (is-all-dis⁰~ˣ⁻-++⁻ʳ (!∷ᵘ [])  (is-all-dis⁰~ˣ⁻-++⁻ʳ k₁k′₁~ k₁k′₁~!∷ᵘk″₁k‴₁~Dis)) k″k‴~~)
@@ -2016,7 +2016,7 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
             ------------------------------------------------
             idx[ I / x ] BP.y along BP.`#⁰_ ≡ (BP.`#⁰ BP.y)
     lemma x≥ kk′~′Dis ~y
-      rewrite dec-no (_ ℕ.≥? _) (ℕ.<⇒≱ (ℕ.<-transˡ (lemma< kk′~′Dis ~y) x≥)) = refl
+      rewrite dec-no (_ ℕ.≥? _) (ℕ.<⇒≱ (ℕ.<-≤-trans (lemma< kk′~′Dis ~y) x≥)) = refl
 ≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡               x≥ kk′~′Dis (`unlift-`lift _ ~M)              = ≥∧is-all-dis⁰~ˣ⁻∧~ᴹ⇒[/⁰]≡ x≥ kk′~′Dis ~M
 
 ?∷ˡ[/⁰]~ᴹ[/]ˡ : (kk′~ : k ⍮ k′ ~ˣ⁻) {k″k‴~ : k″ ⍮ k‴ ~ˣ⁻} →
@@ -2108,30 +2108,30 @@ subst-~ᴹ[/-] {kk′~ = kk′~} {I} {L} {m₀} eq M = subst (λ x → kk′~ �
                        ∃ (λ L′ → L ⟶* L′ × [] ⊢ I′ ~ᴹ L′)
 ~ᴹ-simulation-helper I⟶                     (`unlift-`lift [] ~L)     (acc r)
   with _ , ⟶*L′[≤] , VL′ , ~L′ , L′≤ ← ~ᴹ-normalize[≤] ~L
-    with _ , ⟶*L″ , ~L″ ← ~ᴹ-simulation-helper I⟶ ~L′ (r _ (s≤s L′≤))         = -, ξ-of-↝*-⟶* _⟶[ uMode ≤]_ `unlift`lift ξ-`unlift`lift ⟶*L′[≤]
-                                                                                  ◅◅ β-`↑ VL′ ◅ ⟶*L″
-                                                                              , ~L″
+    with _ , ⟶*L″ , ~L″ ← ~ᴹ-simulation-helper I⟶ ~L′ (r (s≤s L′≤))         = -, ξ-of-↝*-⟶* _⟶[ uMode ≤]_ `unlift`lift ξ-`unlift`lift ⟶*L′[≤]
+                                                                                ◅◅ β-`↑ VL′ ◅ ⟶*L″
+                                                                            , ~L″
 ~ᴹ-simulation-helper BP.ξ-`let-bang I⟶ `in- ([] ⊢`let-bang ~L `in ~M) (acc r)
-  with _ , ⟶*L′ , ~L′ ← ~ᴹ-simulation-helper I⟶ ~L (r _ (s≤s (ℕ.m≤m⊔n _ _)))  = -, ξ-of-⟶* (`let-return_`in _) ξ-`let-return_`in- ⟶*L′
-                                                                              , [] ⊢`let-bang ~L′ `in ~M
+  with _ , ⟶*L′ , ~L′ ← ~ᴹ-simulation-helper I⟶ ~L (r (s≤s (ℕ.m≤m⊔n _ _)))  = -, ξ-of-⟶* (`let-return_`in _) ξ-`let-return_`in- ⟶*L′
+                                                                            , [] ⊢`let-bang ~L′ `in ~M
 ~ᴹ-simulation-helper BP.β-`!                ([] ⊢`let-bang ~L `in ~M) rec
-  with _ , ⟶*`bangL′ , WL′ , ~L ← `bang-~ᴹ-inv ~L                             = -, ξ-of-⟶* (`let-return_`in _) ξ-`let-return_`in- ⟶*`bangL′
-                                                                                  ◅◅ β-`↓ (`lift WL′) ◅ ε
-                                                                              , !∷ᵘ[/¹]~ᴹ[/]ᵘ [] [] [] [] ~L ~M
+  with _ , ⟶*`bangL′ , WL′ , ~L ← `bang-~ᴹ-inv ~L                           = -, ξ-of-⟶* (`let-return_`in _) ξ-`let-return_`in- ⟶*`bangL′
+                                                                                ◅◅ β-`↓ (`lift WL′) ◅ ε
+                                                                            , !∷ᵘ[/¹]~ᴹ[/]ᵘ [] [] [] [] ~L ~M
 ~ᴹ-simulation-helper BP.ξ- I⟶ `$?           ([] ⊢ ~L `$ ~M)           (acc r)
-  with _ , ⟶*L′ , ~L′ ← ~ᴹ-simulation-helper I⟶ ~L (r _ (s≤s (ℕ.m≤m⊔n _ _)))  = -, ξ-of-⟶* (_`$ _) ξ-_`$? ⟶*L′
-                                                                              , [] ⊢ ~L′ `$ ~M
+  with _ , ⟶*L′ , ~L′ ← ~ᴹ-simulation-helper I⟶ ~L (r (s≤s (ℕ.m≤m⊔n _ _)))  = -, ξ-of-⟶* (_`$ _) ξ-_`$? ⟶*L′
+                                                                            , [] ⊢ ~L′ `$ ~M
 ~ᴹ-simulation-helper (BP.ξ-! VI `$ J⟶)      ([] ⊢ ~L `$ ~M)           (acc r)
   with _ , ⟶*L′ , VL′ , ~L′ ← Value~ᴹ-normalize ~L VI
-     | _ , ⟶*M′ , ~M′ ← ~ᴹ-simulation-helper J⟶ ~M (r _ (s≤s (ℕ.m≤n⊔m _ _)))  = -, ξ-of-⟶* (_`$ _) ξ-_`$? ⟶*L′
-                                                                                  ◅◅ ξ-of-⟶* (_ `$_) (ξ-! VL′ `$_) ⟶*M′
-                                                                              , [] ⊢ ~L′ `$ ~M′
+     | _ , ⟶*M′ , ~M′ ← ~ᴹ-simulation-helper J⟶ ~M (r (s≤s (ℕ.m≤n⊔m _ _)))  = -, ξ-of-⟶* (_`$ _) ξ-_`$? ⟶*L′
+                                                                                ◅◅ ξ-of-⟶* (_ `$_) (ξ-! VL′ `$_) ⟶*M′
+                                                                            , [] ⊢ ~L′ `$ ~M′
 ~ᴹ-simulation-helper (BP.β-`⊸ VJ)           ([] ⊢ ~L `$ ~M)           rec
   with _ , _ , ⟶*`λ⦂ˡS′∘L′ , ~L′ , ~S′ ← `λ⦂-∙-~ᴹ-inv ~L
-     | _ , ⟶*M′ , VM′ , ~M′ ← Value~ᴹ-normalize ~M VJ                         = -, ξ-of-⟶* (_`$ _) ξ-_`$? ⟶*`λ⦂ˡS′∘L′
-                                                                                  ◅◅ ξ-of-⟶* (_ `$_) ξ-! `λ⦂ˡ _ ∘ _ `$_ ⟶*M′
-                                                                                  ◅◅ β-`⊸ VM′ ◅ ε
-                                                                              , !∷ˡ[/⁰]~ᴹ[/]ˡ [] [] ~M′ ~L′
+     | _ , ⟶*M′ , VM′ , ~M′ ← Value~ᴹ-normalize ~M VJ                       = -, ξ-of-⟶* (_`$ _) ξ-_`$? ⟶*`λ⦂ˡS′∘L′
+                                                                                ◅◅ ξ-of-⟶* (_ `$_) ξ-! `λ⦂ˡ _ ∘ _ `$_ ⟶*M′
+                                                                                ◅◅ β-`⊸ VM′ ◅ ε
+                                                                            , !∷ˡ[/⁰]~ᴹ[/]ˡ [] [] ~M′ ~L′
 
 ~ᴹ-simulation : I BP.⟶ I′ →
                 [] ⊢ I ~ᴹ L →
