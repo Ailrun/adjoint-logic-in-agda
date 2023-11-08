@@ -22,6 +22,10 @@ open import Calculus.Elevator.Typing ℳ
 infix   4 _⇛_/_
 
 data _⇛_/_ : Context → Type → Mode → Set (ℓ₁ ⊔ ℓ₂) where
+  init : x ⦂[ m ] S ∈ Γ →
+         -----------------
+         Γ ⇛ S / m
+
   `⊤R : Γ is-all-del →
         ---------------
         Γ ⇛ `⊤ / m
