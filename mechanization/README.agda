@@ -6,21 +6,21 @@
 module README where
 
 -- Definition of Mode Specification in Elevator
-import Calculus.Elevator.ModeSpec
+import Calculus.AdjND.ModeSpec
 
 -- Declartive Typing and Equivalence of Elevator
-import Calculus.Elevator.Typing
-import Calculus.Elevator.Typing.Properties
+import Calculus.AdjND.Typing
+import Calculus.AdjND.Typing.Properties
 
 -- Operational Semantics of Elevator
-import Calculus.Elevator.OpSem
-import Calculus.Elevator.OpSem.Properties
+import Calculus.AdjND.OpSem
+import Calculus.AdjND.OpSem.Properties
 
 -- Type Safety and Mode Safety of Elevator
-import Calculus.Elevator.Properties
+import Calculus.AdjND.Properties
 
 -- ModeSpec for Adjoint λ□
-import Calculus.Elevator.Embedding.LambdaBox.ModeSpec
+import Calculus.AdjND.Embedding.LambdaBox.ModeSpec
 
 -- Definition of Original λ□
 import Calculus.LambdaBox.Syntax
@@ -28,24 +28,24 @@ import Calculus.LambdaBox.Typing
 import Calculus.LambdaBox.OpSem
 
 -- Translation, its Soundness and Completeness, and Bisimulation from Original λ□ into Adjoint λ□
-import Calculus.Elevator.Embedding.LambdaBox
+import Calculus.AdjND.Embedding.LambdaBox
 
 -- ModeSpec for Adjoint DILL
-import Calculus.Elevator.Embedding.LinearLambda.ModeSpec
+import Calculus.AdjND.Embedding.DILL.ModeSpec
 
 -- Definition of Original DILL
-import Calculus.LinearLambda.Syntax
-import Calculus.LinearLambda.Typing
-import Calculus.LinearLambda.OpSem
+import Calculus.DILL.Syntax
+import Calculus.DILL.Typing
+import Calculus.DILL.OpSem
 
 -- Translation, its Soundness and Completeness, and Bisimulation from Original DILL into Adjoint DILL
-import Calculus.Elevator.Embedding.LinearLambda
+import Calculus.AdjND.Embedding.DILL
 
 -- Algorithmic Typing of Elevator
-import Calculus.Elevator.Algorithmic
+import Calculus.AdjND.Algorithmic
 
 -- Soundness/Completeness of Algorithmic Typing of Elevator
-import Calculus.Elevator.Algorithmic.Properties
+import Calculus.AdjND.Algorithmic.Properties
 
 -- Completeness of Elevator with regard to Adjoint sequent calculus
-import Calculus.Adjoint.Sequent
+import Calculus.AdjSC.Sequent
